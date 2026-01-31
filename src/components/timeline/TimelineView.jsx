@@ -1,5 +1,10 @@
 import styles from './TimelineView.module.css';
-import { getJobColor, getRoleFromJob } from '../../utils/ffxivData';
+import {
+  getJobColor,
+  getRoleFromJob,
+  jobMatchesEntry,
+  getJobDisplayInfo,
+} from '../../utils/ffxivData';
 import JobBadge from '../common/JobBadge';
 import { CALLOUT_CONFIG } from '../../hooks/useCallout';
 
@@ -19,6 +24,7 @@ const formatCountdown = (seconds) => {
  * Shows upcoming mitigations in a compact, readable format.
  * Displays countdown time (time until ability) rather than absolute timestamps.
  * Filters out abilities that are within the callout window (5 seconds).
+ * Supports both specific jobs (WAR, SCH) and job types (Tank, Healer, Melee).
  *
  * @param {Object} props
  * @param {Object} props.plan - The decoded mitigation plan
@@ -46,9 +52,9 @@ const TimelineView = ({
     );
   }
 
-  // Check if entry matches player's job and role
+  // Check if entry matches player's job and role (supports job types)
   const entryMatchesPlayer = (entry) => {
-    if (entry.job.toUpperCase() !== playerJob.toUpperCase()) return false;
+    if (!jobMatchesEntry(entry.job, playerJob)) return false;
     if (entry.role && playerRole) {
       return entry.role.toUpperCase() === playerRole.toUpperCase();
     }

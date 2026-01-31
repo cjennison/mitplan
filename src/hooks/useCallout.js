@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { jobMatchesEntry } from '../utils/ffxivData';
 
 export const CALLOUT_CONFIG = {
   SHOW_BEFORE: 5,
@@ -6,11 +7,15 @@ export const CALLOUT_CONFIG = {
 };
 
 /**
- * Check if a timeline entry matches the player's job and role
+ * Check if a timeline entry matches the player's job and role.
+ * Supports both specific jobs (WAR, SCH) and job types (Tank, Healer, Melee).
  */
 const entryMatchesPlayer = (entry, playerJob, playerRole) => {
   if (!playerJob) return true;
-  if (entry.job.toUpperCase() !== playerJob.toUpperCase()) return false;
+
+  // Use the new matching logic that supports job types
+  if (!jobMatchesEntry(entry.job, playerJob)) return false;
+
   // If entry has a role requirement and player has a role, they must match
   if (entry.role && playerRole) {
     return entry.role.toUpperCase() === playerRole.toUpperCase();
