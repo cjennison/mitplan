@@ -21,6 +21,10 @@ const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, p
     onConfigChange('showNotes', e.target.checked);
   };
 
+  const handleEnableSoundChange = (e) => {
+    onConfigChange('enableSound', e.target.checked);
+  };
+
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Trigger asChild>
@@ -92,6 +96,23 @@ const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, p
             <p className={styles.checkboxDescription}>
               When enabled, displays any notes attached to mitigations below the ability name in the
               callout.
+            </p>
+          </div>
+
+          {/* Audio Section */}
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Audio</h3>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={config.enableSound}
+                onChange={handleEnableSoundChange}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkboxText}>Play sound on mitigation</span>
+            </label>
+            <p className={styles.checkboxDescription}>
+              When enabled, plays a notification sound when it&apos;s time to use a mitigation.
             </p>
           </div>
 

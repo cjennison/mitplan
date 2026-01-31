@@ -11,6 +11,7 @@ import useFightTimer from './hooks/useFightTimer';
 import { useCallout } from './hooks/useCallout';
 import useConfig from './hooks/useConfig';
 import usePlayerJob from './hooks/usePlayerJob';
+import useMitigationSound from './hooks/useMitigationSound';
 import {
   MAX_TIMELINE_ITEMS,
   TIMELINE_WINDOW_SECONDS,
@@ -91,6 +92,9 @@ const App = () => {
     showOwnOnly: config.showOwnMitigationsOnly,
     playerJob,
   });
+
+  // Play sound when mitigation needs to be used
+  useMitigationSound(calloutData, config.enableSound);
 
   /**
    * Listen for OverlayPlugin lock state changes
