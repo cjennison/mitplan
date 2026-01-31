@@ -48,6 +48,7 @@ const App = () => {
   });
   const [planError, setPlanError] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [importValue, setImportValue] = useState('');
   const [isLocked, setIsLocked] = useState(false);
   const [isUILocked, setIsUILocked] = useState(false);
   const [isDevConsoleVisible, setIsDevConsoleVisible] = useState(false);
@@ -56,11 +57,22 @@ const App = () => {
   const { currentTime, isRunning, start, stop, reset } = useFightTimer();
 
   const combatEvents = useCombatEvents({
-    onCombatStart: useCallback(() => { reset(); setTimeout(() => start(), 50); }, [reset, start]),
-    onCombatEnd: useCallback(() => { reset(); }, [reset]),
-    onCountdownStart: useCallback(() => { reset(); }, [reset]),
-    onZoneChange: useCallback(() => { reset(); }, [reset]),
-    onWipe: useCallback(() => { reset(); }, [reset]),
+    onCombatStart: useCallback(() => {
+      reset();
+      setTimeout(() => start(), 50);
+    }, [reset, start]),
+    onCombatEnd: useCallback(() => {
+      reset();
+    }, [reset]),
+    onCountdownStart: useCallback(() => {
+      reset();
+    }, [reset]),
+    onZoneChange: useCallback(() => {
+      reset();
+    }, [reset]),
+    onWipe: useCallback(() => {
+      reset();
+    }, [reset]),
   });
 
   const { config, updateConfig } = useConfig();
@@ -88,29 +100,41 @@ const App = () => {
   const handleToggleUILock = useCallback(() => setIsUILocked((prev) => !prev), []);
   const handleToggleDevConsole = useCallback(() => setIsDevConsoleVisible((prev) => !prev), []);
 
-  const handlePlanLoad = useCallback((base64String) => {
-    setPlanError('');
-    const decodeResult = decodePlan(base64String);
-    if (!decodeResult.success) {
-      setPlanError(decodeResult.error);
-      return;
+  const handlePlanLoad = useCallback(
+    (base64String) => {
+      setPlanError('');
+      const decodeResult = decodePlan(base64String);
+      if (!decodeResult.success) {
+        setPlanError(decodeResult.error);
+        return false;
+      }
+      const validation = validatePlan(decodeResult.data);
+      if (!validation.valid) {
+        setPlanError(validation.errors.join('. '));
+        return false;
+      }
+      const loadedPlan = decodeResult.data;
+      addImportedPlan(loadedPlan);
+      try {
+        localStorage.setItem(STORAGE_KEYS.LOADED_PLAN, JSON.stringify(loadedPlan));
+      } catch {
+        // Ignore localStorage errors
+      }
+      setPlan(loadedPlan);
+      setDialogOpen(false);
+      setPlanError('');
+      return true;
+    },
+    [addImportedPlan]
+  );
+
+  const handleImport = useCallback(() => {
+    if (!importValue.trim()) return;
+    const success = handlePlanLoad(importValue.trim());
+    if (success) {
+      setImportValue('');
     }
-    const validation = validatePlan(decodeResult.data);
-    if (!validation.valid) {
-      setPlanError(validation.errors.join('. '));
-      return;
-    }
-    const loadedPlan = decodeResult.data;
-    addImportedPlan(loadedPlan);
-    try {
-      localStorage.setItem(STORAGE_KEYS.LOADED_PLAN, JSON.stringify(loadedPlan));
-    } catch {
-      // Ignore localStorage errors
-    }
-    setPlan(loadedPlan);
-    setDialogOpen(false);
-    setPlanError('');
-  }, [addImportedPlan]);
+  }, [importValue, handlePlanLoad]);
 
   const handlePlanSelect = useCallback((selectedPlan) => {
     try {
@@ -235,13 +259,33 @@ const App = () => {
                 Clear
               </button>
             )}
+            <div className={styles.importGroup}>
+              <input
+                type="text"
+                className={styles.importInput}
+                placeholder="Paste plan..."
+                value={importValue}
+                onChange={(e) => setImportValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleImport();
+                  }
+                }}
+              />
+              <button
+                className={styles.importButton}
+                onClick={handleImport}
+                disabled={!importValue.trim()}
+              >
+                Import
+              </button>
+            </div>
             <PlanInput
               open={dialogOpen}
               onOpenChange={setDialogOpen}
-              onPlanLoad={handlePlanLoad}
               onPlanSelect={handlePlanSelect}
               error={planError}
-              isOverlayLocked={isLocked}
               presets={presets}
               importedPlans={importedPlans}
               playerJob={playerJob}

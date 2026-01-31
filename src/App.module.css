@@ -180,3 +180,57 @@
   background: rgba(74, 222, 128, 0.15);
   border-color: rgba(74, 222, 128, 0.4);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   IMPORT GROUP - Input field and button for Base64 import
+   ═══════════════════════════════════════════════════════════════ */
+
+.importGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.importInput {
+  width: 140px;
+  padding: var(--space-1) var(--space-2);
+  background: rgba(26, 26, 35, 0.9);
+  border: 1px solid rgba(80, 80, 100, 0.5);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  transition: border-color 150ms ease;
+}
+
+.importInput::placeholder {
+  color: var(--color-text-muted);
+}
+
+.importInput:focus {
+  outline: none;
+  border-color: var(--color-border-accent);
+}
+
+.importButton {
+  padding: var(--space-1) var(--space-2);
+  background: rgba(180, 160, 120, 0.2);
+  border: 1px solid rgba(180, 160, 120, 0.4);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-accent);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+  white-space: nowrap;
+}
+
+.importButton:hover:not(:disabled) {
+  background: rgba(180, 160, 120, 0.3);
+  border-color: rgba(180, 160, 120, 0.6);
+}
+
+.importButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

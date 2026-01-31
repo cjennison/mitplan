@@ -8,7 +8,7 @@ import m11s from './m11s.js';
 import m12sP1 from './m12s-p1.js';
 import m12sP2 from './m12s-p2.js';
 
-export const PRESETS = [m9s, m10s, m11s, m12sP1, m12sP2];
+export const PRESETS = [/* m9s, m10s, m11s, */ m12sP1 /*, m12sP2 */];
 
 export const getPresetById = (id) => PRESETS.find((p) => p.id === id);
 
