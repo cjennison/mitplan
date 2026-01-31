@@ -41,12 +41,12 @@ const MitigationCallout = ({
 
   /**
    * Get countdown urgency class
+   * Yellow for 3+ seconds, Red for 1-2 seconds, Green for NOW
    */
   const getUrgencyClass = (countdown) => {
-    if (countdown <= 0) return styles.countdownNow;
-    if (countdown <= 2) return styles.countdownUrgent;
-    if (countdown <= 4) return styles.countdownWarning;
-    return styles.countdownNormal;
+    if (countdown <= 0) return styles.countdownNow;    // Green - NOW!
+    if (countdown <= 2) return styles.countdownUrgent; // Red - urgent
+    return styles.countdownNormal;                      // Yellow - normal
   };
 
   // Show placeholder when unlocked and no active callout
