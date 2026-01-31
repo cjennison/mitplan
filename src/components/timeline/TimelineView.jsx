@@ -33,7 +33,6 @@ const TimelineView = ({
   currentTime = 0,
   windowSeconds = 30,
   maxItems = 3,
-  isLocked = false,
   showOwnOnly = false,
   playerJob = null,
 }) => {
@@ -50,6 +49,7 @@ const TimelineView = ({
 
   // Filter to only upcoming entries:
   // - More than CALLOUT_CONFIG.SHOW_BEFORE seconds away (not in callout range)
+  // - Use floor to match displayed value - hide when displayed countdown would be <= SHOW_BEFORE
   // - Within the window
   // - Optionally filter by player job
   const upcomingEntries = sortedTimeline.filter((entry) => {
@@ -61,8 +61,9 @@ const TimelineView = ({
     }
 
     const timeUntil = entry.timestamp - currentTime;
-    // Must be more than 5 seconds away (not yet a callout)
-    if (timeUntil <= CALLOUT_CONFIG.SHOW_BEFORE) {
+    // Hide when the displayed countdown (floored) would be SHOW_BEFORE or less
+    // This prevents showing "5" on timeline and then "5" again on callout
+    if (Math.floor(timeUntil) <= CALLOUT_CONFIG.SHOW_BEFORE) {
       return false;
     }
     // Must be within the window

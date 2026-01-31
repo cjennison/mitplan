@@ -26,11 +26,11 @@ const useCallout = (plan, currentTime, options = {}) => {
 
     for (const entry of sortedTimeline) {
       const abilityTime = entry.timestamp;
-      const showStart = abilityTime - CALLOUT_CONFIG.SHOW_BEFORE;
+      const timeUntil = abilityTime - currentTime;
       const showEnd = abilityTime + CALLOUT_CONFIG.SHOW_AFTER;
 
-      if (currentTime >= showStart && currentTime <= showEnd) {
-        const countdown = abilityTime - currentTime;
+      if (Math.floor(timeUntil) <= CALLOUT_CONFIG.SHOW_BEFORE && currentTime <= showEnd) {
+        const countdown = timeUntil;
         const abilitiesAtTime = sortedTimeline
           .filter((e) => e.timestamp === abilityTime)
           .map((e) => ({ job: e.job, name: e.ability, note: e.note }));
@@ -52,6 +52,7 @@ const useCallout = (plan, currentTime, options = {}) => {
 
 /**
  * Returns timeline items that are upcoming but not yet in callout range.
+ * Uses Math.floor to match displayed countdown - hides when displayed value <= SHOW_BEFORE
  */
 const useTimelineItems = (plan, currentTime, windowSeconds = 30, maxItems = 3) => {
   const items = useMemo(() => {
@@ -59,7 +60,7 @@ const useTimelineItems = (plan, currentTime, windowSeconds = 30, maxItems = 3) =
 
     const filtered = plan.timeline.filter((entry) => {
       const timeUntil = entry.timestamp - currentTime;
-      return timeUntil > CALLOUT_CONFIG.SHOW_BEFORE && timeUntil <= windowSeconds;
+      return Math.floor(timeUntil) > CALLOUT_CONFIG.SHOW_BEFORE && timeUntil <= windowSeconds;
     });
 
     return filtered.sort((a, b) => a.timestamp - b.timestamp).slice(0, maxItems);

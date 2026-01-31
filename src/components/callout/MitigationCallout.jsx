@@ -29,15 +29,15 @@ const MitigationCallout = ({
 }) => {
   /**
    * Format countdown for display
+   * Uses floor to match timeline display - ensures each number appears only once
    * Positive: "5", "4", "3", "2", "1"
    * Zero/Negative: "NOW!" (no negative numbers)
    */
   const formatCountdown = (countdown) => {
-    const rounded = Math.ceil(countdown);
+    const rounded = Math.floor(countdown);
     if (rounded > 0) {
       return rounded.toString();
     }
-    // Show "NOW!" for zero and all negative values
     return 'NOW!';
   };
 

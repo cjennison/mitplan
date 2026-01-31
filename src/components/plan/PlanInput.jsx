@@ -5,9 +5,6 @@ import styles from './PlanInput.module.css';
 /**
  * PlanInput component - Handles Base64 plan input via keyboard paste (Ctrl+V)
  *
- * NOTE: ACT's OverlayPlugin passes keyboard events to the game when "Lock overlay"
- * is enabled. The button is disabled when overlay is locked to prevent this issue.
- *
  * @param {Object} props
  * @param {boolean} props.open - Whether the dialog is open
  * @param {function} props.onOpenChange - Callback when dialog open state changes
