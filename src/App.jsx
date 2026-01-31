@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import PlanInput from './components/plan/PlanInput';
 import TimelineView from './components/timeline/TimelineView';
 import { decodePlan } from './utils/planCodec';
@@ -12,11 +12,32 @@ import styles from './App.module.css';
  * - Plan loading via Base64 input
  * - Plan validation and error display
  * - Timeline view rendering
+ * - Locked/unlocked overlay mode (controlled by ACT OverlayPlugin)
  */
 const App = () => {
   const [plan, setPlan] = useState(null);
   const [planError, setPlanError] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+
+  /**
+   * Listen for OverlayPlugin lock state changes
+   * The OverlayPlugin dispatches 'onOverlayStateUpdate' CustomEvent to document
+   * when the user toggles "Lock overlay" in ACT settings
+   */
+  useEffect(() => {
+    const handleOverlayStateUpdate = (e) => {
+      if (e.detail && typeof e.detail.isLocked === 'boolean') {
+        setIsLocked(e.detail.isLocked);
+      }
+    };
+
+    document.addEventListener('onOverlayStateUpdate', handleOverlayStateUpdate);
+
+    return () => {
+      document.removeEventListener('onOverlayStateUpdate', handleOverlayStateUpdate);
+    };
+  }, []);
 
   /**
    * Handle plan loading from Base64 input
@@ -64,6 +85,23 @@ const App = () => {
     setPlanError('');
   }, []);
 
+  // When locked, show minimal overlay with just the timeline
+  if (isLocked) {
+    return (
+      <div className={styles.appLocked}>
+        {/* Minimal Timeline View - only upcoming mitigations */}
+        {plan && (
+          <TimelineView
+            plan={plan}
+            currentTime={0}
+            windowSeconds={30}
+            isLocked={true}
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className={styles.app}>
       {/* Top Bar */}
@@ -106,7 +144,7 @@ const App = () => {
 
             {/* Timeline View */}
             <div className={styles.timelineContainer}>
-              <TimelineView plan={plan} currentTime={0} windowSeconds={30} />
+              <TimelineView plan={plan} currentTime={0} windowSeconds={30} isLocked={false} />
             </div>
           </div>
         )}

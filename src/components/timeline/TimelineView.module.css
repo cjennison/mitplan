@@ -188,3 +188,96 @@
 .imminent .jobBadge {
   box-shadow: 0 0 6px var(--job-color, rgba(255, 255, 255, 0.3));
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   LOCKED MODE STYLES - Minimal, Transparent Overlay
+   Only shows upcoming mitigations with no background/chrome
+   ═══════════════════════════════════════════════════════════════ */
+
+.containerLocked {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.5rem;
+  pointer-events: none;
+}
+
+.timeGroupLocked {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.5rem;
+  background: rgba(17, 17, 22, 0.75);
+  border-left: 3px solid rgba(74, 111, 165, 0.6);
+  border-radius: 0 4px 4px 0;
+  backdrop-filter: blur(4px);
+}
+
+.timeGroupLocked.imminentLocked {
+  background: rgba(232, 93, 76, 0.25);
+  border-left-color: #e85d4c;
+  box-shadow: 0 0 12px rgba(232, 93, 76, 0.3);
+  animation: pulseLocked 1s ease-in-out infinite;
+}
+
+@keyframes pulseLocked {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.timestampLocked {
+  min-width: 40px;
+}
+
+.timeLocked {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffd866;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.entriesLocked {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.entryLocked {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.jobBadgeLocked {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: 0.125rem 0.25rem;
+  border-radius: 2px;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.abilityLocked {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.imminentLocked .abilityLocked {
+  color: #ffd866;
+}
+
+.imminentLocked .timeLocked {
+  color: #e85d4c;
+}
