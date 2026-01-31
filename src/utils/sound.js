@@ -97,14 +97,12 @@ export const playAlarmSound = () => {
 };
 
 /**
- * Pre-warm the audio context
- * Call this on user interaction to ensure sounds work
+ * Pre-warm the audio context. Call on user interaction to ensure sounds work.
  */
 export const initAudio = () => {
   try {
     getAudioContext();
-    console.log('[Sound] Audio context initialized');
   } catch (e) {
-    console.warn('[Sound] Failed to initialize audio context:', e);
+    // Audio context initialization failed - sounds will not work
   }
 };

@@ -9,10 +9,6 @@
   padding: 0.5rem 0.75rem;
 }
 
-.callout.locked {
-  /* When locked, minimal styling */
-}
-
 .callout.empty {
   justify-content: center;
 }

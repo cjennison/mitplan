@@ -26,11 +26,9 @@ const DraggableContainer = ({
   const loadFromStorage = (key, defaultValue) => {
     try {
       const stored = localStorage.getItem(key);
-      if (stored) {
-        return JSON.parse(stored);
-      }
-    } catch (e) {
-      console.warn('Failed to load from localStorage:', e);
+      if (stored) return JSON.parse(stored);
+    } catch {
+      // Storage unavailable or corrupted
     }
     return defaultValue;
   };
@@ -47,35 +45,32 @@ const DraggableContainer = ({
   const initialPos = useRef({ x: 0, y: 0 });
   const initialSize = useRef({ width: 0, height: 0 });
 
-  // Save position to localStorage
   const savePosition = useCallback(
     (pos) => {
       try {
         localStorage.setItem(storageKeyPosition, JSON.stringify(pos));
-      } catch (e) {
-        console.warn('Failed to save position:', e);
+      } catch {
+        // Storage unavailable
       }
     },
     [storageKeyPosition]
   );
 
-  // Save size to localStorage
   const saveSize = useCallback(
     (sz) => {
       try {
         localStorage.setItem(storageKeySize, JSON.stringify(sz));
-      } catch (e) {
-        console.warn('Failed to save size:', e);
+      } catch {
+        // Storage unavailable
       }
     },
     [storageKeySize]
   );
 
-  // Handle drag start - stop propagation to prevent OverlayPlugin from dragging the whole window
   const handleDragStart = (e) => {
     if (isLocked) return;
     e.preventDefault();
-    e.stopPropagation(); // Prevent OverlayPlugin from capturing this drag
+    e.stopPropagation();
     isDragging.current = true;
     dragStart.current = { x: e.clientX, y: e.clientY };
     initialPos.current = { ...position };
@@ -83,11 +78,10 @@ const DraggableContainer = ({
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  // Handle resize start
   const handleResizeStart = (e) => {
     if (isLocked) return;
     e.preventDefault();
-    e.stopPropagation(); // Prevent OverlayPlugin from capturing this drag
+    e.stopPropagation();
     isResizing.current = true;
     dragStart.current = { x: e.clientX, y: e.clientY };
     initialSize.current = { ...size };
@@ -95,27 +89,23 @@ const DraggableContainer = ({
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  // Handle mouse move for both drag and resize
   const handleMouseMove = useCallback((e) => {
     const deltaX = e.clientX - dragStart.current.x;
     const deltaY = e.clientY - dragStart.current.y;
 
     if (isDragging.current) {
-      const newPos = {
+      setPosition({
         x: Math.max(0, initialPos.current.x + deltaX),
         y: Math.max(0, initialPos.current.y + deltaY),
-      };
-      setPosition(newPos);
+      });
     } else if (isResizing.current) {
-      const newSize = {
+      setSize({
         width: Math.max(100, initialSize.current.width + deltaX),
         height: Math.max(40, initialSize.current.height + deltaY),
-      };
-      setSize(newSize);
+      });
     }
   }, []);
 
-  // Handle mouse up - save to localStorage
   const handleMouseUp = useCallback(() => {
     if (isDragging.current) {
       isDragging.current = false;
@@ -135,7 +125,6 @@ const DraggableContainer = ({
     document.removeEventListener('mouseup', handleMouseUp);
   }, [handleMouseMove, savePosition, saveSize]);
 
-  // Cleanup listeners on unmount
   useEffect(() => {
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
@@ -143,11 +132,8 @@ const DraggableContainer = ({
     };
   }, [handleMouseMove, handleMouseUp]);
 
-  // Prevent OverlayPlugin from dragging the window when clicking inside container
   const handleContainerMouseDown = (e) => {
-    if (!isLocked) {
-      e.stopPropagation();
-    }
+    if (!isLocked) e.stopPropagation();
   };
 
   return (
