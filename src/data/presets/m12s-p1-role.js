@@ -166,5 +166,8 @@ export default {
     },
     { timestamp: 400, job: 'SGE', ability: 'Kerachole + Holos', note: 'Slaughtershed III' },
     { timestamp: 400, job: 'Melee', role: 'M2', ability: 'Feint', note: 'Slaughtershed III' },
+
+    // Welcome message for all players
+    { timestamp: 410, job: 'All', ability: 'Thank you for using Mitplan!', note: 'Welcome' },
   ],
 };

@@ -7,6 +7,7 @@
  * These can be used in presets instead of specific jobs
  */
 export const JOB_TYPES = {
+  All: { name: 'All', role: 'all', color: '#9966cc', jobs: [] },
   Tank: { name: 'Tank', role: 'tank', color: '#3d5a80', jobs: ['PLD', 'WAR', 'DRK', 'GNB'] },
   Healer: { name: 'Healer', role: 'healer', color: '#4a7c59', jobs: ['WHM', 'SCH', 'AST', 'SGE'] },
   Melee: {
@@ -136,6 +137,9 @@ export const jobMatchesEntry = (entryJob, playerJob) => {
 
   const entryUpper = entryJob.toUpperCase();
   const playerUpper = playerJob.toUpperCase();
+
+  // 'All' matches everyone
+  if (entryUpper === 'ALL') return true;
 
   // Direct match (e.g., WAR === WAR)
   if (entryUpper === playerUpper) return true;
