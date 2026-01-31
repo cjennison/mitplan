@@ -4,10 +4,13 @@ import TimelineView from './components/timeline/TimelineView';
 import DraggableContainer from './components/common/DraggableContainer';
 import MitigationCallout from './components/callout/MitigationCallout';
 import DevConsole from './components/dev/DevConsole';
+import ConfigDialog from './components/config/ConfigDialog';
 import { decodePlan } from './utils/planCodec';
 import { validatePlan, getPlanSummary } from './utils/planValidator';
 import useFightTimer from './hooks/useFightTimer';
 import { useCallout } from './hooks/useCallout';
+import useConfig from './hooks/useConfig';
+import usePlayerJob from './hooks/usePlayerJob';
 import {
   MAX_TIMELINE_ITEMS,
   TIMELINE_WINDOW_SECONDS,
@@ -71,11 +74,23 @@ const App = () => {
   // Dev console visibility toggle
   const [isDevConsoleVisible, setIsDevConsoleVisible] = useState(false);
 
+  // Config dialog visibility toggle
+  const [isConfigOpen, setIsConfigOpen] = useState(false);
+
   // Fight timer for controlling timeline and callouts
   const { currentTime, isRunning, start, stop, reset } = useFightTimer();
 
-  // Get current callout based on timer
-  const calloutData = useCallout(plan, currentTime);
+  // Config hook for settings persistence
+  const { config, updateConfig } = useConfig();
+
+  // Player job detection from ACT/OverlayPlugin
+  const { playerJob, playerName } = usePlayerJob();
+
+  // Get current callout based on timer (with filtering options)
+  const calloutData = useCallout(plan, currentTime, {
+    showOwnOnly: config.showOwnMitigationsOnly,
+    playerJob,
+  });
 
   /**
    * Listen for OverlayPlugin lock state changes
@@ -197,6 +212,8 @@ const App = () => {
               windowSeconds={TIMELINE_WINDOW_SECONDS}
               maxItems={MAX_TIMELINE_ITEMS}
               isLocked={!isLocked || isUILocked}
+              showOwnOnly={config.showOwnMitigationsOnly}
+              playerJob={playerJob}
             />
           ) : (
             <div className={styles.emptyContainer}>
@@ -247,6 +264,15 @@ const App = () => {
           </div>
 
           <div className={styles.controlActions}>
+            {/* Config Dialog Toggle */}
+            <ConfigDialog
+              open={isConfigOpen}
+              onOpenChange={setIsConfigOpen}
+              config={config}
+              onConfigChange={updateConfig}
+              playerJob={playerJob}
+              playerName={playerName}
+            />
             {/* Dev Console Toggle - only shown when feature is enabled */}
             {DEV_CONSOLE_AVAILABLE && (
               <button

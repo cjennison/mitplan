@@ -21,16 +21,30 @@ export const CALLOUT_CONFIG = {
  *
  * @param {Object} plan - The mitigation plan with timeline
  * @param {number} currentTime - Current fight time in seconds
+ * @param {Object} options - Optional filtering options
+ * @param {boolean} options.showOwnOnly - If true, only show abilities for playerJob
+ * @param {string} options.playerJob - The player's current job (e.g., "WAR", "SCH")
  * @returns {Object|null} The current callout info or null if no callout should show
  */
-const useCallout = (plan, currentTime) => {
+const useCallout = (plan, currentTime, options = {}) => {
+  const { showOwnOnly = false, playerJob = null } = options;
   const callout = useMemo(() => {
     if (!plan || !plan.timeline || plan.timeline.length === 0) {
       return null;
     }
 
+    // Filter timeline based on options
+    let timeline = plan.timeline;
+    if (showOwnOnly && playerJob) {
+      timeline = timeline.filter((entry) => entry.job.toUpperCase() === playerJob.toUpperCase());
+    }
+
+    if (timeline.length === 0) {
+      return null;
+    }
+
     // Sort timeline by timestamp to ensure we get the earliest callout
-    const sortedTimeline = [...plan.timeline].sort((a, b) => a.timestamp - b.timestamp);
+    const sortedTimeline = [...timeline].sort((a, b) => a.timestamp - b.timestamp);
 
     // Find the first ability that should be shown as a callout
     // An ability is a callout if: (timestamp - SHOW_BEFORE) <= currentTime <= (timestamp + SHOW_AFTER)
@@ -44,7 +58,8 @@ const useCallout = (plan, currentTime) => {
         const countdown = abilityTime - currentTime;
 
         // Find all abilities at this timestamp (for grouped mitigations)
-        const abilitiesAtTime = sortedTimeline
+        // Also apply the same filtering here
+        let abilitiesAtTime = sortedTimeline
           .filter((e) => e.timestamp === abilityTime)
           .map((e) => ({ job: e.job, name: e.ability }));
 
@@ -61,7 +76,7 @@ const useCallout = (plan, currentTime) => {
     }
 
     return null;
-  }, [plan, currentTime]);
+  }, [plan, currentTime, showOwnOnly, playerJob]);
 
   return callout;
 };

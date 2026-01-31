@@ -25,6 +25,8 @@ const formatCountdown = (seconds) => {
  * @param {number} props.windowSeconds - How many seconds ahead to show (default 30)
  * @param {number} props.maxItems - Maximum number of timeline groups to display (default 3)
  * @param {boolean} props.isLocked - Whether the overlay is in locked (minimal) mode
+ * @param {boolean} props.showOwnOnly - If true, only show abilities for playerJob
+ * @param {string} props.playerJob - The player's current job (e.g., "WAR", "SCH")
  */
 const TimelineView = ({
   plan,
@@ -32,6 +34,8 @@ const TimelineView = ({
   windowSeconds = 30,
   maxItems = 3,
   isLocked = false,
+  showOwnOnly = false,
+  playerJob = null,
 }) => {
   if (!plan || !plan.timeline || plan.timeline.length === 0) {
     return (
@@ -47,7 +51,15 @@ const TimelineView = ({
   // Filter to only upcoming entries:
   // - More than CALLOUT_CONFIG.SHOW_BEFORE seconds away (not in callout range)
   // - Within the window
+  // - Optionally filter by player job
   const upcomingEntries = sortedTimeline.filter((entry) => {
+    // Filter by job if showOwnOnly is enabled
+    if (showOwnOnly && playerJob) {
+      if (entry.job.toUpperCase() !== playerJob.toUpperCase()) {
+        return false;
+      }
+    }
+
     const timeUntil = entry.timestamp - currentTime;
     // Must be more than 5 seconds away (not yet a callout)
     if (timeUntil <= CALLOUT_CONFIG.SHOW_BEFORE) {
