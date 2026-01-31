@@ -35,6 +35,7 @@ const TimelineView = ({
   maxItems = 3,
   showOwnOnly = false,
   playerJob = null,
+  playerRole = null,
 }) => {
   if (!plan || !plan.timeline || plan.timeline.length === 0) {
     return (
@@ -44,32 +45,29 @@ const TimelineView = ({
     );
   }
 
+  // Check if entry matches player's job and role
+  const entryMatchesPlayer = (entry) => {
+    if (entry.job.toUpperCase() !== playerJob.toUpperCase()) return false;
+    if (entry.role && playerRole) {
+      return entry.role.toUpperCase() === playerRole.toUpperCase();
+    }
+    return true;
+  };
+
   // Sort timeline by timestamp
   const sortedTimeline = [...plan.timeline].sort((a, b) => a.timestamp - b.timestamp);
 
-  // Filter to only upcoming entries:
-  // - More than CALLOUT_CONFIG.SHOW_BEFORE seconds away (not in callout range)
-  // - Use floor to match displayed value - hide when displayed countdown would be <= SHOW_BEFORE
-  // - Within the window
-  // - Optionally filter by player job
+  // Filter to only upcoming entries (not yet in callout window)
   const upcomingEntries = sortedTimeline.filter((entry) => {
-    // Filter by job if showOwnOnly is enabled
+    // Filter by job and role if showOwnOnly is enabled
     if (showOwnOnly && playerJob) {
-      if (entry.job.toUpperCase() !== playerJob.toUpperCase()) {
-        return false;
-      }
+      if (!entryMatchesPlayer(entry)) return false;
     }
 
     const timeUntil = entry.timestamp - currentTime;
-    // Hide when the displayed countdown (floored) would be SHOW_BEFORE or less
-    // This prevents showing "5" on timeline and then "5" again on callout
-    if (Math.floor(timeUntil) <= CALLOUT_CONFIG.SHOW_BEFORE) {
-      return false;
-    }
-    // Must be within the window
-    if (timeUntil > windowSeconds) {
-      return false;
-    }
+    // Hide entries that are already in the callout window
+    if (Math.floor(timeUntil) <= CALLOUT_CONFIG.SHOW_BEFORE) return false;
+    // No time limit - we'll show the next N groups regardless of time
     return true;
   });
 

@@ -69,6 +69,7 @@ const App = () => {
   const calloutData = useCallout(plan, currentTime, {
     showOwnOnly: config.showOwnMitigationsOnly,
     playerJob,
+    playerRole: config.playerRole,
   });
 
   useMitigationSound(calloutData, config.enableSound);
@@ -163,6 +164,7 @@ const App = () => {
               isLocked={!isLocked || isUILocked}
               showOwnOnly={config.showOwnMitigationsOnly}
               playerJob={playerJob}
+              playerRole={config.playerRole}
             />
           ) : (
             <div className={styles.emptyContainer}>
@@ -242,6 +244,8 @@ const App = () => {
               isOverlayLocked={isLocked}
               presets={presets}
               importedPlans={importedPlans}
+              playerJob={playerJob}
+              playerRole={config.playerRole}
             />
           </div>
         </div>

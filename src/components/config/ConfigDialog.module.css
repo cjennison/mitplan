@@ -199,3 +199,56 @@
   background: rgba(80, 80, 100, 0.6);
   border-color: rgba(80, 80, 100, 0.7);
 }
+
+/* Role Selector Button Group */
+.roleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.roleButtonGroup {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.roleButton {
+  padding: 0.375rem 0.625rem;
+  background: rgba(26, 26, 35, 0.9);
+  border: 1px solid rgba(80, 80, 100, 0.5);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.roleButton:hover {
+  background: rgba(35, 35, 48, 0.95);
+  border-color: rgba(80, 80, 100, 0.7);
+  color: #ffffff;
+}
+
+.roleButton:focus {
+  outline: none;
+  border-color: rgba(180, 160, 120, 0.6);
+}
+
+.roleButtonActive {
+  background: rgba(180, 160, 120, 0.25);
+  border-color: rgba(180, 160, 120, 0.6);
+  color: #ffd866;
+}
+
+.roleWarning {
+  margin: 0.5rem 0 0 0;
+  padding: 0.5rem 0.625rem;
+  background: rgba(201, 162, 39, 0.15);
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  border-radius: 4px;
+  color: rgba(255, 220, 150, 0.9);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}

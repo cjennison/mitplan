@@ -43,11 +43,13 @@ const MitigationCallout = ({
 
   /**
    * Get countdown urgency class
+   * Uses floored value to match display - when "NOW!" is shown, it should be green
    * Yellow for 3+ seconds, Red for 1-2 seconds, Green for NOW
    */
   const getUrgencyClass = (countdown) => {
-    if (countdown <= 0) return styles.countdownNow; // Green - NOW!
-    if (countdown <= 2) return styles.countdownUrgent; // Red - urgent
+    const rounded = Math.floor(countdown);
+    if (rounded <= 0) return styles.countdownNow; // Green - NOW!
+    if (rounded <= 2) return styles.countdownUrgent; // Red - urgent
     return styles.countdownNormal; // Yellow - normal
   };
 

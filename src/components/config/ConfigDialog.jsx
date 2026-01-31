@@ -1,16 +1,9 @@
 import * as Dialog from '@radix-ui/react-dialog';
+import { getRoleOptionsForJob, jobRequiresRoleSelection } from '../../hooks/useConfig';
 import styles from './ConfigDialog.module.css';
 
 /**
  * ConfigDialog - Configuration modal for overlay settings
- *
- * @param {Object} props
- * @param {boolean} props.open - Whether the dialog is open
- * @param {function} props.onOpenChange - Callback when dialog open state changes
- * @param {Object} props.config - Current configuration values
- * @param {function} props.onConfigChange - Callback to update config (key, value)
- * @param {string} props.playerJob - Current player's job (e.g., "WAR", "SCH")
- * @param {string} props.playerName - Current player's name
  */
 const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, playerName }) => {
   const handleShowOwnMitigationsChange = (e) => {
@@ -24,6 +17,9 @@ const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, p
   const handleEnableSoundChange = (e) => {
     onConfigChange('enableSound', e.target.checked);
   };
+
+  const roleOptions = getRoleOptionsForJob(playerJob);
+  const showRoleSelector = jobRequiresRoleSelection(playerJob);
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -60,7 +56,28 @@ const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, p
                   )}
                 </span>
               </div>
+              {showRoleSelector && (
+                <div className={styles.roleRow}>
+                  <span className={styles.infoLabel}>Role:</span>
+                  <div className={styles.roleButtonGroup}>
+                    {roleOptions.map((opt) => (
+                      <button
+                        key={opt.value}
+                        className={`${styles.roleButton} ${config.playerRole === opt.value ? styles.roleButtonActive : ''}`}
+                        onClick={() => onConfigChange('playerRole', opt.value)}
+                      >
+                        {opt.value}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
+            {showRoleSelector && !config.playerRole && (
+              <p className={styles.roleWarning}>
+                Select your role to see role-specific mitigations in plans that require it.
+              </p>
+            )}
           </div>
 
           {/* Filtering Section */}

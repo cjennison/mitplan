@@ -6,18 +6,34 @@ export const CALLOUT_CONFIG = {
 };
 
 /**
+ * Check if a timeline entry matches the player's job and role
+ */
+const entryMatchesPlayer = (entry, playerJob, playerRole) => {
+  if (!playerJob) return true;
+  if (entry.job.toUpperCase() !== playerJob.toUpperCase()) return false;
+  // If entry has a role requirement and player has a role, they must match
+  if (entry.role && playerRole) {
+    return entry.role.toUpperCase() === playerRole.toUpperCase();
+  }
+  // If entry has no role, it matches any role for that job
+  if (!entry.role) return true;
+  // If entry has a role but player doesn't have one set, still show it
+  return true;
+};
+
+/**
  * Determines which ability should be shown as a callout based on current fight time.
  * Shows abilities within SHOW_BEFORE seconds of happening until SHOW_AFTER seconds after.
  */
 const useCallout = (plan, currentTime, options = {}) => {
-  const { showOwnOnly = false, playerJob = null } = options;
+  const { showOwnOnly = false, playerJob = null, playerRole = null } = options;
 
   const callout = useMemo(() => {
     if (!plan?.timeline?.length) return null;
 
     let timeline = plan.timeline;
     if (showOwnOnly && playerJob) {
-      timeline = timeline.filter((entry) => entry.job.toUpperCase() === playerJob.toUpperCase());
+      timeline = timeline.filter((entry) => entryMatchesPlayer(entry, playerJob, playerRole));
     }
 
     if (timeline.length === 0) return null;
@@ -33,7 +49,7 @@ const useCallout = (plan, currentTime, options = {}) => {
         const countdown = timeUntil;
         const abilitiesAtTime = sortedTimeline
           .filter((e) => e.timestamp === abilityTime)
-          .map((e) => ({ job: e.job, name: e.ability, note: e.note }));
+          .map((e) => ({ job: e.job, name: e.ability, note: e.note, role: e.role }));
 
         return {
           mitigation: { time: abilityTime, abilities: abilitiesAtTime },
@@ -45,7 +61,7 @@ const useCallout = (plan, currentTime, options = {}) => {
     }
 
     return null;
-  }, [plan, currentTime, showOwnOnly, playerJob]);
+  }, [plan, currentTime, showOwnOnly, playerJob, playerRole]);
 
   return callout;
 };

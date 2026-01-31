@@ -33,7 +33,10 @@ const useMitigationSound = (calloutData, enableSound = true) => {
 
     const { countdown, abilityTime } = calloutData;
 
-    if (countdown <= 0 && countdown > -0.5 && lastSoundTimeRef.current !== abilityTime) {
+    // Play sound when floored countdown hits 0 (matches when "NOW!" appears green)
+    // Use floored value to sync with visual display
+    const rounded = Math.floor(countdown);
+    if (rounded <= 0 && countdown > -0.5 && lastSoundTimeRef.current !== abilityTime) {
       playAlertSound();
       lastSoundTimeRef.current = abilityTime;
     }

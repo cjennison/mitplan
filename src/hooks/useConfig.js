@@ -4,9 +4,59 @@ const DEFAULT_CONFIG = {
   showOwnMitigationsOnly: false,
   showNotes: true,
   enableSound: true,
+  playerRole: null, // MT, OT, M1, M2, D3, D4, H1, H2
 };
 
 const CONFIG_STORAGE_KEY = 'mitplan-config';
+
+/**
+ * Role options by job category
+ */
+export const ROLE_OPTIONS = {
+  tank: [
+    { value: 'MT', label: 'Main Tank (MT)' },
+    { value: 'OT', label: 'Off Tank (OT)' },
+  ],
+  melee: [
+    { value: 'M1', label: 'Melee 1 (M1)' },
+    { value: 'M2', label: 'Melee 2 (M2)' },
+  ],
+  ranged: [{ value: 'D3', label: 'Ranged DPS (D3)' }],
+  caster: [{ value: 'D4', label: 'Caster DPS (D4)' }],
+  healer: [
+    { value: 'H1', label: 'Healer 1 (H1)' },
+    { value: 'H2', label: 'Healer 2 (H2)' },
+  ],
+};
+
+/**
+ * Get role options for a specific job
+ */
+export const getRoleOptionsForJob = (job) => {
+  if (!job) return [];
+  const jobUpper = job.toUpperCase();
+
+  const tanks = ['PLD', 'WAR', 'DRK', 'GNB'];
+  const melees = ['MNK', 'DRG', 'NIN', 'SAM', 'RPR', 'VPR'];
+  const ranged = ['BRD', 'MCH', 'DNC'];
+  const casters = ['BLM', 'SMN', 'RDM', 'PCT'];
+  const healers = ['WHM', 'SCH', 'AST', 'SGE'];
+
+  if (tanks.includes(jobUpper)) return ROLE_OPTIONS.tank;
+  if (melees.includes(jobUpper)) return ROLE_OPTIONS.melee;
+  if (ranged.includes(jobUpper)) return ROLE_OPTIONS.ranged;
+  if (casters.includes(jobUpper)) return ROLE_OPTIONS.caster;
+  if (healers.includes(jobUpper)) return ROLE_OPTIONS.healer;
+  return [];
+};
+
+/**
+ * Check if a job requires role selection (has multiple options)
+ */
+export const jobRequiresRoleSelection = (job) => {
+  const options = getRoleOptionsForJob(job);
+  return options.length > 1;
+};
 
 /**
  * Hook to manage overlay configuration with localStorage persistence.

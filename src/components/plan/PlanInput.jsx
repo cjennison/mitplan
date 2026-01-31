@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
+import { jobRequiresRoleSelection } from '../../hooks/useConfig';
 import styles from './PlanInput.module.css';
 
 /**
@@ -14,11 +15,15 @@ const PlanInput = ({
   isOverlayLocked = false,
   presets = [],
   importedPlans = [],
+  playerJob = null,
+  playerRole = null,
 }) => {
   const [activeTab, setActiveTab] = useState('catalog');
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const textareaRef = useRef(null);
+
+  const needsRoleWarning = jobRequiresRoleSelection(playerJob) && !playerRole;
 
   useEffect(() => {
     if (open && activeTab === 'import' && textareaRef.current) {
@@ -104,16 +109,26 @@ const PlanInput = ({
 
           {activeTab === 'catalog' && (
             <div className={styles.catalogPanel}>
+              {needsRoleWarning && (
+                <div className={styles.roleWarning}>
+                  Some plans require a role to be set. Go to Settings and select your role (MT/OT
+                  for tanks, M1/M2 for melee).
+                </div>
+              )}
+
               <div className={styles.catalogSection}>
                 <h3 className={styles.sectionTitle}>Presets</h3>
                 <div className={styles.planList}>
                   {presets.map((plan) => (
                     <button
                       key={plan.id}
-                      className={styles.planItem}
+                      className={`${styles.planItem} ${plan.requiresRoles && needsRoleWarning ? styles.planItemWarning : ''}`}
                       onClick={() => handleSelectPlan(plan)}
                     >
-                      <span className={styles.planName}>{plan.name}</span>
+                      <div className={styles.planInfo}>
+                        <span className={styles.planName}>{plan.name}</span>
+                        {plan.requiresRoles && <span className={styles.rolesBadge}>Roles</span>}
+                      </div>
                       <span className={styles.planMeta}>
                         {plan.timeline?.length || 0} mitigations
                       </span>
@@ -129,10 +144,13 @@ const PlanInput = ({
                     {importedPlans.map((plan) => (
                       <button
                         key={plan.id}
-                        className={styles.planItem}
+                        className={`${styles.planItem} ${plan.requiresRoles && needsRoleWarning ? styles.planItemWarning : ''}`}
                         onClick={() => handleSelectPlan(plan)}
                       >
-                        <span className={styles.planName}>{plan.name}</span>
+                        <div className={styles.planInfo}>
+                          <span className={styles.planName}>{plan.name}</span>
+                          {plan.requiresRoles && <span className={styles.rolesBadge}>Roles</span>}
+                        </div>
                         <span className={styles.planMeta}>
                           {plan.timeline?.length || 0} mitigations
                         </span>
@@ -143,7 +161,9 @@ const PlanInput = ({
               )}
 
               {presets.length === 0 && importedPlans.length === 0 && (
-                <p className={styles.emptyText}>No plans available. Import a plan to get started.</p>
+                <p className={styles.emptyText}>
+                  No plans available. Import a plan to get started.
+                </p>
               )}
             </div>
           )}
