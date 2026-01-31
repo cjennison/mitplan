@@ -1,0 +1,190 @@
+/* Timeline View Styles - FFXIV Inspired Dark Theme */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(80, 80, 100, 0.3);
+}
+
+.fightName {
+  margin: 0;
+  color: #ffd866;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.entryCount {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+}
+
+/* Timeline List */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Scrollbar styling */
+.timeline::-webkit-scrollbar {
+  width: 6px;
+}
+
+.timeline::-webkit-scrollbar-track {
+  background: rgba(26, 26, 35, 0.5);
+  border-radius: 3px;
+}
+
+.timeline::-webkit-scrollbar-thumb {
+  background: rgba(80, 80, 100, 0.5);
+  border-radius: 3px;
+}
+
+.timeline::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 80, 100, 0.7);
+}
+
+/* Time Group */
+.timeGroup {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(26, 26, 35, 0.6);
+  border: 1px solid rgba(80, 80, 100, 0.3);
+  border-radius: 4px;
+  transition: all 200ms ease;
+}
+
+.timeGroup.upcoming {
+  background: rgba(74, 111, 165, 0.15);
+  border-color: rgba(74, 111, 165, 0.4);
+}
+
+.timeGroup.imminent {
+  background: rgba(232, 93, 76, 0.2);
+  border-color: rgba(232, 93, 76, 0.5);
+  box-shadow: 0 0 10px rgba(232, 93, 76, 0.2);
+}
+
+.timeGroup.passed {
+  opacity: 0.4;
+}
+
+/* Timestamp Column */
+.timestamp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 50px;
+  gap: 0.125rem;
+}
+
+.time {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.countdown {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.625rem;
+  color: #ffd866;
+}
+
+.imminent .countdown {
+  color: #e85d4c;
+  font-weight: 700;
+}
+
+/* Entries Column */
+.entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  flex: 1;
+}
+
+/* Individual Entry */
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Job Badge */
+.jobBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.role-tank {
+  background: #3d5a80;
+}
+
+.role-healer {
+  background: #4a7c59;
+}
+
+.role-dps {
+  background: #8b3a3a;
+}
+
+.role-unknown {
+  background: #666666;
+}
+
+/* Ability Name */
+.ability {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+/* Note */
+.note {
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+/* Imminent state styling */
+.imminent .ability {
+  color: #ffd866;
+}
+
+.imminent .jobBadge {
+  box-shadow: 0 0 6px var(--job-color, rgba(255, 255, 255, 0.3));
+}

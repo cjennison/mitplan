@@ -1,0 +1,129 @@
+{
+  "version": "1.0",
+  "fightName": "The Epic of Alexander (Ultimate)",
+  "fightId": "TEA",
+  "createdBy": "Raid Leader",
+  "createdAt": "2026-01-31T12:00:00Z",
+  "timeline": [
+    {
+      "timestamp": 10,
+      "job": "WAR",
+      "ability": "Shake It Off",
+      "abilityId": "7388",
+      "note": "Living Liquid opener raidwide"
+    },
+    {
+      "timestamp": 10,
+      "job": "SCH",
+      "ability": "Sacred Soil",
+      "abilityId": "3650",
+      "note": "Living Liquid opener raidwide"
+    },
+    {
+      "timestamp": 18,
+      "job": "DRK",
+      "ability": "The Blackest Night",
+      "abilityId": "7393",
+      "target": "MT",
+      "note": "Fluid Swing tankbuster"
+    },
+    {
+      "timestamp": 25,
+      "job": "WAR",
+      "ability": "Reprisal",
+      "abilityId": "7535",
+      "note": "Cascade raidwide"
+    },
+    {
+      "timestamp": 25,
+      "job": "AST",
+      "ability": "Collective Unconscious",
+      "abilityId": "3613",
+      "note": "Cascade raidwide"
+    },
+    {
+      "timestamp": 45,
+      "job": "GNB",
+      "ability": "Heart of Light",
+      "abilityId": "16160",
+      "note": "Protean Wave"
+    },
+    {
+      "timestamp": 45,
+      "job": "SGE",
+      "ability": "Kerachole",
+      "abilityId": "24298",
+      "note": "Protean Wave"
+    },
+    {
+      "timestamp": 60,
+      "job": "PLD",
+      "ability": "Divine Veil",
+      "abilityId": "3540",
+      "note": "Liquid Rage"
+    },
+    {
+      "timestamp": 60,
+      "job": "WHM",
+      "ability": "Temperance",
+      "abilityId": "16536",
+      "note": "Liquid Rage"
+    },
+    {
+      "timestamp": 90,
+      "job": "WAR",
+      "ability": "Shake It Off",
+      "abilityId": "7388",
+      "note": "Drainage tethers"
+    },
+    {
+      "timestamp": 90,
+      "job": "SCH",
+      "ability": "Expedient",
+      "abilityId": "25868",
+      "note": "Drainage tethers movement"
+    },
+    {
+      "timestamp": 120,
+      "job": "DRK",
+      "ability": "Dark Missionary",
+      "abilityId": "16471",
+      "note": "Splash raidwide"
+    },
+    {
+      "timestamp": 120,
+      "job": "AST",
+      "ability": "Neutral Sect",
+      "abilityId": "16559",
+      "note": "Splash shields"
+    },
+    {
+      "timestamp": 150,
+      "job": "GNB",
+      "ability": "Reprisal",
+      "abilityId": "7535",
+      "note": "Hand of Pain"
+    },
+    {
+      "timestamp": 150,
+      "job": "SGE",
+      "ability": "Holos",
+      "abilityId": "24310",
+      "note": "Hand of Pain"
+    },
+    {
+      "timestamp": 180,
+      "job": "WAR",
+      "ability": "Reprisal",
+      "abilityId": "7535",
+      "note": "Limit Cut prep"
+    },
+    {
+      "timestamp": 180,
+      "job": "WHM",
+      "ability": "Liturgy of the Bell",
+      "abilityId": "25862",
+      "note": "Limit Cut healing"
+    }
+  ]
+}
