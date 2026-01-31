@@ -7,13 +7,14 @@ import MitigationCallout from './components/callout/MitigationCallout';
 import DevConsole from './components/dev/DevConsole';
 import ConfigDialog from './components/config/ConfigDialog';
 import { decodePlan } from './utils/planCodec';
-import { validatePlan, getPlanSummary } from './utils/planValidator';
+import { validatePlan } from './utils/planValidator';
 import useFightTimer from './hooks/useFightTimer';
 import { useCallout } from './hooks/useCallout';
 import useConfig from './hooks/useConfig';
 import usePlayerJob from './hooks/usePlayerJob';
 import useMitigationSound from './hooks/useMitigationSound';
 import useCombatEvents from './hooks/useCombatEvents';
+import usePlanLibrary from './hooks/usePlanLibrary';
 import {
   MAX_TIMELINE_ITEMS,
   TIMELINE_WINDOW_SECONDS,
@@ -64,6 +65,7 @@ const App = () => {
 
   const { config, updateConfig } = useConfig();
   const { playerJob, playerName } = usePlayerJob();
+  const { presets, importedPlans, addImportedPlan } = usePlanLibrary();
   const calloutData = useCallout(plan, currentTime, {
     showOwnOnly: config.showOwnMitigationsOnly,
     playerJob,
@@ -97,13 +99,25 @@ const App = () => {
       setPlanError(validation.errors.join('. '));
       return;
     }
+    const loadedPlan = decodeResult.data;
+    addImportedPlan(loadedPlan);
     try {
-      localStorage.setItem(STORAGE_KEYS.LOADED_PLAN, JSON.stringify(decodeResult.data));
+      localStorage.setItem(STORAGE_KEYS.LOADED_PLAN, JSON.stringify(loadedPlan));
     } catch {
       // Ignore localStorage errors
     }
-    setPlan(decodeResult.data);
+    setPlan(loadedPlan);
     setDialogOpen(false);
+    setPlanError('');
+  }, [addImportedPlan]);
+
+  const handlePlanSelect = useCallback((selectedPlan) => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.LOADED_PLAN, JSON.stringify(selectedPlan));
+    } catch {
+      // Ignore localStorage errors
+    }
+    setPlan(selectedPlan);
     setPlanError('');
   }, []);
 
@@ -223,8 +237,11 @@ const App = () => {
               open={dialogOpen}
               onOpenChange={setDialogOpen}
               onPlanLoad={handlePlanLoad}
+              onPlanSelect={handlePlanSelect}
               error={planError}
               isOverlayLocked={isLocked}
+              presets={presets}
+              importedPlans={importedPlans}
             />
           </div>
         </div>

@@ -3,54 +3,57 @@ import * as Dialog from '@radix-ui/react-dialog';
 import styles from './PlanInput.module.css';
 
 /**
- * PlanInput component - Handles Base64 plan input via keyboard paste (Ctrl+V)
- *
- * @param {Object} props
- * @param {boolean} props.open - Whether the dialog is open
- * @param {function} props.onOpenChange - Callback when dialog open state changes
- * @param {function} props.onPlanLoad - Callback when a valid plan is loaded, receives decoded plan
- * @param {string} props.error - Error message to display
- * @param {boolean} props.isOverlayLocked - Whether ACT's overlay lock is enabled
+ * PlanInput component - Load mitigation plans from catalog or import via Base64
  */
-const PlanInput = ({ open, onOpenChange, onPlanLoad, error, isOverlayLocked = false }) => {
+const PlanInput = ({
+  open,
+  onOpenChange,
+  onPlanLoad,
+  onPlanSelect,
+  error,
+  isOverlayLocked = false,
+  presets = [],
+  importedPlans = [],
+}) => {
+  const [activeTab, setActiveTab] = useState('catalog');
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const textareaRef = useRef(null);
 
-  /**
-   * Focus the textarea when dialog opens
-   * This helps ensure keyboard input goes to our overlay, not the game
-   */
   useEffect(() => {
-    if (open && textareaRef.current) {
-      // Small delay to ensure dialog is fully mounted
-      const timer = setTimeout(() => {
-        textareaRef.current?.focus();
-      }, 50);
+    if (open && activeTab === 'import' && textareaRef.current) {
+      const timer = setTimeout(() => textareaRef.current?.focus(), 50);
       return () => clearTimeout(timer);
+    }
+  }, [open, activeTab]);
+
+  useEffect(() => {
+    if (!open) {
+      setInputValue('');
+      setActiveTab('catalog');
     }
   }, [open]);
 
   const handleLoadPlan = useCallback(() => {
-    if (!inputValue.trim()) {
-      return;
-    }
+    if (!inputValue.trim()) return;
     setIsLoading(true);
-    // Small delay to show loading state
     setTimeout(() => {
       onPlanLoad(inputValue.trim());
       setIsLoading(false);
     }, 100);
   }, [inputValue, onPlanLoad]);
 
-  /**
-   * Handle keydown - stop propagation to prevent ACT from passing to game
-   */
+  const handleSelectPlan = useCallback(
+    (plan) => {
+      onPlanSelect(plan);
+      onOpenChange(false);
+    },
+    [onPlanSelect, onOpenChange]
+  );
+
   const handleKeyDown = useCallback(
     (e) => {
-      // CRITICAL: Stop propagation so ACT doesn't pass keyboard events to the game
       e.stopPropagation();
-
       if (e.key === 'Enter' && e.ctrlKey) {
         handleLoadPlan();
       }
@@ -58,10 +61,6 @@ const PlanInput = ({ open, onOpenChange, onPlanLoad, error, isOverlayLocked = fa
     [handleLoadPlan]
   );
 
-  /**
-   * Stop all keyboard events from bubbling up to ACT/game
-   * This is applied to the entire dialog content
-   */
   const stopKeyboardPropagation = useCallback((e) => {
     e.stopPropagation();
   }, []);
@@ -74,7 +73,7 @@ const PlanInput = ({ open, onOpenChange, onPlanLoad, error, isOverlayLocked = fa
           disabled={isOverlayLocked}
           title={isOverlayLocked ? 'Unlock overlay in ACT to load mitigation plan' : ''}
         >
-          {isOverlayLocked ? '🔒 Load Mitigation Plan' : 'Load Mitigation Plan'}
+          {isOverlayLocked ? '🔒 Load Plan' : 'Load Plan'}
         </button>
       </Dialog.Trigger>
 
@@ -88,41 +87,105 @@ const PlanInput = ({ open, onOpenChange, onPlanLoad, error, isOverlayLocked = fa
         >
           <Dialog.Title className={styles.title}>Load Mitigation Plan</Dialog.Title>
 
-          <Dialog.Description className={styles.description}>
-            Paste the Base64 encoded mitigation plan from your raid leader using Ctrl+V.
-          </Dialog.Description>
-
-          <div className={styles.inputWrapper}>
-            <textarea
-              ref={textareaRef}
-              className={styles.textarea}
-              placeholder="Click here, then press Ctrl+V to paste..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onKeyUp={stopKeyboardPropagation}
-              onKeyPress={stopKeyboardPropagation}
-              rows={4}
-            />
-          </div>
-
-          {error && <div className={styles.error}>⚠️ {error}</div>}
-
-          <div className={styles.actions}>
-            <Dialog.Close asChild>
-              <button className={styles.buttonSecondary}>Cancel</button>
-            </Dialog.Close>
-
+          <div className={styles.tabs}>
             <button
-              className={styles.buttonPrimary}
-              onClick={handleLoadPlan}
-              disabled={!inputValue.trim() || isLoading}
+              className={`${styles.tab} ${activeTab === 'catalog' ? styles.tabActive : ''}`}
+              onClick={() => setActiveTab('catalog')}
             >
-              {isLoading ? 'Loading...' : 'Load Plan'}
+              Catalog
+            </button>
+            <button
+              className={`${styles.tab} ${activeTab === 'import' ? styles.tabActive : ''}`}
+              onClick={() => setActiveTab('import')}
+            >
+              Import
             </button>
           </div>
 
-          <p className={styles.hint}>Tip: Press Ctrl+Enter to load the plan quickly</p>
+          {activeTab === 'catalog' && (
+            <div className={styles.catalogPanel}>
+              <div className={styles.catalogSection}>
+                <h3 className={styles.sectionTitle}>Presets</h3>
+                <div className={styles.planList}>
+                  {presets.map((plan) => (
+                    <button
+                      key={plan.id}
+                      className={styles.planItem}
+                      onClick={() => handleSelectPlan(plan)}
+                    >
+                      <span className={styles.planName}>{plan.name}</span>
+                      <span className={styles.planMeta}>
+                        {plan.timeline?.length || 0} mitigations
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {importedPlans.length > 0 && (
+                <div className={styles.catalogSection}>
+                  <h3 className={styles.sectionTitle}>Imported</h3>
+                  <div className={styles.planList}>
+                    {importedPlans.map((plan) => (
+                      <button
+                        key={plan.id}
+                        className={styles.planItem}
+                        onClick={() => handleSelectPlan(plan)}
+                      >
+                        <span className={styles.planName}>{plan.name}</span>
+                        <span className={styles.planMeta}>
+                          {plan.timeline?.length || 0} mitigations
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {presets.length === 0 && importedPlans.length === 0 && (
+                <p className={styles.emptyText}>No plans available. Import a plan to get started.</p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'import' && (
+            <div className={styles.importPanel}>
+              <Dialog.Description className={styles.description}>
+                Paste the Base64 encoded mitigation plan from your raid leader.
+              </Dialog.Description>
+
+              <div className={styles.inputWrapper}>
+                <textarea
+                  ref={textareaRef}
+                  className={styles.textarea}
+                  placeholder="Paste Base64 encoded plan here..."
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onKeyUp={stopKeyboardPropagation}
+                  onKeyPress={stopKeyboardPropagation}
+                  rows={4}
+                />
+              </div>
+
+              {error && <div className={styles.error}>{error}</div>}
+
+              <div className={styles.actions}>
+                <Dialog.Close asChild>
+                  <button className={styles.buttonSecondary}>Cancel</button>
+                </Dialog.Close>
+                <button
+                  className={styles.buttonPrimary}
+                  onClick={handleLoadPlan}
+                  disabled={!inputValue.trim() || isLoading}
+                >
+                  {isLoading ? 'Loading...' : 'Import Plan'}
+                </button>
+              </div>
+
+              <p className={styles.hint}>Tip: Press Ctrl+Enter to import quickly</p>
+            </div>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
