@@ -17,6 +17,7 @@ export const STORAGE_KEYS = {
   TIMELINE_SIZE: 'mitplan-timeline-size',
   CALLOUT_POSITION: 'mitplan-callout-position',
   CALLOUT_SIZE: 'mitplan-callout-size',
+  LOADED_PLAN: 'mitplan-loaded-plan',
 };
 
 // Default positions and sizes for containers (percentages of parent)

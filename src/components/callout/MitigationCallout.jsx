@@ -4,18 +4,106 @@ import styles from './MitigationCallout.module.css';
  * MitigationCallout - Shows the current/upcoming mitigation as a large callout
  *
  * This is what the player sees front-and-center during combat.
- * Currently shows an example; will be dynamic based on fight timeline.
+ * Shows countdown before the ability should be used, then shows
+ * negative time after it should have been used.
+ *
+ * When unlocked and no active callout, shows a placeholder so users
+ * can see what the callout will look like during the fight.
  *
  * @param {Object} props
- * @param {string} props.abilityName - Name of the ability to use
- * @param {string} props.job - Job abbreviation (WAR, SCH, etc.)
- * @param {boolean} props.isLocked - Whether overlay is locked
+ * @param {Object} props.calloutData - Callout info from useCallout hook
+ * @param {Object} props.calloutData.mitigation - The mitigation object
+ * @param {number} props.calloutData.countdown - Seconds until/since ability (positive=before, negative=after)
+ * @param {boolean} props.calloutData.isOverdue - Whether the ability time has passed
+ * @param {boolean} props.isLocked - Whether overlay is locked (gameplay mode)
+ * @param {boolean} props.isEmpty - Whether to show empty state
+ * @param {boolean} props.showPlaceholder - Whether to show placeholder when empty (for unlocked mode)
  */
-const MitigationCallout = ({ abilityName = 'Shake It Off', job = 'WAR', isLocked = false }) => {
+const MitigationCallout = ({
+  calloutData,
+  isLocked = false,
+  isEmpty = false,
+  showPlaceholder = false,
+}) => {
+  /**
+   * Format countdown for display
+   * Positive: "5", "4", "3", "2", "1"
+   * Zero/Negative: "NOW!" (no negative numbers)
+   */
+  const formatCountdown = (countdown) => {
+    const rounded = Math.ceil(countdown);
+    if (rounded > 0) {
+      return rounded.toString();
+    }
+    // Show "NOW!" for zero and all negative values
+    return 'NOW!';
+  };
+
+  /**
+   * Get countdown urgency class
+   */
+  const getUrgencyClass = (countdown) => {
+    if (countdown <= 0) return styles.countdownNow;
+    if (countdown <= 2) return styles.countdownUrgent;
+    if (countdown <= 4) return styles.countdownWarning;
+    return styles.countdownNormal;
+  };
+
+  // Show placeholder when unlocked and no active callout
+  // This helps users see what the callout will look like
+  if ((isEmpty || !calloutData) && showPlaceholder && !isLocked) {
+    return (
+      <div className={`${styles.callout} ${styles.placeholder}`}>
+        <div className={styles.mainContent}>
+          <div className={styles.abilityInfo}>
+            <span className={styles.jobBadge}>WAR</span>
+            <span className={styles.abilityName}>Reprisal</span>
+          </div>
+        </div>
+        <div className={`${styles.countdown} ${styles.countdownNormal}`}>5</div>
+      </div>
+    );
+  }
+
+  // Empty state when no callout data - show nothing
+  if (isEmpty || !calloutData) {
+    return null;
+  }
+
+  const { mitigation, countdown } = calloutData;
+
+  // Get job and ability info - handle multiple abilities
+  const abilities = mitigation.abilities || [];
+  const firstAbility = abilities[0] || {};
+  const job = firstAbility.job || 'UNK';
+  const abilityName = firstAbility.name || 'Unknown';
+
+  // If there are multiple abilities, show them all
+  const hasMultiple = abilities.length > 1;
+
   return (
     <div className={`${styles.callout} ${isLocked ? styles.locked : ''}`}>
-      <span className={styles.jobBadge}>{job}</span>
-      <span className={styles.abilityName}>{abilityName}</span>
+      <div className={styles.mainContent}>
+        <div className={styles.abilityInfo}>
+          <span className={styles.jobBadge}>{job}</span>
+          <span className={styles.abilityName}>{abilityName}</span>
+        </div>
+
+        {hasMultiple && (
+          <div className={styles.additionalAbilities}>
+            {abilities.slice(1).map((ability, index) => (
+              <span key={index} className={styles.additionalAbility}>
+                <span className={styles.additionalJob}>{ability.job}</span>
+                <span className={styles.additionalName}>{ability.name}</span>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className={`${styles.countdown} ${getUrgencyClass(countdown)}`}>
+        {formatCountdown(countdown)}
+      </div>
     </div>
   );
 };

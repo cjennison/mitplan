@@ -1,12 +1,23 @@
 import styles from './TimelineView.module.css';
-import { formatTime } from '../../utils/timeFormat';
 import { getJobColor, getRoleFromJob } from '../../utils/ffxivData';
+import { CALLOUT_CONFIG } from '../../hooks/useCallout';
+
+/**
+ * Format countdown time for display
+ * Shows seconds until ability (e.g., "0:15" for 15 seconds)
+ */
+const formatCountdown = (seconds) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+};
 
 /**
  * TimelineView component - Displays mitigations from the plan
  *
  * Shows upcoming mitigations in a compact, readable format.
- * Always uses the "locked" style for consistency.
+ * Displays countdown time (time until ability) rather than absolute timestamps.
+ * Filters out abilities that are within the callout window (5 seconds).
  *
  * @param {Object} props
  * @param {Object} props.plan - The decoded mitigation plan
@@ -33,10 +44,20 @@ const TimelineView = ({
   // Sort timeline by timestamp
   const sortedTimeline = [...plan.timeline].sort((a, b) => a.timestamp - b.timestamp);
 
-  // Filter to only upcoming entries within the window
+  // Filter to only upcoming entries:
+  // - More than CALLOUT_CONFIG.SHOW_BEFORE seconds away (not in callout range)
+  // - Within the window
   const upcomingEntries = sortedTimeline.filter((entry) => {
     const timeUntil = entry.timestamp - currentTime;
-    return timeUntil > 0 && timeUntil <= windowSeconds;
+    // Must be more than 5 seconds away (not yet a callout)
+    if (timeUntil <= CALLOUT_CONFIG.SHOW_BEFORE) {
+      return false;
+    }
+    // Must be within the window
+    if (timeUntil > windowSeconds) {
+      return false;
+    }
+    return true;
   });
 
   // Group entries by timestamp for display
@@ -69,7 +90,7 @@ const TimelineView = ({
     <div className={styles.containerLocked}>
       {limitedGroups.map((group, groupIndex) => {
         const timeUntil = group.timestamp - currentTime;
-        const isImminent = timeUntil > 0 && timeUntil <= 5;
+        const isImminent = timeUntil > 0 && timeUntil <= 10;
 
         return (
           <div
@@ -77,7 +98,7 @@ const TimelineView = ({
             className={`${styles.timeGroupLocked} ${isImminent ? styles.imminentLocked : ''}`}
           >
             <div className={styles.timestampLocked}>
-              <span className={styles.timeLocked}>{formatTime(group.timestamp)}</span>
+              <span className={styles.timeLocked}>{formatCountdown(timeUntil)}</span>
             </div>
 
             <div className={styles.entriesLocked}>

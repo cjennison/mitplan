@@ -1,0 +1,126 @@
+/* ═══════════════════════════════════════════════════════════════
+   DEV CONSOLE STYLES
+   
+   Development-only panel for testing timer and mitigation system.
+   Hidden during actual gameplay (when UI is locked).
+   ═══════════════════════════════════════════════════════════════ */
+
+.console {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(17, 17, 22, 0.95);
+  border: 1px solid rgba(80, 80, 100, 0.5);
+  border-radius: 6px;
+  min-width: 160px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(80, 80, 100, 0.3);
+}
+
+.icon {
+  font-size: 0.75rem;
+}
+
+.title {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+/* Timer Display */
+.timerDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.timerLabel {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.timerValue {
+  color: #ffffff;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.timerValue.running {
+  color: #4ade80; /* Green when running */
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.button {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+  border: 1px solid transparent;
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Start Button */
+.startButton {
+  background: rgba(74, 222, 128, 0.2);
+  border-color: rgba(74, 222, 128, 0.4);
+  color: #4ade80;
+}
+
+.startButton:hover:not(:disabled) {
+  background: rgba(74, 222, 128, 0.3);
+  border-color: rgba(74, 222, 128, 0.6);
+}
+
+/* Stop Button */
+.stopButton {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+}
+
+.stopButton:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.3);
+  border-color: rgba(251, 191, 36, 0.6);
+}
+
+/* Reset Button */
+.resetButton {
+  background: rgba(248, 113, 113, 0.15);
+  border-color: rgba(248, 113, 113, 0.3);
+  color: #f87171;
+}
+
+.resetButton:hover:not(:disabled) {
+  background: rgba(248, 113, 113, 0.25);
+  border-color: rgba(248, 113, 113, 0.5);
+}

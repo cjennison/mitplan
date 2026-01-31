@@ -76,6 +76,17 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   DEV CONSOLE WRAPPER - Positioned in bottom-left corner
+   ═══════════════════════════════════════════════════════════════ */
+
+.devConsoleWrapper {
+  position: absolute;
+  bottom: var(--space-2);
+  left: var(--space-2);
+  z-index: 100;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    CONTROL BAR - At bottom, contains title and actions
    ═══════════════════════════════════════════════════════════════ */
 
@@ -139,4 +150,33 @@
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.3);
   color: var(--color-text-secondary);
+}
+
+/* Dev Console Toggle Button */
+.devToggleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 150ms ease;
+}
+
+.devToggleButton:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.devToggleButton.devToggleActive {
+  opacity: 1;
+  background: rgba(74, 222, 128, 0.15);
+  border-color: rgba(74, 222, 128, 0.4);
 }
