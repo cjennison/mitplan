@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { playAlertSound, initAudio } from '../utils/sound';
+import { playSoundByType, initAudio } from '../utils/sound';
 
 /**
  * Hook to play alert sounds when mitigations reach their activation time.
  * Sound plays when countdown crosses from positive to zero/negative.
  */
-const useMitigationSound = (calloutData, enableSound = true) => {
+const useMitigationSound = (calloutData, enableSound = true, soundType = 'info') => {
   const lastSoundTimeRef = useRef(null);
   const audioInitRef = useRef(false);
 
@@ -37,10 +37,10 @@ const useMitigationSound = (calloutData, enableSound = true) => {
     // Use floored value to sync with visual display
     const rounded = Math.floor(countdown);
     if (rounded <= 0 && countdown > -0.5 && lastSoundTimeRef.current !== abilityTime) {
-      playAlertSound();
+      playSoundByType(soundType);
       lastSoundTimeRef.current = abilityTime;
     }
-  }, [calloutData, enableSound]);
+  }, [calloutData, enableSound, soundType]);
 
   useEffect(() => {
     if (!calloutData) {

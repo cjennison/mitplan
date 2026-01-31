@@ -4,6 +4,7 @@ const DEFAULT_CONFIG = {
   showOwnMitigationsOnly: false,
   showNotes: true,
   enableSound: true,
+  soundType: 'info', // info, alert, alarm, chime, ping
   playerRole: null, // MT, OT, M1, M2, D3, D4, H1, H2
 };
 

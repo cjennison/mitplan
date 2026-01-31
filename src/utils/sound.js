@@ -97,6 +97,52 @@ export const playAlarmSound = () => {
 };
 
 /**
+ * Play a "chime" sound - pleasant ascending notes
+ * A more musical, less jarring option
+ */
+export const playChimeSound = () => {
+  playTone({ frequency: 523, duration: 0.1, volume: 0.2, type: 'sine' }); // C5
+  setTimeout(() => {
+    playTone({ frequency: 659, duration: 0.1, volume: 0.2, type: 'sine' }); // E5
+  }, 80);
+  setTimeout(() => {
+    playTone({ frequency: 784, duration: 0.15, volume: 0.25, type: 'sine' }); // G5
+  }, 160);
+};
+
+/**
+ * Play a "ping" sound - short high-pitched ping
+ * Quick and non-intrusive
+ */
+export const playPingSound = () => {
+  playTone({ frequency: 1200, duration: 0.08, volume: 0.2, type: 'sine' });
+};
+
+/**
+ * Sound type definitions for UI and playback
+ */
+export const SOUND_TYPES = {
+  info: { id: 'info', label: 'Soft Tone', play: playInfoSound },
+  alert: { id: 'alert', label: 'Double Beep', play: playAlertSound },
+  alarm: { id: 'alarm', label: 'Urgent Alarm', play: playAlarmSound },
+  chime: { id: 'chime', label: 'Chime', play: playChimeSound },
+  ping: { id: 'ping', label: 'Ping', play: playPingSound },
+};
+
+/**
+ * Play a sound by type ID
+ */
+export const playSoundByType = (soundType) => {
+  const sound = SOUND_TYPES[soundType];
+  if (sound) {
+    sound.play();
+  } else {
+    // Fallback to info sound
+    playInfoSound();
+  }
+};
+
+/**
  * Pre-warm the audio context. Call on user interaction to ensure sounds work.
  */
 export const initAudio = () => {

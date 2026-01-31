@@ -1,5 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { getRoleOptionsForJob, jobRequiresRoleSelection } from '../../hooks/useConfig';
+import { SOUND_TYPES, initAudio } from '../../utils/sound';
 import styles from './ConfigDialog.module.css';
 
 /**
@@ -16,6 +17,15 @@ const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, p
 
   const handleEnableSoundChange = (e) => {
     onConfigChange('enableSound', e.target.checked);
+  };
+
+  const handleSoundTypeChange = (soundType) => {
+    onConfigChange('soundType', soundType);
+  };
+
+  const handlePreviewSound = (soundType) => {
+    initAudio();
+    SOUND_TYPES[soundType]?.play();
   };
 
   const roleOptions = getRoleOptionsForJob(playerJob);
@@ -131,6 +141,31 @@ const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, p
             <p className={styles.checkboxDescription}>
               When enabled, plays a notification sound when it&apos;s time to use a mitigation.
             </p>
+
+            {config.enableSound && (
+              <div className={styles.soundTypeSection}>
+                <span className={styles.soundTypeLabel}>Sound Type:</span>
+                <div className={styles.soundTypeList}>
+                  {Object.values(SOUND_TYPES).map((sound) => (
+                    <div key={sound.id} className={styles.soundTypeRow}>
+                      <button
+                        className={`${styles.soundTypeButton} ${config.soundType === sound.id ? styles.soundTypeButtonActive : ''}`}
+                        onClick={() => handleSoundTypeChange(sound.id)}
+                      >
+                        {sound.label}
+                      </button>
+                      <button
+                        className={styles.previewButton}
+                        onClick={() => handlePreviewSound(sound.id)}
+                        title={`Preview ${sound.label}`}
+                      >
+                        ▶
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className={styles.actions}>

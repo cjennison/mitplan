@@ -84,7 +84,7 @@ const App = () => {
     playerRole: config.playerRole,
   });
 
-  useMitigationSound(calloutData, config.enableSound);
+  useMitigationSound(calloutData, config.enableSound, config.soundType);
 
   useEffect(() => {
     const handleOverlayStateUpdate = (e) => {
