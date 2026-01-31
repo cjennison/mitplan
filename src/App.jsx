@@ -8,11 +8,12 @@ import styles from './App.module.css';
 /**
  * Main Mitplan Application Component
  *
- * Handles:
- * - Plan loading via Base64 input
- * - Plan validation and error display
- * - Timeline view rendering
- * - Locked/unlocked overlay mode (controlled by ACT OverlayPlugin)
+ * Layout Design:
+ * - Timeline is always displayed using the clean "locked" style
+ * - When UNLOCKED: drag header at top, timeline in middle, controls at bottom
+ * - When LOCKED: only timeline remains (no header, no controls)
+ *
+ * This ensures the timeline stays where users position it when they lock the overlay.
  */
 const App = () => {
   const [plan, setPlan] = useState(null);
@@ -43,35 +44,27 @@ const App = () => {
    * Handle plan loading from Base64 input
    */
   const handlePlanLoad = useCallback((base64String) => {
-    // Reset previous errors
     setPlanError('');
 
-    // Decode the Base64 string
     const decodeResult = decodePlan(base64String);
-
     if (!decodeResult.success) {
       setPlanError(decodeResult.error);
       return;
     }
 
-    // Validate the plan schema
     const validation = validatePlan(decodeResult.data);
-
     if (!validation.valid) {
       setPlanError(validation.errors.join('. '));
       return;
     }
 
-    // Log warnings if any
     if (validation.warnings.length > 0) {
       console.warn('Plan warnings:', validation.warnings);
     }
 
-    // Log plan summary
     const summary = getPlanSummary(decodeResult.data);
     console.log('Plan loaded:', summary);
 
-    // Set the plan and close dialog
     setPlan(decodeResult.data);
     setDialogOpen(false);
     setPlanError('');
@@ -85,69 +78,69 @@ const App = () => {
     setPlanError('');
   }, []);
 
-  // When locked, show minimal overlay with just the timeline
+  // LOCKED MODE: Timeline stays in exact same position
+  // Invisible spacers replace the header and control bar to maintain layout
   if (isLocked) {
     return (
       <div className={styles.appLocked}>
-        {/* Minimal Timeline View - only upcoming mitigations */}
-        {plan && (
-          <TimelineView
-            plan={plan}
-            currentTime={0}
-            windowSeconds={30}
-            isLocked={true}
-          />
+        {/* Invisible spacer - same height as drag header */}
+        <div className={styles.lockedHeaderSpacer} />
+
+        {/* Timeline in same position as unlocked */}
+        {plan ? (
+          <TimelineView plan={plan} currentTime={0} windowSeconds={30} isLocked={true} />
+        ) : (
+          <div className={styles.lockedEmpty}>No plan loaded</div>
         )}
+
+        {/* Invisible spacer - same height as control bar */}
+        <div className={styles.lockedControlSpacer} />
       </div>
     );
   }
 
+  // UNLOCKED MODE: Drag header at top, timeline in middle, controls at bottom
   return (
     <div className={styles.app}>
-      {/* Top Bar */}
-      <div className={styles.topBar}>
-        <div className={styles.title}>
-          <span className={styles.logo}>🛡️</span>
-          <span>Mitplan</span>
-        </div>
-
-        <PlanInput
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          onPlanLoad={handlePlanLoad}
-          error={planError}
-        />
+      {/* Drag Handle Header - helps users position the overlay */}
+      <div className={styles.dragHeader}>
+        <span className={styles.dragIcon}>⋮⋮</span>
+        <span className={styles.dragText}>Drag to position</span>
       </div>
 
-      {/* Main Content */}
-      <div className={styles.content}>
-        {!plan ? (
-          // Empty State
-          <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>📋</div>
-            <p className={styles.emptyText}>
-              No mitigation plan loaded. Click "Load Mitigation Plan" to get started.
-            </p>
-          </div>
+      {/* Timeline Area - uses the clean locked style */}
+      <div className={styles.timelineArea}>
+        {plan ? (
+          <TimelineView plan={plan} currentTime={0} windowSeconds={30} isLocked={true} />
         ) : (
-          // Plan Loaded State
-          <div className={styles.planLoaded}>
-            {/* Status Bar */}
-            <div className={styles.statusBar}>
-              <span className={styles.statusText}>
-                ✓ Plan loaded: {plan.fightName || 'Unknown Fight'}
-              </span>
-              <button className={styles.clearButton} onClick={handleClearPlan}>
-                Clear
-              </button>
-            </div>
-
-            {/* Timeline View */}
-            <div className={styles.timelineContainer}>
-              <TimelineView plan={plan} currentTime={0} windowSeconds={30} isLocked={false} />
-            </div>
+          <div className={styles.emptyTimeline}>
+            <p>No mitigations to display</p>
+            <p className={styles.emptyHint}>Load a plan below to get started</p>
           </div>
         )}
+      </div>
+
+      {/* Control Bar - at the bottom */}
+      <div className={styles.controlBar}>
+        <div className={styles.controlInfo}>
+          <span className={styles.logo}>🛡️</span>
+          <span className={styles.title}>Mitplan</span>
+          {plan && <span className={styles.planStatus}>• {plan.fightName || 'Plan loaded'}</span>}
+        </div>
+
+        <div className={styles.controlActions}>
+          {plan && (
+            <button className={styles.clearButton} onClick={handleClearPlan}>
+              Clear
+            </button>
+          )}
+          <PlanInput
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            onPlanLoad={handlePlanLoad}
+            error={planError}
+          />
+        </div>
       </div>
     </div>
   );

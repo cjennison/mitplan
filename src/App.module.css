@@ -1,4 +1,12 @@
-/* App Container Styles */
+/* ═══════════════════════════════════════════════════════════════
+   APP CONTAINER STYLES
+   
+   Layout Design:
+   - UNLOCKED: Drag header (top) → Timeline (middle) → Controls (bottom)
+   - LOCKED: Only timeline, transparent background
+   
+   This ensures the timeline stays where users position it.
+   ═══════════════════════════════════════════════════════════════ */
 
 .app {
   display: flex;
@@ -11,93 +19,143 @@
   overflow: hidden;
 }
 
-/* Locked Mode - Minimal, Transparent Overlay
-   Activated by ACT OverlayPlugin "Lock overlay" checkbox */
+/* ═══════════════════════════════════════════════════════════════
+   LOCKED MODE - Minimal, Transparent Overlay
+   Activated by ACT OverlayPlugin "Lock overlay" checkbox
+   ═══════════════════════════════════════════════════════════════ */
+
 .appLocked {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
   background: transparent;
+  border-left: 1px solid transparent; /* Match .app border to prevent 1px shift */
   pointer-events: none;
 }
 
-/* Top Bar */
-.topBar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border-subtle);
+.lockedEmpty {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: var(--font-size-sm);
+  padding: var(--space-2);
 }
 
-.title {
+/* Invisible spacers to maintain timeline position when locked */
+.lockedHeaderSpacer {
+  /* Same height as .dragHeader: padding-top + padding-bottom + line height */
+  height: calc(var(--space-2) + var(--space-2) + 1.25em);
+  flex-shrink: 0;
+}
+
+.lockedControlSpacer {
+  /* Same height as .controlBar: padding-top + padding-bottom + line height */
+  height: calc(var(--space-2) + var(--space-2) + 1.5em);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DRAG HEADER - At top, helps users position the overlay
+   ═══════════════════════════════════════════════════════════════ */
+
+.dragHeader {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  color: var(--color-text-accent);
-  font-size: var(--font-size-base);
-  font-weight: 600;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-subtle);
+  cursor: move;
+  user-select: none;
 }
 
-.logo {
-  font-size: var(--font-size-md);
+.dragIcon {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  letter-spacing: 2px;
 }
 
-/* Main Content Area */
-.content {
+.dragText {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TIMELINE AREA - Middle section, shows the clean locked-style timeline
+   ═══════════════════════════════════════════════════════════════ */
+
+.timelineArea {
   flex: 1;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  background: transparent;
 }
 
-/* Empty State */
-.emptyState {
+.emptyTimeline {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-4);
+  gap: var(--space-2);
   height: 100%;
-  padding: var(--space-6);
+  padding: var(--space-4);
   text-align: center;
-}
-
-.emptyIcon {
-  font-size: 2.5rem;
-  opacity: 0.5;
-}
-
-.emptyText {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
-  max-width: 250px;
 }
 
-/* Plan Loaded State */
-.planLoaded {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+.emptyHint {
+  font-size: var(--font-size-xs);
+  opacity: 0.6;
 }
 
-/* Status Bar */
-.statusBar {
+/* ═══════════════════════════════════════════════════════════════
+   CONTROL BAR - At bottom, contains title and actions
+   ═══════════════════════════════════════════════════════════════ */
+
+.controlBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-2) var(--space-4);
-  background: rgba(74, 222, 128, 0.1);
-  border-bottom: 1px solid rgba(74, 222, 128, 0.2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border-subtle);
+  gap: var(--space-3);
 }
 
-.statusText {
+.controlInfo {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  color: var(--color-success);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.logo {
+  font-size: var(--font-size-base);
+  flex-shrink: 0;
+}
+
+.title {
+  color: var(--color-text-accent);
   font-size: var(--font-size-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.planStatus {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.controlActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
 }
 
 .clearButton {
@@ -115,10 +173,4 @@
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.3);
   color: var(--color-text-secondary);
-}
-
-/* Timeline Container */
-.timelineContainer {
-  flex: 1;
-  overflow: hidden;
 }
