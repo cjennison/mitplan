@@ -56,9 +56,9 @@
   padding: 0.25rem 0.5rem !important;
   border-width: 2px !important;
   /* Dark background to ensure legibility over any terrain */
-  background-color: rgba(0, 0, 0, 0.8) !important; 
+  background-color: rgba(0, 0, 0, 0.8) !important;
   /* Hard outline shadow */
-  box-shadow: 
+  box-shadow:
     0 0 0 1px #000,
     2px 2px 0 rgba(0, 0, 0, 0.8);
 }
@@ -135,7 +135,17 @@
   font-style: italic;
   color: rgba(255, 255, 255, 0.5);
   text-shadow:
-    -1px -1px .25rem;
+    -1px -1px 0 rgba(0, 0, 0, 0.6),
+    1px -1px 0 rgba(0, 0, 0, 0.6),
+    -1px 1px 0 rgba(0, 0, 0, 0.6),
+    1px 1px 0 rgba(0, 0, 0, 0.6);
+  margin-left: 0.5rem;
+}
+
+/* Countdown Display */
+.countdown {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 2.25rem;
   font-weight: 800;
   min-width: 3.5rem;
   text-align: center;
@@ -145,17 +155,7 @@
     2px -2px 0 #000,
     -2px 2px 0 #000,
     2px 2px 0 #000,
-    3px 3px 0 rgba(0, 0, 0, 0.5
-  font-weight: 700;
-  min-width: 3rem;
-  text-align: center;
-  /* Thick black outline for visibility */
-  text-shadow:
-    -2px -2px 0 #000,
-    2px -2px 0 #000,
-    -2px 2px 0 #000,
-    2px 2px 0 #000,
-    0 0 6px rgba(0, 0, 0, 0.9);
+    3px 3px 0 rgba(0, 0, 0, 0.5);
   flex-shrink: 0;
 }
 
