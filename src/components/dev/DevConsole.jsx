@@ -8,6 +8,7 @@ import styles from './DevConsole.module.css';
  * - Stop Timer button (pauses without reset)
  * - Reset Timer button (stops and resets to 0:00)
  * - Current time display
+ * - Combat state display (from ACT events)
  *
  * This component is hidden when the UI is locked (gameplay mode).
  *
@@ -18,8 +19,17 @@ import styles from './DevConsole.module.css';
  * @param {function} props.onStop - Callback to stop/pause the timer
  * @param {function} props.onReset - Callback to reset the timer
  * @param {boolean} props.isHidden - Whether to hide the console (when UI locked)
+ * @param {Object} props.combatState - Combat state info from useCombatEvents
  */
-const DevConsole = ({ currentTime, isRunning, onStart, onStop, onReset, isHidden = false }) => {
+const DevConsole = ({
+  currentTime,
+  isRunning,
+  onStart,
+  onStop,
+  onReset,
+  isHidden = false,
+  combatState = null,
+}) => {
   /**
    * Format time as M:SS.s (minutes:seconds.tenths)
    */
@@ -48,6 +58,34 @@ const DevConsole = ({ currentTime, isRunning, onStart, onStop, onReset, isHidden
         </span>
       </div>
 
+      {/* Combat State Display */}
+      {combatState && (
+        <div className={styles.combatInfo}>
+          <div className={styles.combatRow}>
+            <span className={styles.combatLabel}>State:</span>
+            <span className={`${styles.combatValue} ${styles[`state-${combatState.combatState}`]}`}>
+              {combatState.combatState}
+            </span>
+          </div>
+          {combatState.zoneName && (
+            <div className={styles.combatRow}>
+              <span className={styles.combatLabel}>Zone:</span>
+              <span className={styles.combatValue} title={`ID: ${combatState.zoneId}`}>
+                {combatState.zoneName.length > 20
+                  ? `${combatState.zoneName.slice(0, 20)}...`
+                  : combatState.zoneName}
+              </span>
+            </div>
+          )}
+          {combatState.countdownSeconds && (
+            <div className={styles.combatRow}>
+              <span className={styles.combatLabel}>Countdown:</span>
+              <span className={styles.combatValue}>{combatState.countdownSeconds}s</span>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className={styles.controls}>
         {!isRunning ? (
           <button className={`${styles.button} ${styles.startButton}`} onClick={onStart}>
@@ -67,6 +105,33 @@ const DevConsole = ({ currentTime, isRunning, onStart, onStop, onReset, isHidden
           ↺ Reset
         </button>
       </div>
+
+      {/* Manual Combat Simulation (for testing without ACT) */}
+      {combatState && (
+        <div className={styles.combatControls}>
+          <span className={styles.combatControlsLabel}>Simulate:</span>
+          <button
+            className={`${styles.button} ${styles.simButton}`}
+            onClick={combatState.manualStartCombat}
+            disabled={combatState.isInCombat}
+          >
+            ⚔️ Combat
+          </button>
+          <button
+            className={`${styles.button} ${styles.simButton}`}
+            onClick={combatState.manualEndCombat}
+            disabled={!combatState.isInCombat}
+          >
+            🏁 End
+          </button>
+          <button
+            className={`${styles.button} ${styles.simButton}`}
+            onClick={combatState.triggerWipe}
+          >
+            💀 Wipe
+          </button>
+        </div>
+      )}
     </div>
   );
 };

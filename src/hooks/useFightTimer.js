@@ -23,13 +23,42 @@ const useFightTimer = () => {
   // Ref to store the last timestamp for accurate timing
   const lastTickRef = useRef(null);
 
+  // Ref to track running state to avoid stale closures
+  const isRunningRef = useRef(false);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    isRunningRef.current = isRunning;
+  }, [isRunning]);
+
+  /**
+   * Stop/pause the fight timer - defined first since start and reset depend on it
+   */
+  const stop = useCallback(() => {
+    // Always try to clear the interval, regardless of state
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setIsRunning(false);
+    isRunningRef.current = false;
+  }, []);
+
   /**
    * Start the fight timer
    */
   const start = useCallback(() => {
-    if (isRunning) return;
+    // Don't start if already running
+    if (isRunningRef.current) return;
+
+    // Clear any existing interval first
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
 
     setIsRunning(true);
+    isRunningRef.current = true;
     lastTickRef.current = Date.now();
 
     // Update every 100ms for smooth countdown display
@@ -40,20 +69,7 @@ const useFightTimer = () => {
 
       setCurrentTime((prev) => prev + delta);
     }, 100);
-  }, [isRunning]);
-
-  /**
-   * Stop/pause the fight timer
-   */
-  const stop = useCallback(() => {
-    if (!isRunning) return;
-
-    setIsRunning(false);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  }, [isRunning]);
+  }, []);
 
   /**
    * Reset the timer to 0:00
@@ -67,12 +83,12 @@ const useFightTimer = () => {
    * Toggle between running and stopped
    */
   const toggle = useCallback(() => {
-    if (isRunning) {
+    if (isRunningRef.current) {
       stop();
     } else {
       start();
     }
-  }, [isRunning, start, stop]);
+  }, [start, stop]);
 
   // Cleanup interval on unmount
   useEffect(() => {

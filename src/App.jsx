@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import PlanInput from './components/plan/PlanInput';
 import TimelineView from './components/timeline/TimelineView';
 import DraggableContainer from './components/common/DraggableContainer';
@@ -12,6 +13,7 @@ import { useCallout } from './hooks/useCallout';
 import useConfig from './hooks/useConfig';
 import usePlayerJob from './hooks/usePlayerJob';
 import useMitigationSound from './hooks/useMitigationSound';
+import useCombatEvents from './hooks/useCombatEvents';
 import {
   MAX_TIMELINE_ITEMS,
   TIMELINE_WINDOW_SECONDS,
@@ -80,6 +82,42 @@ const App = () => {
 
   // Fight timer for controlling timeline and callouts
   const { currentTime, isRunning, start, stop, reset } = useFightTimer();
+
+  // Combat events hook for automatic timer control from game events
+  const combatEvents = useCombatEvents({
+    onCombatStart: useCallback(() => {
+      console.log('[Combat] Fight started - starting timer');
+      reset();
+      // Small delay to ensure reset completes before start
+      setTimeout(() => start(), 50);
+    }, [reset, start]),
+    onCombatEnd: useCallback(() => {
+      console.log('[Combat] Fight ended - stopping and resetting timer');
+      // Fully stop and reset timer when combat ends (wipe, kill, or leaving combat)
+      reset();
+    }, [reset]),
+    onCountdownStart: useCallback(
+      (seconds, player) => {
+        console.log(`[Combat] Countdown started: ${seconds}s by ${player}`);
+        // Reset timer when countdown starts (will auto-start on engage)
+        reset();
+      },
+      [reset]
+    ),
+    onZoneChange: useCallback(
+      (zoneId, zoneName) => {
+        console.log(`[Combat] Zone changed: ${zoneName} (${zoneId})`);
+        // Reset timer on zone change
+        reset();
+      },
+      [reset]
+    ),
+    onWipe: useCallback(() => {
+      console.log('[Combat] Wipe detected - stopping and resetting timer');
+      // Fully stop and reset timer on wipe
+      reset();
+    }, [reset]),
+  });
 
   // Config hook for settings persistence
   const { config, updateConfig } = useConfig();
@@ -254,6 +292,7 @@ const App = () => {
               onStop={stop}
               onReset={reset}
               isHidden={isLocked && isUILocked}
+              combatState={combatEvents}
             />
           </div>
         )}
@@ -303,6 +342,7 @@ const App = () => {
           </div>
         </div>
       )}
+      <SpeedInsights />
     </div>
   );
 };

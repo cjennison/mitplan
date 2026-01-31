@@ -124,3 +124,90 @@
   background: rgba(248, 113, 113, 0.25);
   border-color: rgba(248, 113, 113, 0.5);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   COMBAT STATE INFO
+   ═══════════════════════════════════════════════════════════════ */
+
+.combatInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  border: 1px solid rgba(80, 80, 100, 0.3);
+}
+
+.combatRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.combatLabel {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.combatValue {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Combat state indicators */
+.state-idle {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.state-countdown {
+  color: #fbbf24; /* Amber */
+}
+
+.state-combat {
+  color: #4ade80; /* Green */
+  font-weight: 700;
+}
+
+.state-ended {
+  color: #f87171; /* Red */
+}
+
+/* Combat simulation controls */
+.combatControls {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(80, 80, 100, 0.3);
+}
+
+.combatControlsLabel {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-right: 0.25rem;
+}
+
+.simButton {
+  flex: 1;
+  padding: 0.375rem;
+  font-size: 0.625rem;
+  background: rgba(60, 60, 80, 0.3);
+  border-color: rgba(80, 80, 100, 0.4);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.simButton:hover:not(:disabled) {
+  background: rgba(80, 80, 100, 0.4);
+  border-color: rgba(100, 100, 120, 0.5);
+  color: #ffffff;
+}

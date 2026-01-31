@@ -16,27 +16,14 @@ const usePlayerJob = () => {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    console.log('[usePlayerJob] Initializing...');
-    console.log(
-      '[usePlayerJob] addOverlayListener available:',
-      typeof window.addOverlayListener === 'function'
-    );
-    console.log(
-      '[usePlayerJob] startOverlayEvents available:',
-      typeof window.startOverlayEvents === 'function'
-    );
-
     // Handler for Cactbot's onPlayerChangedEvent
     const handlePlayerChanged = (e) => {
-      console.log('[usePlayerJob] onPlayerChangedEvent received:', e);
       const data = e.detail || e;
 
       if (data.job) {
-        console.log('[usePlayerJob] Setting job:', data.job);
         setPlayerJob(data.job.toUpperCase());
       }
       if (data.name) {
-        console.log('[usePlayerJob] Setting name:', data.name);
         setPlayerName(data.name);
       }
     };
