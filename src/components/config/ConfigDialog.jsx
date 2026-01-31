@@ -2,6 +2,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { getRoleOptionsForJob, jobRequiresRoleSelection } from '../../hooks/useConfig';
 import { SOUND_TYPES, initAudio } from '../../utils/sound';
 import styles from './ConfigDialog.module.css';
+import JobBadge from '../common/JobBadge';
 
 /**
  * ConfigDialog - Configuration modal for overlay settings
@@ -59,11 +60,7 @@ const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, p
               <div className={styles.infoRow}>
                 <span className={styles.infoLabel}>Class:</span>
                 <span className={styles.infoValue}>
-                  {playerJob ? (
-                    <span className={styles.jobBadge}>{playerJob}</span>
-                  ) : (
-                    'Not detected'
-                  )}
+                  {playerJob ? <JobBadge job={playerJob} /> : 'Not detected'}
                 </span>
               </div>
               {showRoleSelector && (

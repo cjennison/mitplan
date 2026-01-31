@@ -1,5 +1,6 @@
 import styles from './TimelineView.module.css';
 import { getJobColor, getRoleFromJob } from '../../utils/ffxivData';
+import JobBadge from '../common/JobBadge';
 import { CALLOUT_CONFIG } from '../../hooks/useCallout';
 
 /**
@@ -123,9 +124,7 @@ const TimelineView = ({
                     className={styles.entryLocked}
                     style={{ '--job-color': jobColor }}
                   >
-                    <span className={`${styles.jobBadgeLocked} ${styles[`role-${role}`]}`}>
-                      {entry.job}
-                    </span>
+                    <JobBadge job={entry.job} />
                     <span className={styles.abilityLocked}>{entry.ability}</span>
                   </div>
                 );

@@ -13,6 +13,15 @@
   justify-content: center;
 }
 
+/* Locked Mode - No background, just clear text */
+.callout.locked {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  padding: 0; /* Align tight to content */
+}
+
 /* Placeholder state - shown when unlocked so user can preview callout */
 .callout.placeholder {
   opacity: 0.6;
@@ -41,39 +50,30 @@
   gap: 0.5rem;
 }
 
-.jobBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem 0.5rem;
-  background: #3d5a80; /* Tank blue - will be dynamic */
-  border-radius: 3px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #ffffff;
-  text-transform: uppercase;
-  /* Thick black outline for visibility */
-  text-shadow:
-    -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000,
-    0 0 4px rgba(0, 0, 0, 0.8);
-  flex-shrink: 0;
+/* Job badge override for callout visibility */
+.calloutBadge {
+  font-size: 1.125rem !important;
+  padding: 0.25rem 0.5rem !important;
+  border-width: 2px !important;
+  /* Dark background to ensure legibility over any terrain */
+  background-color: rgba(0, 0, 0, 0.8) !important; 
+  /* Hard outline shadow */
+  box-shadow: 
+    0 0 0 1px #000,
+    2px 2px 0 rgba(0, 0, 0, 0.8);
 }
 
 .abilityName {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
   color: #ffd866;
-  /* Thick black outline for visibility */
+  /* Hard outline text shadow for max readability */
   text-shadow:
     -2px -2px 0 #000,
     2px -2px 0 #000,
     -2px 2px 0 #000,
     2px 2px 0 #000,
-    0 0 6px rgba(0, 0, 0, 0.9),
-    0 0 10px rgba(255, 216, 102, 0.3);
+    3px 3px 0 rgba(0, 0, 0, 0.5);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -135,17 +135,17 @@
   font-style: italic;
   color: rgba(255, 255, 255, 0.5);
   text-shadow:
-    -1px -1px 0 rgba(0, 0, 0, 0.6),
-    1px -1px 0 rgba(0, 0, 0, 0.6),
-    -1px 1px 0 rgba(0, 0, 0, 0.6),
-    1px 1px 0 rgba(0, 0, 0, 0.6);
-  margin-left: 0.5rem;
-}
-
-/* Countdown Display */
-.countdown {
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  font-size: 2rem;
+    -1px -1px .25rem;
+  font-weight: 800;
+  min-width: 3.5rem;
+  text-align: center;
+  /* Hard outline text shadow */
+  text-shadow:
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000,
+    3px 3px 0 rgba(0, 0, 0, 0.5
   font-weight: 700;
   min-width: 3rem;
   text-align: center;

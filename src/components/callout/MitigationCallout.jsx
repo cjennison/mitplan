@@ -1,4 +1,5 @@
 import styles from './MitigationCallout.module.css';
+import JobBadge from '../common/JobBadge';
 
 /**
  * MitigationCallout - Shows the current/upcoming mitigation as a large callout
@@ -60,7 +61,7 @@ const MitigationCallout = ({
       <div className={`${styles.callout} ${styles.placeholder}`}>
         <div className={styles.mainContent}>
           <div className={styles.abilityInfo}>
-            <span className={styles.jobBadge}>WAR</span>
+            <JobBadge job="WAR" />
             <span className={styles.abilityName}>Reprisal</span>
           </div>
         </div>
@@ -90,7 +91,7 @@ const MitigationCallout = ({
     <div className={`${styles.callout} ${isLocked ? styles.locked : ''}`}>
       <div className={styles.mainContent}>
         <div className={styles.abilityInfo}>
-          <span className={styles.jobBadge}>{job}</span>
+          <JobBadge job={job} className={isLocked ? styles.calloutBadge : ''} />
           <span className={styles.abilityName}>{abilityName}</span>
         </div>
 
