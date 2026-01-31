@@ -1,0 +1,82 @@
+/* Draggable Container Styles */
+
+.container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: rgba(17, 17, 22, 0.6);
+  border: 1px solid rgba(80, 80, 100, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.container.locked {
+  background: transparent;
+  border-color: transparent;
+}
+
+/* Hidden state for handles - invisible but maintains space */
+.handleHidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Drag Handle */
+.dragHandle {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(26, 26, 35, 0.8);
+  border-bottom: 1px solid rgba(80, 80, 100, 0.3);
+  cursor: move;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.dragIcon {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.625rem;
+  letter-spacing: 1px;
+}
+
+.dragLabel {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Content Area */
+.content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Resize Handle */
+.resizeHandle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: se-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 26, 35, 0.6);
+  border-top-left-radius: 4px;
+}
+
+.resizeIcon {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.resizeHandle:hover .resizeIcon {
+  color: rgba(255, 255, 255, 0.7);
+}

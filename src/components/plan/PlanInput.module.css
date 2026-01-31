@@ -23,12 +23,28 @@
   outline-offset: 2px;
 }
 
+/* Disabled state when overlay is locked */
+.triggerDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: rgba(80, 80, 100, 0.3);
+  color: rgba(255, 216, 102, 0.5);
+}
+
+.triggerDisabled:hover {
+  background: rgba(26, 26, 35, 0.95);
+  border-color: rgba(80, 80, 100, 0.3);
+  box-shadow: none;
+}
+
 /* Dialog Overlay */
 .overlay {
   background: rgba(0, 0, 0, 0.75);
   position: fixed;
   inset: 0;
   animation: overlayShow 150ms ease;
+  /* Ensure overlay captures all pointer/keyboard events */
+  pointer-events: auto !important;
 }
 
 @keyframes overlayShow {
@@ -57,6 +73,8 @@
   max-height: 85vh;
   padding: 1.5rem;
   animation: contentShow 200ms ease;
+  /* Ensure content captures all pointer/keyboard events */
+  pointer-events: auto !important;
 }
 
 @keyframes contentShow {
@@ -105,7 +123,7 @@
   border: 1px solid rgba(80, 80, 100, 0.5);
   border-radius: 4px;
   color: #ffffff;
-  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
   font-size: 0.75rem;
   padding: 0.75rem;
   resize: vertical;
@@ -135,7 +153,7 @@
   text-align: center;
 }
 
-.clipboardButton:hover {
+.clipboardButton:hover:not(:disabled) {
   background: rgba(45, 45, 60, 0.95);
   border-color: rgba(80, 80, 100, 0.6);
 }
@@ -143,6 +161,30 @@
 .clipboardButton:focus-visible {
   outline: 2px solid #fbbf24;
   outline-offset: 2px;
+}
+
+.clipboardButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Clipboard denied state */
+.clipboardDenied {
+  background: rgba(139, 58, 58, 0.2);
+  border-color: rgba(248, 113, 113, 0.3);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Permission Notice */
+.permissionNotice {
+  background: rgba(201, 162, 39, 0.15);
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  border-radius: 4px;
+  color: rgba(255, 220, 150, 0.9);
+  font-size: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
 }
 
 /* Error Message */

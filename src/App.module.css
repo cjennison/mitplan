@@ -2,10 +2,9 @@
    APP CONTAINER STYLES
    
    Layout Design:
-   - UNLOCKED: Drag header (top) → Timeline (middle) → Controls (bottom)
-   - LOCKED: Only timeline, transparent background
-   
-   This ensures the timeline stays where users position it.
+   - Canvas area with draggable Timeline and Callout containers
+   - Control bar at bottom (hidden when locked)
+   - Very transparent background so game shows through
    ═══════════════════════════════════════════════════════════════ */
 
 .app {
@@ -13,100 +12,67 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg);
+  background: rgba(17, 17, 22, 0.3); /* Very transparent */
   overflow: hidden;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   LOCKED MODE - Minimal, Transparent Overlay
-   Activated by ACT OverlayPlugin "Lock overlay" checkbox
-   ═══════════════════════════════════════════════════════════════ */
-
-.appLocked {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  background: transparent;
-  border-left: 1px solid transparent; /* Match .app border to prevent 1px shift */
-  pointer-events: none;
-}
-
-.lockedEmpty {
-  color: rgba(255, 255, 255, 0.3);
-  font-size: var(--font-size-sm);
-  padding: var(--space-2);
-}
-
-/* Invisible spacers to maintain timeline position when locked */
-.lockedHeaderSpacer {
-  /* Same height as .dragHeader: padding-top + padding-bottom + line height */
-  height: calc(var(--space-2) + var(--space-2) + 1.25em);
-  flex-shrink: 0;
-}
-
-.lockedControlSpacer {
-  /* Same height as .controlBar: padding-top + padding-bottom + line height */
-  height: calc(var(--space-2) + var(--space-2) + 1.5em);
-  flex-shrink: 0;
+/* Gameplay mode - fully transparent for unobstructed view */
+.gameplayMode {
+  background: transparent !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   DRAG HEADER - At top, helps users position the overlay
+   CANVAS - The main area where draggable elements live
    ═══════════════════════════════════════════════════════════════ */
 
-.dragHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  background: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border-subtle);
-  cursor: move;
-  user-select: none;
-}
-
-.dragIcon {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  letter-spacing: 2px;
-}
-
-.dragText {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   TIMELINE AREA - Middle section, shows the clean locked-style timeline
-   ═══════════════════════════════════════════════════════════════ */
-
-.timelineArea {
+.canvas {
   flex: 1;
+  position: relative;
   overflow: hidden;
-  background: transparent;
 }
 
-.emptyTimeline {
+/* ═══════════════════════════════════════════════════════════════
+   UI LOCK TOGGLE - Small icon in top-right when ACT overlay is locked
+   Allows toggling between UI unlocked (can drag) and UI locked (gameplay)
+   ═══════════════════════════════════════════════════════════════ */
+
+.uiLockToggle {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  z-index: 1000;
+
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
-  height: 100%;
-  padding: var(--space-4);
-  text-align: center;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+
+  width: 24px;
+  height: 24px;
+  padding: 0;
+
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 150ms ease;
 }
 
-.emptyHint {
-  font-size: var(--font-size-xs);
-  opacity: 0.6;
+.uiLockToggle:hover {
+  opacity: 1;
+  background: var(--color-bg-elevated);
+  border-color: var(--color-border-accent);
+}
+
+.emptyContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
 }
 
 /* ═══════════════════════════════════════════════════════════════
