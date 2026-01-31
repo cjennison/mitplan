@@ -49,9 +49,8 @@ export default {
     { timestamp: 88, job: 'Melee', role: 'M1', ability: 'Feint', note: 'Ravenous Reach' },
 
     // Fourth-wall Fusion @ 1:37
-    { timestamp: 97, job: 'DRK', role: 'OT', ability: 'Party Mit', note: 'Fourth-wall Fusion' },
-    { timestamp: 97, job: 'GNB', role: 'OT', ability: 'Party Mit', note: 'Fourth-wall Fusion' },
     { timestamp: 97, job: 'Tank', role: 'OT', ability: 'Reprisal', note: 'Fourth-wall Fusion' },
+    { timestamp: 97, job: 'Tank', role: 'OT', ability: 'Party Mit', note: 'Fourth-wall Fusion' },
     { timestamp: 97, job: 'WHM', ability: 'Liturgy of the Bell', note: 'Fourth-wall Fusion' },
     { timestamp: 97, job: 'AST', ability: 'Macrocosmos', note: 'Fourth-wall Fusion' },
     { timestamp: 97, job: 'SCH', ability: 'Sacred Soil + Spreadlo', note: 'Fourth-wall Fusion' },
@@ -61,8 +60,7 @@ export default {
     { timestamp: 97, job: 'MagicRanged', ability: 'Addle', note: 'Fourth-wall Fusion' },
 
     // The Fixer @ 1:48
-    { timestamp: 108, job: 'WAR', role: 'OT', ability: 'Party Mit', note: 'The Fixer' },
-    { timestamp: 108, job: 'PLD', role: 'OT', ability: 'Party Mit', note: 'The Fixer' },
+    { timestamp: 108, job: 'Tank', role: 'OT', ability: 'Party Mit', note: 'The Fixer' },
     { timestamp: 108, job: 'WHM', ability: 'Plenary Indulgence', note: 'The Fixer' },
     { timestamp: 108, job: 'AST', ability: 'Collective Unconscious', note: 'The Fixer' },
     { timestamp: 108, job: 'PhysRanged', ability: 'Party Mit', note: 'The Fixer' },
@@ -76,8 +74,7 @@ export default {
 
     // Venomous Scourge @ 3:51
     { timestamp: 231, job: 'Tank', role: 'MT', ability: 'Reprisal', note: 'Venomous Scourge' },
-    { timestamp: 231, job: 'DRK', role: 'OT', ability: 'Party Mit', note: 'Venomous Scourge' },
-    { timestamp: 231, job: 'GNB', role: 'OT', ability: 'Party Mit', note: 'Venomous Scourge' },
+    { timestamp: 231, job: 'Tank', role: 'OT', ability: 'Party Mit', note: 'Venomous Scourge' },
     {
       timestamp: 231,
       job: 'SCH',
@@ -95,8 +92,7 @@ export default {
     { timestamp: 231, job: 'MagicRanged', ability: 'Addle', note: 'Venomous Scourge' },
 
     // The Fixer @ 4:01
-    { timestamp: 241, job: 'WAR', role: 'OT', ability: 'Party Mit', note: 'The Fixer' },
-    { timestamp: 241, job: 'PLD', role: 'OT', ability: 'Party Mit', note: 'The Fixer' },
+    { timestamp: 241, job: 'Tank', role: 'OT', ability: 'Party Mit', note: 'The Fixer' },
     { timestamp: 241, job: 'WHM', ability: 'Plenary Indulgence', note: 'The Fixer' },
     { timestamp: 241, job: 'AST', ability: 'Collective Unconscious', note: 'The Fixer' },
 
