@@ -59,6 +59,19 @@ export const jobRequiresRoleSelection = (job) => {
 };
 
 /**
+ * Check if the selected role is valid for the current job
+ * Returns true if no role selection is needed, or if the role matches the job's options
+ */
+export const isRoleValidForJob = (role, job) => {
+  if (!job) return true; // No job info, can't validate
+  const options = getRoleOptionsForJob(job);
+  if (options.length === 0) return true; // Job doesn't need role selection
+  if (options.length === 1) return true; // Only one option, auto-valid
+  if (!role) return false; // Needs role but none selected
+  return options.some((opt) => opt.value === role);
+};
+
+/**
  * Hook to manage overlay configuration with localStorage persistence.
  */
 const useConfig = () => {

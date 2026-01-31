@@ -10,7 +10,7 @@ import { decodePlan } from './utils/planCodec';
 import { validatePlan } from './utils/planValidator';
 import useFightTimer from './hooks/useFightTimer';
 import { useCallout } from './hooks/useCallout';
-import useConfig from './hooks/useConfig';
+import useConfig, { isRoleValidForJob } from './hooks/useConfig';
 import usePlayerJob from './hooks/usePlayerJob';
 import useMitigationSound from './hooks/useMitigationSound';
 import useCombatEvents from './hooks/useCombatEvents';
@@ -234,6 +234,9 @@ const App = () => {
           <div className={styles.controlInfo}>
             <span className={styles.title}>Mitplan</span>
             {plan && <span className={styles.planStatus}>| {plan.fightName || 'Plan loaded'}</span>}
+            {plan?.requiresRoles && !isRoleValidForJob(config.playerRole, playerJob) && (
+              <span className={styles.roleWarning}>⚠️ Select role in Settings</span>
+            )}
           </div>
 
           <div className={styles.controlActions}>
