@@ -61,7 +61,7 @@ const useCallout = (plan, currentTime, options = {}) => {
         // Also apply the same filtering here
         let abilitiesAtTime = sortedTimeline
           .filter((e) => e.timestamp === abilityTime)
-          .map((e) => ({ job: e.job, name: e.ability }));
+          .map((e) => ({ job: e.job, name: e.ability, note: e.note }));
 
         return {
           mitigation: {

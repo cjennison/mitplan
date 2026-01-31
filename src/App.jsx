@@ -236,6 +236,7 @@ const App = () => {
             isLocked={!isLocked || isUILocked}
             isEmpty={!calloutData}
             showPlaceholder={!isLocked || !isUILocked}
+            showNotes={config.showNotes}
           />
         </DraggableContainer>
 

@@ -17,6 +17,10 @@ const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, p
     onConfigChange('showOwnMitigationsOnly', e.target.checked);
   };
 
+  const handleShowNotesChange = (e) => {
+    onConfigChange('showNotes', e.target.checked);
+  };
+
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Trigger asChild>
@@ -70,6 +74,24 @@ const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, p
             <p className={styles.checkboxDescription}>
               When enabled, only shows mitigations for your current class ({playerJob || 'N/A'}).
               Other players' mitigations will be hidden.
+            </p>
+          </div>
+
+          {/* Display Section */}
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Display</h3>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={config.showNotes}
+                onChange={handleShowNotesChange}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkboxText}>Show mitigation notes</span>
+            </label>
+            <p className={styles.checkboxDescription}>
+              When enabled, displays any notes attached to mitigations below the ability name in the
+              callout.
             </p>
           </div>
 

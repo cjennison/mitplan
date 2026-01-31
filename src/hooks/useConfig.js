@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
  */
 const DEFAULT_CONFIG = {
   showOwnMitigationsOnly: false,
+  showNotes: true,
 };
 
 /**

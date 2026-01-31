@@ -18,12 +18,14 @@ import styles from './MitigationCallout.module.css';
  * @param {boolean} props.isLocked - Whether overlay is locked (gameplay mode)
  * @param {boolean} props.isEmpty - Whether to show empty state
  * @param {boolean} props.showPlaceholder - Whether to show placeholder when empty (for unlocked mode)
+ * @param {boolean} props.showNotes - Whether to show notes underneath abilities
  */
 const MitigationCallout = ({
   calloutData,
   isLocked = false,
   isEmpty = false,
   showPlaceholder = false,
+  showNotes = true,
 }) => {
   /**
    * Format countdown for display
@@ -77,6 +79,7 @@ const MitigationCallout = ({
   const firstAbility = abilities[0] || {};
   const job = firstAbility.job || 'UNK';
   const abilityName = firstAbility.name || 'Unknown';
+  const note = firstAbility.note || null;
 
   // If there are multiple abilities, show them all
   const hasMultiple = abilities.length > 1;
@@ -89,13 +92,22 @@ const MitigationCallout = ({
           <span className={styles.abilityName}>{abilityName}</span>
         </div>
 
+        {/* Show note for first ability if showNotes is enabled */}
+        {showNotes && note && <div className={styles.abilityNote}>{note}</div>}
+
         {hasMultiple && (
           <div className={styles.additionalAbilities}>
             {abilities.slice(1).map((ability, index) => (
-              <span key={index} className={styles.additionalAbility}>
-                <span className={styles.additionalJob}>{ability.job}</span>
-                <span className={styles.additionalName}>{ability.name}</span>
-              </span>
+              <div key={index} className={styles.additionalAbilityRow}>
+                <span className={styles.additionalAbility}>
+                  <span className={styles.additionalJob}>{ability.job}</span>
+                  <span className={styles.additionalName}>{ability.name}</span>
+                </span>
+                {/* Show note for additional abilities if showNotes is enabled */}
+                {showNotes && ability.note && (
+                  <div className={styles.additionalNote}>{ability.note}</div>
+                )}
+              </div>
             ))}
           </div>
         )}
