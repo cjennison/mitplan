@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './TimelineView.module.css';
 import {
   getJobColor,
@@ -18,6 +19,9 @@ const formatCountdown = (seconds) => {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
+// Approximate height of a single timeline group in pixels
+const ITEM_HEIGHT_ESTIMATE = 36;
+
 /**
  * TimelineView component - Displays mitigations from the plan
  *
@@ -25,12 +29,12 @@ const formatCountdown = (seconds) => {
  * Displays countdown time (time until ability) rather than absolute timestamps.
  * Filters out abilities that are within the callout window (5 seconds).
  * Supports both specific jobs (WAR, SCH) and job types (Tank, Healer, Melee).
+ * Dynamically shows as many items as can fit in the container.
  *
  * @param {Object} props
  * @param {Object} props.plan - The decoded mitigation plan
  * @param {number} props.currentTime - Current fight time in seconds (0 if not started)
  * @param {number} props.windowSeconds - How many seconds ahead to show (default 30)
- * @param {number} props.maxItems - Maximum number of timeline groups to display (default 3)
  * @param {boolean} props.isLocked - Whether the overlay is in locked (minimal) mode
  * @param {boolean} props.showOwnOnly - If true, only show abilities for playerJob
  * @param {string} props.playerJob - The player's current job (e.g., "WAR", "SCH")
@@ -39,11 +43,57 @@ const TimelineView = ({
   plan,
   currentTime = 0,
   windowSeconds = 30,
-  maxItems = 3,
   showOwnOnly = false,
   playerJob = null,
   playerRole = null,
 }) => {
+  const containerRef = useRef(null);
+  const itemRef = useRef(null);
+  const [maxItems, setMaxItems] = useState(3);
+
+  // Calculate how many items can fit in the container
+  const calculateMaxItems = useCallback(() => {
+    if (!containerRef.current) return;
+
+    const containerHeight = containerRef.current.clientHeight;
+    const containerPadding = 16; // 0.5rem top + 0.5rem bottom padding
+    const itemGap = 6; // 0.375rem gap between items
+
+    // Use measured item height if available, otherwise use estimate
+    let itemHeight = ITEM_HEIGHT_ESTIMATE;
+    if (itemRef.current) {
+      itemHeight = itemRef.current.offsetHeight;
+    }
+
+    const availableHeight = containerHeight - containerPadding;
+    const itemWithGap = itemHeight + itemGap;
+
+    // Calculate how many full items can fit
+    const fittingItems = Math.floor((availableHeight + itemGap) / itemWithGap);
+
+    // Minimum of 1, and cap at a reasonable maximum
+    const newMaxItems = Math.max(1, Math.min(fittingItems, 20));
+
+    if (newMaxItems !== maxItems) {
+      setMaxItems(newMaxItems);
+    }
+  }, [maxItems]);
+
+  // Recalculate on mount and when container resizes
+  useEffect(() => {
+    calculateMaxItems();
+
+    const resizeObserver = new ResizeObserver(() => {
+      calculateMaxItems();
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [calculateMaxItems]);
+
   if (!plan || !plan.timeline || plan.timeline.length === 0) {
     return (
       <div className={styles.empty}>
@@ -105,7 +155,7 @@ const TimelineView = ({
   }
 
   return (
-    <div className={styles.containerLocked}>
+    <div ref={containerRef} className={styles.containerLocked}>
       {limitedGroups.map((group, groupIndex) => {
         const timeUntil = group.timestamp - currentTime;
         const isImminent = timeUntil > 0 && timeUntil <= 10;
@@ -113,6 +163,7 @@ const TimelineView = ({
         return (
           <div
             key={groupIndex}
+            ref={groupIndex === 0 ? itemRef : null}
             className={`${styles.timeGroupLocked} ${isImminent ? styles.imminentLocked : ''}`}
           >
             <div className={styles.timestampLocked}>
