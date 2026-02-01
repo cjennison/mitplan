@@ -344,14 +344,20 @@
   border-color: rgba(201, 162, 39, 0.4);
 }
 
-/* Imported plan row with delete button */
-.importedPlanRow {
+.planItemDefault {
+  border-color: rgba(255, 216, 102, 0.4);
+  background: rgba(255, 216, 102, 0.08);
+}
+
+/* Plan row with action buttons */
+.planRow {
   display: flex;
   align-items: stretch;
   gap: 0.375rem;
 }
 
-.planItemImported {
+/* Plan item takes remaining space in row */
+.planRow .planItem {
   flex: 1;
   min-width: 0;
 }
@@ -379,6 +385,44 @@
 
 .deleteButton:focus-visible {
   outline: 2px solid #f87171;
+  outline-offset: 2px;
+}
+
+/* Default star button */
+.defaultButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  flex-shrink: 0;
+  background: rgba(26, 26, 35, 0.6);
+  border: 1px solid rgba(80, 80, 100, 0.3);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.defaultButton:hover {
+  background: rgba(255, 216, 102, 0.1);
+  border-color: rgba(255, 216, 102, 0.4);
+  color: rgba(255, 216, 102, 0.8);
+}
+
+.defaultButtonActive {
+  background: rgba(255, 216, 102, 0.15);
+  border-color: rgba(255, 216, 102, 0.5);
+  color: #ffd866;
+}
+
+.defaultButtonActive:hover {
+  background: rgba(255, 216, 102, 0.2);
+  border-color: rgba(255, 216, 102, 0.6);
+}
+
+.defaultButton:focus-visible {
+  outline: 2px solid #ffd866;
   outline-offset: 2px;
 }
 

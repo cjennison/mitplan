@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Collapsible from '@radix-ui/react-collapsible';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { jobRequiresRoleSelection } from '../../hooks/useConfig';
 import styles from './PlanInput.module.css';
 
@@ -13,6 +14,8 @@ const PlanInput = ({
   onOpenChange,
   onPlanSelect,
   onDeletePlan,
+  onSetDefault,
+  isPlanDefault,
   presets = [],
   importedPlans = [],
   playerJob = null,
@@ -49,6 +52,18 @@ const PlanInput = ({
   const handleCancelDelete = useCallback(() => {
     setPlanToDelete(null);
   }, []);
+
+  const handleDefaultToggle = useCallback(
+    (e, plan) => {
+      e.stopPropagation();
+      if (!onSetDefault || !plan.fightName) return;
+
+      const isCurrentlyDefault = isPlanDefault?.(plan.id, plan.fightName);
+      // If currently default, clear it; otherwise set as default
+      onSetDefault(plan.fightName, isCurrentlyDefault ? null : plan.id);
+    },
+    [onSetDefault, isPlanDefault]
+  );
 
   const toggleGroup = useCallback((fightName) => {
     setExpandedGroups((prev) => ({
@@ -122,6 +137,11 @@ const PlanInput = ({
           onKeyPress={stopKeyboardPropagation}
         >
           <Dialog.Title className={styles.title}>Load Mitigation Plan</Dialog.Title>
+          <VisuallyHidden.Root asChild>
+            <Dialog.Description>
+              Select a mitigation plan from presets or your imported plans
+            </Dialog.Description>
+          </VisuallyHidden.Root>
 
           <div className={styles.planListScroll}>
             {needsRoleWarning && (
@@ -148,43 +168,57 @@ const PlanInput = ({
                   </Collapsible.Trigger>
                   <Collapsible.Content className={styles.groupContent}>
                     <div className={styles.planList}>
-                      {group.plans.map((plan) => (
-                        <div key={plan.id} className={styles.importedPlanRow}>
-                          <button
-                            className={`${styles.planItem} ${plan.type === 'imported' ? styles.planItemImported : ''} ${plan.requiresRoles && needsRoleWarning ? styles.planItemWarning : ''}`}
-                            onClick={() => handleSelectPlan(plan)}
-                          >
-                            <div className={styles.planInfo}>
-                              <span className={styles.planName}>{plan.name}</span>
-                              {plan.type === 'preset' && (
-                                <span className={`${styles.typeBadge} ${styles.badgePreset}`}>
-                                  PRESET
-                                </span>
-                              )}
-                              {plan.type === 'imported' && (
-                                <span className={`${styles.typeBadge} ${styles.badgeImported}`}>
-                                  IMPORTED
-                                </span>
-                              )}
-                              {plan.requiresRoles && (
-                                <span className={styles.rolesBadge}>Roles</span>
-                              )}
-                            </div>
-                            <span className={styles.planMeta}>
-                              {plan.timeline?.length || 0} mitigations
-                            </span>
-                          </button>
-                          {plan.type === 'imported' && (
+                      {group.plans.map((plan) => {
+                        const isDefault = isPlanDefault?.(plan.id, plan.fightName);
+                        return (
+                          <div key={plan.id} className={styles.planRow}>
                             <button
-                              className={styles.deleteButton}
-                              onClick={(e) => handleDeleteClick(e, plan)}
-                              title="Delete imported plan"
+                              className={`${styles.planItem} ${plan.type === 'imported' ? styles.planItemImported : ''} ${plan.requiresRoles && needsRoleWarning ? styles.planItemWarning : ''} ${isDefault ? styles.planItemDefault : ''}`}
+                              onClick={() => handleSelectPlan(plan)}
                             >
-                              🗑️
+                              <div className={styles.planInfo}>
+                                <span className={styles.planName}>{plan.name}</span>
+                                {plan.type === 'preset' && (
+                                  <span className={`${styles.typeBadge} ${styles.badgePreset}`}>
+                                    PRESET
+                                  </span>
+                                )}
+                                {plan.type === 'imported' && (
+                                  <span className={`${styles.typeBadge} ${styles.badgeImported}`}>
+                                    IMPORTED
+                                  </span>
+                                )}
+                                {plan.requiresRoles && (
+                                  <span className={styles.rolesBadge}>Roles</span>
+                                )}
+                              </div>
+                              <span className={styles.planMeta}>
+                                {plan.timeline?.length || 0} mitigations
+                              </span>
                             </button>
-                          )}
-                        </div>
-                      ))}
+                            {plan.type === 'imported' && (
+                              <button
+                                className={styles.deleteButton}
+                                onClick={(e) => handleDeleteClick(e, plan)}
+                                title="Delete imported plan"
+                              >
+                                🗑️
+                              </button>
+                            )}
+                            <button
+                              className={`${styles.defaultButton} ${isDefault ? styles.defaultButtonActive : ''}`}
+                              onClick={(e) => handleDefaultToggle(e, plan)}
+                              title={
+                                isDefault
+                                  ? 'Remove as auto-load default'
+                                  : 'Set as auto-load default for this fight'
+                              }
+                            >
+                              {isDefault ? '★' : '☆'}
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
                   </Collapsible.Content>
                 </Collapsible.Root>

@@ -8,7 +8,7 @@
  */
 export default {
   id: 'm12s-p1-role',
-  name: 'M12S P1 - Role Based (Simplified)',
+  name: "Ikuya Mitty's M12S - Part 1",
   fightName: 'M12S P1',
   version: '1.0',
   requiresRoles: true,
