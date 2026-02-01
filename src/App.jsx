@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import PlanInput from './components/plan/PlanInput';
 import TimelineView from './components/timeline/TimelineView';
 import DraggableContainer from './components/common/DraggableContainer';
+import Logo from './components/common/Logo';
 import MitigationCallout from './components/callout/MitigationCallout';
 import DevConsole from './components/dev/DevConsole';
 import ConfigDialog from './components/config/ConfigDialog';
@@ -232,6 +233,7 @@ const App = () => {
       {!(isLocked && isUILocked) && (
         <div className={styles.controlBar}>
           <div className={styles.controlInfo}>
+            <Logo size={21} className={styles.logo} />
             <span className={styles.title}>Mitplan</span>
             {plan && <span className={styles.planStatus}>| {plan.fightName || 'Plan loaded'}</span>}
             {plan?.requiresRoles && !isRoleValidForJob(config.playerRole, playerJob) && (
