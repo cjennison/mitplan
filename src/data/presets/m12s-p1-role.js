@@ -13,6 +13,43 @@ export default {
   version: '1.0',
   requiresRoles: true,
   timeline: [
+    // ═══════════════════════════════════════════════════════════════
+    // RAID PLAN IMAGES
+    // Show strategy diagrams at specific fight phases
+    // ═══════════════════════════════════════════════════════════════
+    {
+      type: 'raidplan',
+      timestamp: 115, // 1:55 - Act 2 starts
+      endTimestamp: 178, // 2:58 - Act 2 ends
+      imageUrl: '/raidplans/m12s-p1-act2.png',
+      note: 'Act 2 Positions',
+    },
+    {
+      type: 'raidplan',
+      timestamp: 300, // 300 3:00 - Act 3 starts
+      endTimestamp: 330, // 330 3:50 - Act 3 ends
+      imageUrl: '/raidplans/m12s-p1-act3.png',
+      note: 'Act 3 Positions',
+    },
+    {
+      type: 'raidplan',
+      timestamp: 360, // 360 4:00 - Curtain Call Baits
+      endTimestamp: 380, // 380 4:20 - Curtain Call Baits ends
+      imageUrl: '/raidplans/m12s-p1-curtaincallbaits.png',
+      note: 'Curtain Call Baits',
+    },
+    {
+      type: 'raidplan',
+      timestamp: 380, // 380 4:20 - Curtain Call Spreads
+      endTimestamp: 400, // 400 4:40 - Curtain Call Spreads ends
+      imageUrl: '/raidplans/m12s-p1-curtaincallspreads.png',
+      note: 'Curtain Call Spreads',
+    },
+
+    // ═══════════════════════════════════════════════════════════════
+    // MITIGATION TIMELINE
+    // ═══════════════════════════════════════════════════════════════
+
     // The Fixer @ 0:16
     { timestamp: 16, job: 'Tank', role: 'MT', ability: 'Reprisal', note: 'The Fixer' },
     { timestamp: 16, job: 'Tank', role: 'OT', ability: 'Party Mit', note: 'The Fixer' },

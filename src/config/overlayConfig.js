@@ -17,6 +17,8 @@ export const STORAGE_KEYS = {
   TIMELINE_SIZE: 'mitplan-timeline-size',
   CALLOUT_POSITION: 'mitplan-callout-position',
   CALLOUT_SIZE: 'mitplan-callout-size',
+  RAIDPLAN_POSITION: 'mitplan-raidplan-position',
+  RAIDPLAN_SIZE: 'mitplan-raidplan-size',
   LOADED_PLAN: 'mitplan-loaded-plan',
 };
 
@@ -33,4 +35,11 @@ export const DEFAULT_CALLOUT = {
   y: 150,
   width: 200,
   height: 60,
+};
+
+export const DEFAULT_RAIDPLAN = {
+  x: 300,
+  y: 10,
+  width: 300,
+  height: 200,
 };

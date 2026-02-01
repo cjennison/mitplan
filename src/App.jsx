@@ -5,6 +5,7 @@ import TimelineView from './components/timeline/TimelineView';
 import DraggableContainer from './components/common/DraggableContainer';
 import Logo from './components/common/Logo';
 import MitigationCallout from './components/callout/MitigationCallout';
+import RaidPlanDisplay from './components/raidplan/RaidPlanDisplay';
 import DevConsole from './components/dev/DevConsole';
 import ConfigDialog from './components/config/ConfigDialog';
 import HelpDialog from './components/help/HelpDialog';
@@ -14,6 +15,7 @@ import { decodePlan } from './utils/planCodec';
 import { validatePlan } from './utils/planValidator';
 import useFightTimer from './hooks/useFightTimer';
 import { useCallout } from './hooks/useCallout';
+import useRaidPlan from './hooks/useRaidPlan';
 import useConfig, { isRoleValidForJob } from './hooks/useConfig';
 import usePlayerJob from './hooks/usePlayerJob';
 import useMitigationSound from './hooks/useMitigationSound';
@@ -26,6 +28,7 @@ import {
   STORAGE_KEYS,
   DEFAULT_TIMELINE,
   DEFAULT_CALLOUT,
+  DEFAULT_RAIDPLAN,
 } from './config/overlayConfig';
 import styles from './App.module.css';
 
@@ -133,6 +136,9 @@ const App = () => {
     playerRole: config.playerRole,
   });
 
+  // Raid plan image display hook
+  const raidPlanData = useRaidPlan(plan, currentTime);
+
   useMitigationSound(calloutData, config.enableSound, config.soundType);
 
   useEffect(() => {
@@ -217,8 +223,31 @@ const App = () => {
   // Gameplay mode: UI is locked, hide all controls for clean gameplay view
   const isGameplayMode = isUILocked;
 
+  // Show unlock indicator when ACT overlay is not locked
+  const showUnlockIndicator = !isLocked;
+
   return (
-    <div className={`${styles.app} ${isGameplayMode ? styles.gameplayMode : ''}`}>
+    <div
+      className={`${styles.app} ${isGameplayMode ? styles.gameplayMode : ''} ${showUnlockIndicator ? styles.overlayUnlocked : ''}`}
+    >
+      {/* Overlay unlock indicator - shows bounds and resize handle when ACT overlay is unlocked */}
+      {showUnlockIndicator && (
+        <>
+          <div className={styles.unlockBadge}>
+            <span>🔓</span>
+            <span>Overlay Unlocked</span>
+          </div>
+          <div className={styles.resizeHandle}>
+            <div className={styles.resizeGrip}>
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Tutorial backdrop overlay */}
       <TutorialOverlay
         isActive={showTutorial}
@@ -287,6 +316,24 @@ const App = () => {
             />
           </DraggableContainer>
         </TutorialTooltip>
+
+        {/* Raid Plan Image Display - shows strategy images at defined times */}
+        {config.enableRaidPlan && (raidPlanData || !isUILocked) && (
+          <DraggableContainer
+            storageKeyPosition={STORAGE_KEYS.RAIDPLAN_POSITION}
+            storageKeySize={STORAGE_KEYS.RAIDPLAN_SIZE}
+            defaultPosition={{ x: DEFAULT_RAIDPLAN.x, y: DEFAULT_RAIDPLAN.y }}
+            defaultSize={{ width: DEFAULT_RAIDPLAN.width, height: DEFAULT_RAIDPLAN.height }}
+            label="Raid Plan"
+            isLocked={isUILocked}
+          >
+            <RaidPlanDisplay
+              raidPlan={raidPlanData}
+              isLocked={isUILocked}
+              showPlaceholder={!isUILocked}
+            />
+          </DraggableContainer>
+        )}
 
         {DEV_CONSOLE_AVAILABLE && isDevConsoleVisible && (
           <div className={styles.devConsoleWrapper}>

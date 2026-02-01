@@ -24,6 +24,10 @@ const ConfigDialog = ({
     onConfigChange('showNotes', e.target.checked);
   };
 
+  const handleEnableRaidPlanChange = (e) => {
+    onConfigChange('enableRaidPlan', e.target.checked);
+  };
+
   const handleEnableSoundChange = (e) => {
     onConfigChange('enableSound', e.target.checked);
   };
@@ -128,6 +132,20 @@ const ConfigDialog = ({
             <p className={styles.checkboxDescription}>
               When enabled, displays any notes attached to mitigations below the ability name in the
               callout.
+            </p>
+
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={config.enableRaidPlan}
+                onChange={handleEnableRaidPlanChange}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkboxText}>Enable raid plan images</span>
+            </label>
+            <p className={styles.checkboxDescription}>
+              When enabled, displays strategy images defined in the plan at specific fight times.
+              Disable to reduce bandwidth usage.
             </p>
           </div>
 

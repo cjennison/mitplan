@@ -1,0 +1,71 @@
+/* ═══════════════════════════════════════════════════════════════
+   RAID PLAN DISPLAY
+   
+   Displays raid plan images during specified time windows.
+   Images are shown full-size within the container, scaling to fit.
+   ═══════════════════════════════════════════════════════════════ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.label {
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-accent);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.imageWrapper {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 0; /* Allow flex child to shrink */
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+
+/* Error state when image fails to load */
+.errorState {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: var(--space-2);
+}
+
+/* Placeholder when no raid plan is active */
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.placeholderText {
+  opacity: 0.5;
+}

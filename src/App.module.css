@@ -22,6 +22,100 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   OVERLAY UNLOCK INDICATOR
+   
+   When ACT overlay is unlocked, show a dashed yellow border and
+   resize handle so users can clearly see the overlay bounds.
+   ═══════════════════════════════════════════════════════════════ */
+
+.overlayUnlocked {
+  outline: 2px dashed var(--color-text-accent);
+  outline-offset: -2px;
+}
+
+/* Resize handle indicator in bottom-right corner */
+.resizeHandle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  cursor: nwse-resize;
+  z-index: 9999;
+  pointer-events: none; /* OverlayPlugin handles actual resize */
+}
+
+/* Resize handle visual - diagonal lines */
+.resizeHandle::before,
+.resizeHandle::after {
+  content: '';
+  position: absolute;
+  background: var(--color-text-accent);
+  border-radius: 1px;
+}
+
+.resizeHandle::before {
+  width: 12px;
+  height: 2px;
+  bottom: 6px;
+  right: 2px;
+  transform: rotate(-45deg);
+  transform-origin: right bottom;
+}
+
+.resizeHandle::after {
+  width: 8px;
+  height: 2px;
+  bottom: 4px;
+  right: 2px;
+  transform: rotate(-45deg);
+  transform-origin: right bottom;
+}
+
+/* Corner grip dots - visual indicator */
+.resizeHandle .resizeGrip {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  display: grid;
+  grid-template-columns: repeat(2, 4px);
+  grid-template-rows: repeat(2, 4px);
+  gap: 2px;
+}
+
+.resizeHandle .resizeGrip span {
+  width: 3px;
+  height: 3px;
+  background: var(--color-text-accent);
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+/* Hide bottom-left dot for triangular appearance */
+.resizeHandle .resizeGrip span:nth-child(3) {
+  opacity: 0;
+}
+
+/* Unlock label badge */
+.unlockBadge {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background: rgba(255, 216, 102, 0.15);
+  border: 1px solid rgba(255, 216, 102, 0.4);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-accent);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    CANVAS - The main area where draggable elements live
    ═══════════════════════════════════════════════════════════════ */
 

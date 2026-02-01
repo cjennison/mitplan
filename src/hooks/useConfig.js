@@ -5,6 +5,7 @@ const DEFAULT_CONFIG = {
   showNotes: true,
   enableSound: true,
   soundType: 'info', // info, alert, alarm, chime, ping
+  enableRaidPlan: false, // Show raid plan images (off by default to save bandwidth)
   playerRole: null, // MT, OT, M1, M2, D3, D4, H1, H2
 };
 

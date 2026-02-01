@@ -120,8 +120,10 @@ const TimelineView = ({
     return true;
   };
 
-  // Sort timeline by timestamp
-  const sortedTimeline = [...plan.timeline].sort((a, b) => a.timestamp - b.timestamp);
+  // Sort timeline by timestamp, filtering out raidplan entries (handled separately)
+  const sortedTimeline = [...plan.timeline]
+    .filter((entry) => entry.type !== 'raidplan')
+    .sort((a, b) => a.timestamp - b.timestamp);
 
   // Filter to only upcoming entries (not yet in callout window)
   const upcomingEntries = sortedTimeline.filter((entry) => {

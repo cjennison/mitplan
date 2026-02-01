@@ -36,7 +36,9 @@ const useCallout = (plan, currentTime, options = {}) => {
   const callout = useMemo(() => {
     if (!plan?.timeline?.length) return null;
 
-    let timeline = plan.timeline;
+    // Filter out raidplan entries - they are handled separately
+    let timeline = plan.timeline.filter((entry) => entry.type !== 'raidplan');
+
     if (showOwnOnly && playerJob) {
       timeline = timeline.filter((entry) => entryMatchesPlayer(entry, playerJob, playerRole));
     }
@@ -80,6 +82,8 @@ const useTimelineItems = (plan, currentTime, windowSeconds = 30, maxItems = 3) =
     if (!plan?.timeline?.length) return [];
 
     const filtered = plan.timeline.filter((entry) => {
+      // Filter out raidplan entries - they are handled separately
+      if (entry.type === 'raidplan') return false;
       const timeUntil = entry.timestamp - currentTime;
       return Math.floor(timeUntil) > CALLOUT_CONFIG.SHOW_BEFORE && timeUntil <= windowSeconds;
     });
