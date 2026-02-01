@@ -166,16 +166,23 @@ const App = () => {
 
   const handlePlanLoad = useCallback(
     (base64String) => {
+      console.log('[Mitplan] Attempting to load plan...');
       setPlanError('');
       const decodeResult = decodePlan(base64String);
       if (!decodeResult.success) {
+        console.error('[Mitplan] Decode failed:', decodeResult.error);
         setPlanError(decodeResult.error);
         return false;
       }
+      console.log('[Mitplan] Decoded plan:', decodeResult.data);
       const validation = validatePlan(decodeResult.data);
       if (!validation.valid) {
+        console.error('[Mitplan] Validation failed:', validation.errors);
         setPlanError(validation.errors.join('. '));
         return false;
+      }
+      if (validation.warnings.length > 0) {
+        console.warn('[Mitplan] Validation warnings:', validation.warnings);
       }
       const loadedPlan = decodeResult.data;
       addImportedPlan(loadedPlan);
@@ -187,16 +194,23 @@ const App = () => {
       setPlan(loadedPlan);
       setDialogOpen(false);
       setPlanError('');
+      console.log('[Mitplan] Plan loaded successfully:', loadedPlan.fightName || loadedPlan.name);
       return true;
     },
     [addImportedPlan]
   );
 
   const handleImport = useCallback(() => {
-    if (!importValue.trim()) return;
+    if (!importValue.trim()) {
+      console.warn('[Mitplan] Import attempted with empty value');
+      return;
+    }
+    console.log('[Mitplan] Importing from text input, length:', importValue.trim().length);
     const success = handlePlanLoad(importValue.trim());
     if (success) {
       setImportValue('');
+    } else {
+      console.error('[Mitplan] Import failed - check planError state');
     }
   }, [importValue, handlePlanLoad]);
 

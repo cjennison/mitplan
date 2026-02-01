@@ -8,12 +8,17 @@
 const REQUIRED_FIELDS = ['version', 'timeline'];
 
 /**
- * Required fields for each timeline entry
+ * Required fields for each timeline entry (mitigation type)
  */
 const REQUIRED_ENTRY_FIELDS = ['timestamp', 'job', 'ability'];
 
 /**
- * Valid job codes
+ * Required fields for raid plan entries
+ */
+const REQUIRED_RAIDPLAN_FIELDS = ['timestamp', 'endTimestamp', 'imageUrl'];
+
+/**
+ * Valid job codes (specific jobs)
  */
 const VALID_JOBS = [
   // Tanks
@@ -43,6 +48,12 @@ const VALID_JOBS = [
   'RDM',
   'PCT',
 ];
+
+/**
+ * Valid job type codes (role-based categories)
+ * Used in role-based presets where abilities apply to entire job types
+ */
+const VALID_JOB_TYPES = ['All', 'Tank', 'Healer', 'Melee', 'PhysRanged', 'MagicRanged'];
 
 /**
  * Validates a mitigation plan object
@@ -86,6 +97,39 @@ export const validatePlan = (plan) => {
   plan.timeline.forEach((entry, index) => {
     const entryPrefix = `Timeline entry ${index + 1}`;
 
+    // Check if this is a raid plan entry
+    if (entry.type === 'raidplan') {
+      // Validate raid plan entry
+      for (const field of REQUIRED_RAIDPLAN_FIELDS) {
+        if (!(field in entry)) {
+          errors.push(`${entryPrefix} (raidplan): Missing required field "${field}"`);
+        }
+      }
+
+      // Validate timestamps
+      if (entry.timestamp !== undefined) {
+        if (typeof entry.timestamp !== 'number' || entry.timestamp < 0) {
+          errors.push(`${entryPrefix} (raidplan): Timestamp must be a non-negative number`);
+        }
+      }
+      if (entry.endTimestamp !== undefined) {
+        if (typeof entry.endTimestamp !== 'number' || entry.endTimestamp < 0) {
+          errors.push(`${entryPrefix} (raidplan): End timestamp must be a non-negative number`);
+        }
+        if (entry.timestamp !== undefined && entry.endTimestamp <= entry.timestamp) {
+          errors.push(`${entryPrefix} (raidplan): End timestamp must be after start timestamp`);
+        }
+      }
+
+      // Validate imageUrl
+      if (entry.imageUrl !== undefined && typeof entry.imageUrl !== 'string') {
+        errors.push(`${entryPrefix} (raidplan): Image URL must be a string`);
+      }
+
+      return; // Skip mitigation validation for raid plan entries
+    }
+
+    // Standard mitigation entry validation
     // Check required entry fields
     for (const field of REQUIRED_ENTRY_FIELDS) {
       if (!(field in entry)) {
@@ -104,8 +148,13 @@ export const validatePlan = (plan) => {
     if (entry.job !== undefined) {
       if (typeof entry.job !== 'string') {
         errors.push(`${entryPrefix}: Job must be a string`);
-      } else if (!VALID_JOBS.includes(entry.job.toUpperCase())) {
-        warnings.push(`${entryPrefix}: Unknown job code "${entry.job}"`);
+      } else {
+        const jobUpper = entry.job.toUpperCase();
+        const isValidJob = VALID_JOBS.includes(jobUpper);
+        const isValidJobType = VALID_JOB_TYPES.some((type) => type.toUpperCase() === jobUpper);
+        if (!isValidJob && !isValidJobType) {
+          warnings.push(`${entryPrefix}: Unknown job code "${entry.job}"`);
+        }
       }
     }
 
