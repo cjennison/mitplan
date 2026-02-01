@@ -18,6 +18,12 @@ const REQUIRED_ENTRY_FIELDS = ['timestamp', 'job', 'ability'];
 const REQUIRED_RAIDPLAN_FIELDS = ['timestamp', 'endTimestamp', 'imageUrl'];
 
 /**
+ * Allowed URL protocols for image URLs (security)
+ * Blocks javascript:, data:, vbscript:, etc.
+ */
+const ALLOWED_URL_PROTOCOLS = ['http:', 'https:', 'blob:'];
+
+/**
  * Valid job codes (specific jobs)
  */
 const VALID_JOBS = [
@@ -122,8 +128,28 @@ export const validatePlan = (plan) => {
       }
 
       // Validate imageUrl
-      if (entry.imageUrl !== undefined && typeof entry.imageUrl !== 'string') {
-        errors.push(`${entryPrefix} (raidplan): Image URL must be a string`);
+      if (entry.imageUrl !== undefined) {
+        if (typeof entry.imageUrl !== 'string') {
+          errors.push(`${entryPrefix} (raidplan): Image URL must be a string`);
+        } else {
+          // Security: Validate URL protocol to prevent javascript:, data:, etc.
+          const url = entry.imageUrl.trim().toLowerCase();
+          // Allow relative paths (start with / or alphanumeric)
+          const isRelativePath = /^[a-z0-9\/.]/.test(url) && !url.includes(':');
+          if (!isRelativePath) {
+            try {
+              const parsed = new URL(entry.imageUrl);
+              if (!ALLOWED_URL_PROTOCOLS.includes(parsed.protocol)) {
+                errors.push(
+                  `${entryPrefix} (raidplan): Unsafe URL protocol "${parsed.protocol}" - only http:, https:, or relative paths allowed`
+                );
+              }
+            } catch {
+              // If URL parsing fails and it's not a relative path, it's invalid
+              errors.push(`${entryPrefix} (raidplan): Invalid image URL format`);
+            }
+          }
+        }
       }
 
       return; // Skip mitigation validation for raid plan entries

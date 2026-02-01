@@ -1,6 +1,41 @@
 import styles from './RaidPlanDisplay.module.css';
 
 /**
+ * Sanitizes a URL to ensure it's safe for use as an image source.
+ * Blocks dangerous protocols like javascript:, data:, vbscript:, etc.
+ *
+ * @param {string} url - The URL to sanitize
+ * @returns {string|null} - The safe URL or null if unsafe
+ */
+const sanitizeImageUrl = (url) => {
+  if (!url || typeof url !== 'string') return null;
+
+  const trimmed = url.trim();
+  const lower = trimmed.toLowerCase();
+
+  // Block dangerous protocols explicitly
+  const dangerousProtocols = ['javascript:', 'data:', 'vbscript:', 'file:'];
+  for (const protocol of dangerousProtocols) {
+    if (lower.startsWith(protocol)) {
+      console.warn('[Mitplan] Blocked unsafe image URL protocol:', protocol);
+      return null;
+    }
+  }
+
+  // Allow relative paths and http(s)
+  const isRelativePath = /^[a-z0-9\/.]/i.test(trimmed) && !trimmed.includes(':');
+  const isHttpUrl = lower.startsWith('http://') || lower.startsWith('https://');
+  const isBlobUrl = lower.startsWith('blob:');
+
+  if (isRelativePath || isHttpUrl || isBlobUrl) {
+    return trimmed;
+  }
+
+  console.warn('[Mitplan] Blocked unrecognized URL format:', trimmed);
+  return null;
+};
+
+/**
  * RaidPlanDisplay - Displays a raid plan image during the specified time window
  *
  * @param {Object} props
@@ -9,8 +44,11 @@ import styles from './RaidPlanDisplay.module.css';
  * @param {boolean} props.showPlaceholder - Whether to show placeholder when no image
  */
 const RaidPlanDisplay = ({ raidPlan, isLocked, showPlaceholder = false }) => {
-  // If no raid plan is active
-  if (!raidPlan) {
+  // Sanitize the URL at render time (defense-in-depth)
+  const safeImageUrl = raidPlan ? sanitizeImageUrl(raidPlan.imageUrl) : null;
+
+  // If no raid plan is active or URL is unsafe
+  if (!raidPlan || !safeImageUrl) {
     if (showPlaceholder && !isLocked) {
       return (
         <div className={styles.placeholder}>
@@ -26,7 +64,7 @@ const RaidPlanDisplay = ({ raidPlan, isLocked, showPlaceholder = false }) => {
       {raidPlan.note && <div className={styles.label}>{raidPlan.note}</div>}
       <div className={styles.imageWrapper}>
         <img
-          src={raidPlan.imageUrl}
+          src={safeImageUrl}
           alt={raidPlan.note || 'Raid Plan'}
           className={styles.image}
           onError={(e) => {
