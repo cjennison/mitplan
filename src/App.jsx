@@ -7,6 +7,7 @@ import Logo from './components/common/Logo';
 import MitigationCallout from './components/callout/MitigationCallout';
 import DevConsole from './components/dev/DevConsole';
 import ConfigDialog from './components/config/ConfigDialog';
+import HelpDialog from './components/help/HelpDialog';
 import { decodePlan } from './utils/planCodec';
 import { validatePlan } from './utils/planValidator';
 import useFightTimer from './hooks/useFightTimer';
@@ -27,10 +28,9 @@ import styles from './App.module.css';
 
 /**
  * Check if dev console should be available.
- * Enabled when VITE_DEV_CONSOLE_ENABLED is 'true' or in development mode.
+ * Only enabled when VITE_DEV_CONSOLE_ENABLED is explicitly set to 'true'.
  */
-const isDevConsoleEnabled = () =>
-  import.meta.env.VITE_DEV_CONSOLE_ENABLED === 'true' || import.meta.env.DEV;
+const isDevConsoleEnabled = () => import.meta.env.VITE_DEV_CONSOLE_ENABLED === 'true';
 
 const DEV_CONSOLE_AVAILABLE = isDevConsoleEnabled();
 
@@ -54,6 +54,7 @@ const App = () => {
   const [isUILocked, setIsUILocked] = useState(false);
   const [isDevConsoleVisible, setIsDevConsoleVisible] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const { currentTime, isRunning, start, stop, reset } = useFightTimer();
 
@@ -78,7 +79,7 @@ const App = () => {
 
   const { config, updateConfig } = useConfig();
   const { playerJob, playerName } = usePlayerJob();
-  const { presets, importedPlans, addImportedPlan } = usePlanLibrary();
+  const { presets, importedPlans, addImportedPlan, removeImportedPlan } = usePlanLibrary();
   const calloutData = useCallout(plan, currentTime, {
     showOwnOnly: config.showOwnMitigationsOnly,
     playerJob,
@@ -242,6 +243,7 @@ const App = () => {
           </div>
 
           <div className={styles.controlActions}>
+            <HelpDialog open={isHelpOpen} onOpenChange={setIsHelpOpen} />
             <ConfigDialog
               open={isConfigOpen}
               onOpenChange={setIsConfigOpen}
@@ -290,6 +292,7 @@ const App = () => {
               open={dialogOpen}
               onOpenChange={setDialogOpen}
               onPlanSelect={handlePlanSelect}
+              onDeletePlan={removeImportedPlan}
               error={planError}
               presets={presets}
               importedPlans={importedPlans}

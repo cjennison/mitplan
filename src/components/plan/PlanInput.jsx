@@ -1,5 +1,6 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
+import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { jobRequiresRoleSelection } from '../../hooks/useConfig';
 import styles from './PlanInput.module.css';
 
@@ -10,11 +11,13 @@ const PlanInput = ({
   open,
   onOpenChange,
   onPlanSelect,
+  onDeletePlan,
   presets = [],
   importedPlans = [],
   playerJob = null,
   playerRole = null,
 }) => {
+  const [planToDelete, setPlanToDelete] = useState(null);
   const needsRoleWarning = jobRequiresRoleSelection(playerJob) && !playerRole;
 
   const handleSelectPlan = useCallback(
@@ -27,6 +30,22 @@ const PlanInput = ({
 
   const stopKeyboardPropagation = useCallback((e) => {
     e.stopPropagation();
+  }, []);
+
+  const handleDeleteClick = useCallback((e, plan) => {
+    e.stopPropagation();
+    setPlanToDelete(plan);
+  }, []);
+
+  const handleConfirmDelete = useCallback(() => {
+    if (planToDelete && onDeletePlan) {
+      onDeletePlan(planToDelete.id);
+    }
+    setPlanToDelete(null);
+  }, [planToDelete, onDeletePlan]);
+
+  const handleCancelDelete = useCallback(() => {
+    setPlanToDelete(null);
   }, []);
 
   return (
@@ -79,23 +98,62 @@ const PlanInput = ({
                 <h3 className={styles.sectionTitle}>Imported</h3>
                 <div className={styles.planList}>
                   {importedPlans.map((plan) => (
-                    <button
-                      key={plan.id}
-                      className={`${styles.planItem} ${plan.requiresRoles && needsRoleWarning ? styles.planItemWarning : ''}`}
-                      onClick={() => handleSelectPlan(plan)}
-                    >
-                      <div className={styles.planInfo}>
-                        <span className={styles.planName}>{plan.name}</span>
-                        {plan.requiresRoles && <span className={styles.rolesBadge}>Roles</span>}
-                      </div>
-                      <span className={styles.planMeta}>
-                        {plan.timeline?.length || 0} mitigations
-                      </span>
-                    </button>
+                    <div key={plan.id} className={styles.importedPlanRow}>
+                      <button
+                        className={`${styles.planItem} ${styles.planItemImported} ${plan.requiresRoles && needsRoleWarning ? styles.planItemWarning : ''}`}
+                        onClick={() => handleSelectPlan(plan)}
+                      >
+                        <div className={styles.planInfo}>
+                          <span className={styles.planName}>{plan.name}</span>
+                          {plan.requiresRoles && <span className={styles.rolesBadge}>Roles</span>}
+                        </div>
+                        <span className={styles.planMeta}>
+                          {plan.timeline?.length || 0} mitigations
+                        </span>
+                      </button>
+                      <button
+                        className={styles.deleteButton}
+                        onClick={(e) => handleDeleteClick(e, plan)}
+                        title="Delete imported plan"
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   ))}
                 </div>
               </div>
             )}
+
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog.Root
+              open={!!planToDelete}
+              onOpenChange={(open) => !open && setPlanToDelete(null)}
+            >
+              <AlertDialog.Portal>
+                <AlertDialog.Overlay className={styles.alertOverlay} />
+                <AlertDialog.Content className={styles.alertContent}>
+                  <AlertDialog.Title className={styles.alertTitle}>
+                    Delete Imported Plan?
+                  </AlertDialog.Title>
+                  <AlertDialog.Description className={styles.alertDescription}>
+                    Are you sure you want to delete "{planToDelete?.name}"? This action cannot be
+                    undone.
+                  </AlertDialog.Description>
+                  <div className={styles.alertActions}>
+                    <AlertDialog.Cancel asChild>
+                      <button className={styles.alertCancel} onClick={handleCancelDelete}>
+                        Cancel
+                      </button>
+                    </AlertDialog.Cancel>
+                    <AlertDialog.Action asChild>
+                      <button className={styles.alertDelete} onClick={handleConfirmDelete}>
+                        Delete
+                      </button>
+                    </AlertDialog.Action>
+                  </div>
+                </AlertDialog.Content>
+              </AlertDialog.Portal>
+            </AlertDialog.Root>
 
             {presets.length === 0 && importedPlans.length === 0 && (
               <p className={styles.emptyText}>

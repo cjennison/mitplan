@@ -81,7 +81,13 @@ const TimelineView = ({
 
   // Recalculate on mount and when container resizes
   useEffect(() => {
-    calculateMaxItems();
+    // Wait for next animation frame to ensure container is properly sized after mount
+    // This fixes the issue where the container reports incorrect size on initial load/reload
+    let frameId = requestAnimationFrame(() => {
+      frameId = requestAnimationFrame(() => {
+        calculateMaxItems();
+      });
+    });
 
     const resizeObserver = new ResizeObserver(() => {
       calculateMaxItems();
@@ -91,7 +97,10 @@ const TimelineView = ({
       resizeObserver.observe(containerRef.current);
     }
 
-    return () => resizeObserver.disconnect();
+    return () => {
+      cancelAnimationFrame(frameId);
+      resizeObserver.disconnect();
+    };
   }, [calculateMaxItems]);
 
   if (!plan || !plan.timeline || plan.timeline.length === 0) {
