@@ -11,6 +11,7 @@ import styles from './DraggableContainer.module.css';
  * @param {Object} props.defaultSize - { width, height } default size
  * @param {string} props.label - Label shown on drag handle
  * @param {boolean} props.isLocked - Whether the overlay is locked (hides controls)
+ * @param {boolean} props.tutorialHighlight - Whether to show tutorial highlight effect
  * @param {React.ReactNode} props.children - Content to render inside
  */
 const DraggableContainer = ({
@@ -20,6 +21,7 @@ const DraggableContainer = ({
   defaultSize = { width: 200, height: 100 },
   label = 'Drag',
   isLocked = false,
+  tutorialHighlight = false,
   children,
 }) => {
   // Load initial state from localStorage or use defaults
@@ -139,7 +141,7 @@ const DraggableContainer = ({
   return (
     <div
       ref={containerRef}
-      className={`${styles.container} ${isLocked ? styles.locked : ''}`}
+      className={`${styles.container} ${isLocked ? styles.locked : ''} ${tutorialHighlight ? styles.tutorialHighlight : ''}`}
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,

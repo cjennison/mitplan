@@ -314,3 +314,30 @@
   border-color: rgba(74, 124, 89, 0.6);
   color: #6ba87a;
 }
+
+/* Tutorial Button */
+.tutorialButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  background: rgba(255, 216, 102, 0.1);
+  border: 1px solid rgba(255, 216, 102, 0.3);
+  border-radius: 4px;
+  color: #ffd866;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.tutorialButton:hover {
+  background: rgba(255, 216, 102, 0.2);
+  border-color: rgba(255, 216, 102, 0.5);
+}
+
+.tutorialButton:focus-visible {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}

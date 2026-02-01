@@ -7,7 +7,15 @@ import JobBadge from '../common/JobBadge';
 /**
  * ConfigDialog - Configuration modal for overlay settings
  */
-const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, playerName }) => {
+const ConfigDialog = ({
+  open,
+  onOpenChange,
+  config,
+  onConfigChange,
+  playerJob,
+  playerName,
+  onShowTutorial,
+}) => {
   const handleShowOwnMitigationsChange = (e) => {
     onConfigChange('showOwnMitigationsOnly', e.target.checked);
   };
@@ -163,6 +171,23 @@ const ConfigDialog = ({ open, onOpenChange, config, onConfigChange, playerJob, p
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Tutorial Section */}
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Help</h3>
+            <button
+              className={styles.tutorialButton}
+              onClick={() => {
+                onShowTutorial();
+                onOpenChange(false);
+              }}
+            >
+              Show Tutorial
+            </button>
+            <p className={styles.checkboxDescription}>
+              Re-display the first-run tutorial to learn how to use Mitplan.
+            </p>
           </div>
 
           <div className={styles.actions}>

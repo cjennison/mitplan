@@ -8,6 +8,8 @@ import MitigationCallout from './components/callout/MitigationCallout';
 import DevConsole from './components/dev/DevConsole';
 import ConfigDialog from './components/config/ConfigDialog';
 import HelpDialog from './components/help/HelpDialog';
+import TutorialTooltip from './components/tutorial/TutorialTooltip';
+import TutorialOverlay from './components/tutorial/TutorialOverlay';
 import { decodePlan } from './utils/planCodec';
 import { validatePlan } from './utils/planValidator';
 import useFightTimer from './hooks/useFightTimer';
@@ -17,6 +19,7 @@ import usePlayerJob from './hooks/usePlayerJob';
 import useMitigationSound from './hooks/useMitigationSound';
 import useCombatEvents from './hooks/useCombatEvents';
 import usePlanLibrary from './hooks/usePlanLibrary';
+import useTutorial from './hooks/useTutorial';
 import {
   MAX_TIMELINE_ITEMS,
   TIMELINE_WINDOW_SECONDS,
@@ -68,6 +71,9 @@ const App = () => {
     isPlanDefault,
     getDefaultPlanForZone,
   } = usePlanLibrary();
+
+  // Tutorial system for first-run experience
+  const { showTutorial, completeTutorial, resetTutorial } = useTutorial();
 
   const { currentTime, isRunning, start, stop, reset } = useFightTimer();
 
@@ -140,7 +146,16 @@ const App = () => {
     return () => document.removeEventListener('onOverlayStateUpdate', handleOverlayStateUpdate);
   }, []);
 
-  const handleToggleUILock = useCallback(() => setIsUILocked((prev) => !prev), []);
+  const handleToggleUILock = useCallback(() => {
+    setIsUILocked((prev) => {
+      // If locking the UI and tutorial is showing, complete the tutorial
+      if (!prev && showTutorial) {
+        completeTutorial();
+      }
+      return !prev;
+    });
+  }, [showTutorial, completeTutorial]);
+
   const handleToggleDevConsole = useCallback(() => setIsDevConsoleVisible((prev) => !prev), []);
 
   const handlePlanLoad = useCallback(
@@ -199,63 +214,79 @@ const App = () => {
     setPlanError('');
   }, []);
 
-  const isGameplayMode = isLocked && isUILocked;
+  // Gameplay mode: UI is locked, hide all controls for clean gameplay view
+  const isGameplayMode = isUILocked;
 
   return (
     <div className={`${styles.app} ${isGameplayMode ? styles.gameplayMode : ''}`}>
+      {/* Tutorial backdrop overlay */}
+      <TutorialOverlay
+        isActive={showTutorial}
+        isOverlayLocked={isLocked}
+        onDismiss={completeTutorial}
+      />
+
       <div className={styles.canvas}>
         {isLocked && (
-          <button
-            className={styles.uiLockToggle}
-            onClick={handleToggleUILock}
-            title={isUILocked ? 'Unlock UI to reposition elements' : 'Lock UI for gameplay'}
-          >
-            {isUILocked ? '🔒' : '🔓'}
-          </button>
+          <TutorialTooltip contentKey="lock" show={showTutorial} side="bottom" align="end">
+            <button
+              className={`${styles.uiLockToggle} ${showTutorial ? styles.tutorialHighlight : ''}`}
+              onClick={handleToggleUILock}
+              title={isUILocked ? 'Unlock UI to reposition elements' : 'Lock UI for gameplay'}
+            >
+              {isUILocked ? '🔒' : '🔓'}
+            </button>
+          </TutorialTooltip>
         )}
 
-        <DraggableContainer
-          storageKeyPosition={STORAGE_KEYS.TIMELINE_POSITION}
-          storageKeySize={STORAGE_KEYS.TIMELINE_SIZE}
-          defaultPosition={{ x: DEFAULT_TIMELINE.x, y: DEFAULT_TIMELINE.y }}
-          defaultSize={{ width: DEFAULT_TIMELINE.width, height: DEFAULT_TIMELINE.height }}
-          label="Timeline"
-          isLocked={!isLocked || isUILocked}
-        >
-          {plan ? (
-            <TimelineView
-              plan={plan}
-              currentTime={currentTime}
-              windowSeconds={TIMELINE_WINDOW_SECONDS}
-              maxItems={MAX_TIMELINE_ITEMS}
-              isLocked={!isLocked || isUILocked}
-              showOwnOnly={config.showOwnMitigationsOnly}
-              playerJob={playerJob}
-              playerRole={config.playerRole}
-            />
-          ) : (
-            <div className={styles.emptyContainer}>
-              <p>No plan loaded</p>
-            </div>
-          )}
-        </DraggableContainer>
+        <TutorialTooltip contentKey="timeline" show={showTutorial} side="right" align="start">
+          <DraggableContainer
+            storageKeyPosition={STORAGE_KEYS.TIMELINE_POSITION}
+            storageKeySize={STORAGE_KEYS.TIMELINE_SIZE}
+            defaultPosition={{ x: DEFAULT_TIMELINE.x, y: DEFAULT_TIMELINE.y }}
+            defaultSize={{ width: DEFAULT_TIMELINE.width, height: DEFAULT_TIMELINE.height }}
+            label="Timeline"
+            isLocked={isUILocked}
+            tutorialHighlight={showTutorial}
+          >
+            {plan ? (
+              <TimelineView
+                plan={plan}
+                currentTime={currentTime}
+                windowSeconds={TIMELINE_WINDOW_SECONDS}
+                maxItems={MAX_TIMELINE_ITEMS}
+                isLocked={isUILocked}
+                showOwnOnly={config.showOwnMitigationsOnly}
+                playerJob={playerJob}
+                playerRole={config.playerRole}
+              />
+            ) : (
+              <div className={styles.emptyContainer}>
+                <p>No plan loaded</p>
+              </div>
+            )}
+          </DraggableContainer>
+        </TutorialTooltip>
 
-        <DraggableContainer
-          storageKeyPosition={STORAGE_KEYS.CALLOUT_POSITION}
-          storageKeySize={STORAGE_KEYS.CALLOUT_SIZE}
-          defaultPosition={{ x: DEFAULT_CALLOUT.x, y: DEFAULT_CALLOUT.y }}
-          defaultSize={{ width: DEFAULT_CALLOUT.width, height: DEFAULT_CALLOUT.height }}
-          label="Callout"
-          isLocked={!isLocked || isUILocked}
-        >
-          <MitigationCallout
-            calloutData={calloutData}
-            isLocked={!isLocked || isUILocked}
-            isEmpty={!calloutData}
-            showPlaceholder={!isLocked || !isUILocked}
-            showNotes={config.showNotes}
-          />
-        </DraggableContainer>
+        <TutorialTooltip contentKey="callout" show={showTutorial} side="right" align="start">
+          <DraggableContainer
+            storageKeyPosition={STORAGE_KEYS.CALLOUT_POSITION}
+            storageKeySize={STORAGE_KEYS.CALLOUT_SIZE}
+            defaultPosition={{ x: DEFAULT_CALLOUT.x, y: DEFAULT_CALLOUT.y }}
+            defaultSize={{ width: DEFAULT_CALLOUT.width, height: DEFAULT_CALLOUT.height }}
+            label="Callout"
+            isLocked={isUILocked}
+            tutorialHighlight={showTutorial}
+          >
+            <MitigationCallout
+              calloutData={calloutData}
+              isLocked={isUILocked}
+              isEmpty={!calloutData}
+              showPlaceholder={!isUILocked}
+              showNotes={config.showNotes}
+            />
+          </DraggableContainer>
+        </TutorialTooltip>
 
         {DEV_CONSOLE_AVAILABLE && isDevConsoleVisible && (
           <div className={styles.devConsoleWrapper}>
@@ -265,14 +296,14 @@ const App = () => {
               onStart={start}
               onStop={stop}
               onReset={reset}
-              isHidden={isLocked && isUILocked}
+              isHidden={isUILocked}
               combatState={combatEvents}
             />
           </div>
         )}
       </div>
 
-      {!(isLocked && isUILocked) && (
+      {!isUILocked && (
         <div className={styles.controlBar}>
           <div className={styles.controlInfo}>
             <Logo size={21} className={styles.logo} />
@@ -285,14 +316,19 @@ const App = () => {
 
           <div className={styles.controlActions}>
             <HelpDialog open={isHelpOpen} onOpenChange={setIsHelpOpen} />
-            <ConfigDialog
-              open={isConfigOpen}
-              onOpenChange={setIsConfigOpen}
-              config={config}
-              onConfigChange={updateConfig}
-              playerJob={playerJob}
-              playerName={playerName}
-            />
+            <TutorialTooltip contentKey="settings" show={showTutorial} side="top" align="center">
+              <div>
+                <ConfigDialog
+                  open={isConfigOpen}
+                  onOpenChange={setIsConfigOpen}
+                  config={config}
+                  onConfigChange={updateConfig}
+                  playerJob={playerJob}
+                  playerName={playerName}
+                  onShowTutorial={resetTutorial}
+                />
+              </div>
+            </TutorialTooltip>
             {DEV_CONSOLE_AVAILABLE && (
               <button
                 className={`${styles.devToggleButton} ${isDevConsoleVisible ? styles.devToggleActive : ''}`}
@@ -329,19 +365,23 @@ const App = () => {
                 Import
               </button>
             </div>
-            <PlanInput
-              open={dialogOpen}
-              onOpenChange={setDialogOpen}
-              onPlanSelect={handlePlanSelect}
-              onDeletePlan={removeImportedPlan}
-              onSetDefault={setDefaultPlan}
-              isPlanDefault={isPlanDefault}
-              error={planError}
-              presets={presets}
-              importedPlans={importedPlans}
-              playerJob={playerJob}
-              playerRole={config.playerRole}
-            />
+            <TutorialTooltip contentKey="loadPlan" show={showTutorial} side="top" align="end">
+              <div>
+                <PlanInput
+                  open={dialogOpen}
+                  onOpenChange={setDialogOpen}
+                  onPlanSelect={handlePlanSelect}
+                  onDeletePlan={removeImportedPlan}
+                  onSetDefault={setDefaultPlan}
+                  isPlanDefault={isPlanDefault}
+                  error={planError}
+                  presets={presets}
+                  importedPlans={importedPlans}
+                  playerJob={playerJob}
+                  playerRole={config.playerRole}
+                />
+              </div>
+            </TutorialTooltip>
           </div>
         </div>
       )}
