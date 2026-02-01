@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { PRESETS, getDefaultPresetForFight } from '../data/presets/presets.js';
 import { getFightNameForZone } from '../data/zoneMapping.js';
 
-const STORAGE_KEY = 'mitplan-imported-plans';
-const DEFAULTS_STORAGE_KEY = 'mitplan-default-plans';
+const STORAGE_KEY = 'xrt-imported-plans';
+const DEFAULTS_STORAGE_KEY = 'xrt-default-plans';
 
 /**
  * Hook for managing the plan library (presets + imported plans)

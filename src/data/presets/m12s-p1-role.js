@@ -1,6 +1,6 @@
 /**
  * M12S Phase 1 - AAC Heavyweight M4 (Savage)
- * Simplified role-based mitigation plan
+ * Simplified role-based raid plan
  *
  * This version uses job types (Tank, Healer, Melee, etc.) instead of specific jobs
  * where abilities are shared across the job type. Class-specific abilities still
@@ -54,7 +54,7 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════
-    // MITIGATION TIMELINE
+    // ACTION TIMELINE
     // ═══════════════════════════════════════════════════════════════
 
     // The Fixer @ 0:16
@@ -212,6 +212,6 @@ export default {
     { timestamp: 400, job: 'Melee', role: 'M2', ability: 'Feint', note: 'Slaughtershed III' },
 
     // Welcome message for all players
-    { timestamp: 410, job: 'All', ability: 'Thank you for using Mitplan!', note: 'Welcome' },
+    { timestamp: 410, job: 'All', ability: 'Thank you for using XRT!', note: 'Welcome' },
   ],
 };

@@ -3,19 +3,19 @@ import { useState, useCallback } from 'react';
 /**
  * Storage key for tracking if user has completed the tutorial
  */
-const TUTORIAL_STORAGE_KEY = 'mitplan-tutorial-completed';
+const TUTORIAL_STORAGE_KEY = 'xrt-tutorial-completed';
 
 /**
  * Tutorial tooltip content for each element
  */
 export const TUTORIAL_CONTENT = {
   callout: {
-    title: 'Mitigation Callout',
-    description: 'Drag this to where you want mitigation alerts to appear during combat.',
+    title: 'Action Callout',
+    description: 'Drag this to where you want action alerts to appear during combat.',
   },
   timeline: {
     title: 'Timeline View',
-    description: 'Drag to reposition and resize to show more or fewer upcoming mitigations.',
+    description: 'Drag to reposition and resize to show more or fewer upcoming actions.',
   },
   settings: {
     title: 'Settings',
@@ -23,7 +23,7 @@ export const TUTORIAL_CONTENT = {
   },
   loadPlan: {
     title: 'Load Plan',
-    description: 'Load mitigation plans for your raid from presets or import custom plans.',
+    description: 'Load raid plans from presets or import custom plans.',
   },
   lock: {
     title: 'Lock Interface',

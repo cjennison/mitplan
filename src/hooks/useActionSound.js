@@ -2,10 +2,10 @@ import { useEffect, useRef } from 'react';
 import { playSoundByType, initAudio } from '../utils/sound';
 
 /**
- * Hook to play alert sounds when mitigations reach their activation time.
+ * Hook to play alert sounds when raid actions reach their activation time.
  * Sound plays when countdown crosses from positive to zero/negative.
  */
-const useMitigationSound = (calloutData, enableSound = true, soundType = 'info') => {
+const useActionSound = (calloutData, enableSound = true, soundType = 'info') => {
   const lastSoundTimeRef = useRef(null);
   const audioInitRef = useRef(false);
 
@@ -49,4 +49,4 @@ const useMitigationSound = (calloutData, enableSound = true, soundType = 'info')
   }, [calloutData]);
 };
 
-export default useMitigationSound;
+export default useActionSound;

@@ -1,12 +1,12 @@
-# Mitplan - FFXIV Mitigation Planning Overlay
+# XRT - XIV Raid Tools
 
-A FFXIV ACT overlay that helps raid teams coordinate their mitigation abilities. Mitplan displays personalized ability callouts based on a shared mitigation plan, showing each player exactly when to use their assigned defensive cooldowns.
+A FFXIV ACT overlay that helps raid teams coordinate their raid actions and communications. XRT displays personalized ability callouts based on a shared raid plan, showing each player exactly when to perform their assigned actions, use defensive cooldowns, or follow specific instructions from their raid leader.
 
 ## How It Works
 
-1. **Raid Leader** creates a mitigation plan and encodes it as a Base64 string
-2. **Team Members** paste the Base64 string into the Mitplan overlay
-3. **During Combat**, Mitplan displays countdown alerts for each player's assigned abilities
+1. **Raid Leader** creates a raid plan and encodes it as a Base64 string
+2. **Team Members** paste the Base64 string into the XRT overlay
+3. **During Combat**, XRT displays countdown alerts for each player's assigned actions
    - 📋 **15-second warning**: Small notification card appears
    - 🚨 **3-second warning**: Large, prominent alert demands attention
 
@@ -17,13 +17,13 @@ A FFXIV ACT overlay that helps raid teams coordinate their mitigation abilities.
 - [Node.js](https://nodejs.org/) 20.x or higher
 - [ACT (Advanced Combat Tracker)](https://advancedcombattracker.com/)
 - [OverlayPlugin](https://github.com/OverlayPlugin/OverlayPlugin) for ACT
-- (Optional) [Cactbot](https://github.com/quisquous/cactbot) - not required, but Mitplan uses similar APIs
+- (Optional) [Cactbot](https://github.com/quisquous/cactbot) - not required, but XRT uses similar APIs
 
 ### 1. Clone and Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/mitplan.git
-cd mitplan
+git clone https://github.com/YOUR_USERNAME/xrt.git
+cd xrt
 npm install
 ```
 
@@ -43,9 +43,9 @@ http://localhost:5173
 
 ### 3. Configure ACT OverlayPlugin
 
-To test Mitplan in ACT, you need to create an overlay that points to your local dev server.
+To test XRT in ACT, you need to create an overlay that points to your local dev server.
 
-#### Step-by-Step: Creating a Mitplan Overlay
+#### Step-by-Step: Creating an XRT Overlay
 
 1. **Open ACT** and go to the **Plugins** tab
 2. Click on **OverlayPlugin.dll** in the plugin list
@@ -54,7 +54,7 @@ To test Mitplan in ACT, you need to create an overlay that points to your local 
 
    | Setting    | Value                                  |
    | ---------- | -------------------------------------- |
-   | **Name**   | `Mitplan`                              |
+   | **Name**   | `XRT`                                  |
    | **Preset** | `Custom`                               |
    | **Type**   | `MiniParse` (or `Custom` if available) |
 
@@ -83,16 +83,16 @@ To test Mitplan in ACT, you need to create an overlay that points to your local 
 
 ### 4. Test the Overlay
 
-Once connected, you should see the Mitplan interface. Use the **Developer Console** (if visible) to:
+Once connected, you should see the XRT interface. Use the **Developer Console** (if visible) to:
 
 - Start/stop the fight timer manually
-- Load a sample mitigation plan
+- Load a sample raid plan
 - Simulate different jobs
 
 ## Project Structure
 
 ```
-mitplan/
+xrt/
 ├── docs/
 │   └── PROJECT.md          # Detailed project documentation
 ├── src/
@@ -117,12 +117,12 @@ mitplan/
 
 ## Usage
 
-### Loading a Mitigation Plan
+### Loading a Raid Plan
 
-1. Obtain a Base64-encoded mitigation plan string from your raid leader
-2. Paste it into the Mitplan input field
+1. Obtain a Base64-encoded raid plan string from your raid leader
+2. Paste it into the XRT input field
 3. The plan is validated and loaded
-4. Your job's abilities are filtered and displayed
+4. Your job's actions are filtered and displayed
 
 ### During a Fight
 
@@ -195,28 +195,28 @@ See [.github/copilot-instructions.md](.github/copilot-instructions.md) for detai
 
 ### ACT/Cactbot APIs
 
-Mitplan integrates with OverlayPlugin using these event listeners:
+XRT integrates with OverlayPlugin using these event listeners:
 
 ```javascript
 // Detect combat start/end
-addOverlayListener("onInCombatChangedEvent", (e) => {
+addOverlayListener('onInCombatChangedEvent', (e) => {
   if (e.detail.inGameCombat) {
     // Fight started
   }
 });
 
 // Get player's current job
-addOverlayListener("onPlayerChangedEvent", (e) => {
+addOverlayListener('onPlayerChangedEvent', (e) => {
   const job = e.detail.job; // "WAR", "DRK", etc.
 });
 ```
 
 ## Deployment (Production)
 
-Mitplan is deployed to Vercel. Users point their OverlayPlugin to the production URL:
+XRT is deployed to Vercel. Users point their OverlayPlugin to the production URL:
 
 ```
-https://mitplan.vercel.app
+https://xrt.vercel.app
 ```
 
 ### Deploying Updates

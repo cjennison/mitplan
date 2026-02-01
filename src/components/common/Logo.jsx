@@ -1,5 +1,5 @@
 /**
- * Mitplan Logo - Shield with pulse/timeline line
+ * XRT Logo - Shield with pulse/timeline line
  * SVG logo for inline rendering (no network request)
  */
 const Logo = ({ className, size = 32 }) => {

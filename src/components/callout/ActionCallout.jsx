@@ -1,19 +1,19 @@
-import styles from './MitigationCallout.module.css';
+import styles from './ActionCallout.module.css';
 import JobBadge from '../common/JobBadge';
 
 /**
- * MitigationCallout - Shows the current/upcoming mitigation as a large callout
+ * ActionCallout - Shows the current/upcoming raid action as a large callout
  *
  * This is what the player sees front-and-center during combat.
- * Shows countdown before the ability should be used, then shows
- * negative time after it should have been used.
+ * Shows countdown before the action should be performed, then shows
+ * negative time after it should have been done.
  *
  * When unlocked and no active callout, shows a placeholder so users
  * can see what the callout will look like during the fight.
  *
  * @param {Object} props
  * @param {Object} props.calloutData - Callout info from useCallout hook
- * @param {Object} props.calloutData.mitigation - The mitigation object
+ * @param {Object} props.calloutData.action - The raid action object
  * @param {number} props.calloutData.countdown - Seconds until/since ability (positive=before, negative=after)
  * @param {boolean} props.calloutData.isOverdue - Whether the ability time has passed
  * @param {boolean} props.isLocked - Whether overlay is locked (gameplay mode)
@@ -21,7 +21,7 @@ import JobBadge from '../common/JobBadge';
  * @param {boolean} props.showPlaceholder - Whether to show placeholder when empty (for unlocked mode)
  * @param {boolean} props.showNotes - Whether to show notes underneath abilities
  */
-const MitigationCallout = ({
+const ActionCallout = ({
   calloutData,
   isLocked = false,
   isEmpty = false,
@@ -75,10 +75,10 @@ const MitigationCallout = ({
     return null;
   }
 
-  const { mitigation, countdown } = calloutData;
+  const { action, countdown } = calloutData;
 
   // Get job and ability info - handle multiple abilities
-  const abilities = mitigation.abilities || [];
+  const abilities = action.abilities || [];
   const firstAbility = abilities[0] || {};
   const job = firstAbility.job || 'UNK';
   const abilityName = firstAbility.name || 'Unknown';
@@ -123,4 +123,4 @@ const MitigationCallout = ({
   );
 };
 
-export default MitigationCallout;
+export default ActionCallout;

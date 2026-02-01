@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 
 const DEFAULT_CONFIG = {
-  showOwnMitigationsOnly: false,
+  showOwnActionsOnly: false,
   showNotes: true,
   enableSound: true,
   soundType: 'info', // info, alert, alarm, chime, ping
@@ -9,7 +9,7 @@ const DEFAULT_CONFIG = {
   playerRole: null, // MT, OT, M1, M2, D3, D4, H1, H2
 };
 
-const CONFIG_STORAGE_KEY = 'mitplan-config';
+const CONFIG_STORAGE_KEY = 'xrt-config';
 
 /**
  * Role options by job category

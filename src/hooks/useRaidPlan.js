@@ -10,7 +10,7 @@ import { useMemo } from 'react';
  * - imageUrl: URL/path to the image
  * - note: optional label for the image
  *
- * @param {Object} plan - The loaded mitigation plan
+ * @param {Object} plan - The loaded raid plan
  * @param {number} currentTime - Current fight time in seconds
  * @returns {Object|null} - The active raid plan entry or null
  */

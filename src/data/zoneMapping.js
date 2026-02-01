@@ -2,7 +2,7 @@
  * FFXIV Zone to Fight Name Mapping
  *
  * Maps actual FFXIV zone names (as reported by ACT/OverlayPlugin) to our
- * internal fight name identifiers used in mitigation plans.
+ * internal fight name identifiers used in raid plans.
  *
  * Zone names come from the ChangeZone event's zoneName property.
  * Fight names must match the fightName property in our preset/imported plans.

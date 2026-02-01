@@ -7,7 +7,7 @@ import { jobRequiresRoleSelection } from '../../hooks/useConfig';
 import styles from './PlanInput.module.css';
 
 /**
- * PlanInput component - Load mitigation plans from catalog
+ * PlanInput component - Load raid plans from catalog
  */
 const PlanInput = ({
   open,
@@ -136,10 +136,10 @@ const PlanInput = ({
           onKeyUp={stopKeyboardPropagation}
           onKeyPress={stopKeyboardPropagation}
         >
-          <Dialog.Title className={styles.title}>Load Mitigation Plan</Dialog.Title>
+          <Dialog.Title className={styles.title}>Load Raid Plan</Dialog.Title>
           <VisuallyHidden.Root asChild>
             <Dialog.Description>
-              Select a mitigation plan from presets or your imported plans
+              Select a raid plan from presets or your imported plans
             </Dialog.Description>
           </VisuallyHidden.Root>
 
@@ -193,7 +193,7 @@ const PlanInput = ({
                                 )}
                               </div>
                               <span className={styles.planMeta}>
-                                {plan.timeline?.length || 0} mitigations
+                                {plan.timeline?.length || 0} actions
                               </span>
                             </button>
                             {plan.type === 'imported' && (

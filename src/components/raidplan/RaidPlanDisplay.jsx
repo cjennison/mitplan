@@ -17,7 +17,7 @@ const sanitizeImageUrl = (url) => {
   const dangerousProtocols = ['javascript:', 'data:', 'vbscript:', 'file:'];
   for (const protocol of dangerousProtocols) {
     if (lower.startsWith(protocol)) {
-      console.warn('[Mitplan] Blocked unsafe image URL protocol:', protocol);
+      console.warn('[XRT] Blocked unsafe image URL protocol:', protocol);
       return null;
     }
   }
@@ -31,7 +31,7 @@ const sanitizeImageUrl = (url) => {
     return trimmed;
   }
 
-  console.warn('[Mitplan] Blocked unrecognized URL format:', trimmed);
+  console.warn('[XRT] Blocked unrecognized URL format:', trimmed);
   return null;
 };
 

@@ -198,7 +198,7 @@ const useCombatEvents = ({
 
     // Log zone info for debugging zone name mappings
     if (import.meta.env.DEV || import.meta.env.VITE_DEV_CONSOLE_ENABLED === 'true') {
-      console.log('[Mitplan] Zone Change:', {
+      console.log('[XRT] Zone Change:', {
         zoneId: newZoneId,
         zoneName: newZoneName,
         raw: e,

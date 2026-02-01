@@ -1,7 +1,7 @@
 {
-  "name": "mitplan",
+  "name": "xrt",
   "version": "0.1.0",
-  "description": "FFXIV ACT overlay for coordinating raid mitigation abilities",
+  "description": "FFXIV ACT overlay for raid action coordination - XIV Raid Tools",
   "type": "module",
   "scripts": {
     "dev": "vite",

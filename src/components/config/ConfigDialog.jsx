@@ -16,8 +16,8 @@ const ConfigDialog = ({
   playerName,
   onShowTutorial,
 }) => {
-  const handleShowOwnMitigationsChange = (e) => {
-    onConfigChange('showOwnMitigationsOnly', e.target.checked);
+  const handleShowOwnActionsChange = (e) => {
+    onConfigChange('showOwnActionsOnly', e.target.checked);
   };
 
   const handleShowNotesChange = (e) => {
@@ -94,7 +94,7 @@ const ConfigDialog = ({
             </div>
             {showRoleSelector && !config.playerRole && (
               <p className={styles.roleWarning}>
-                Select your role to see role-specific mitigations in plans that require it.
+                Select your role to see role-specific actions in plans that require it.
               </p>
             )}
           </div>
@@ -105,15 +105,15 @@ const ConfigDialog = ({
             <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
-                checked={config.showOwnMitigationsOnly}
-                onChange={handleShowOwnMitigationsChange}
+                checked={config.showOwnActionsOnly}
+                onChange={handleShowOwnActionsChange}
                 className={styles.checkbox}
               />
-              <span className={styles.checkboxText}>Show own mitigations only</span>
+              <span className={styles.checkboxText}>Show own actions only</span>
             </label>
             <p className={styles.checkboxDescription}>
-              When enabled, only shows mitigations for your current class ({playerJob || 'N/A'}).
-              Other players' mitigations will be hidden.
+              When enabled, only shows actions for your current class ({playerJob || 'N/A'}). Other
+              players' actions will be hidden.
             </p>
           </div>
 
@@ -127,10 +127,10 @@ const ConfigDialog = ({
                 onChange={handleShowNotesChange}
                 className={styles.checkbox}
               />
-              <span className={styles.checkboxText}>Show mitigation notes</span>
+              <span className={styles.checkboxText}>Show action notes</span>
             </label>
             <p className={styles.checkboxDescription}>
-              When enabled, displays any notes attached to mitigations below the ability name in the
+              When enabled, displays any notes attached to actions below the ability name in the
               callout.
             </p>
 
@@ -159,10 +159,10 @@ const ConfigDialog = ({
                 onChange={handleEnableSoundChange}
                 className={styles.checkbox}
               />
-              <span className={styles.checkboxText}>Play sound on mitigation</span>
+              <span className={styles.checkboxText}>Play sound on action</span>
             </label>
             <p className={styles.checkboxDescription}>
-              When enabled, plays a notification sound when it&apos;s time to use a mitigation.
+              When enabled, plays a notification sound when it&apos;s time to perform an action.
             </p>
 
             {config.enableSound && (
@@ -204,7 +204,7 @@ const ConfigDialog = ({
               Show Tutorial
             </button>
             <p className={styles.checkboxDescription}>
-              Re-display the first-run tutorial to learn how to use Mitplan.
+              Re-display the first-run tutorial to learn how to use XRT.
             </p>
           </div>
 

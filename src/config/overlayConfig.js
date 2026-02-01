@@ -1,25 +1,25 @@
 /**
  * Overlay Configuration
  *
- * These values control the behavior and appearance of the Mitplan overlay.
+ * These values control the behavior and appearance of the XRT overlay.
  * Some are hardcoded for now but designed to be configurable later.
  */
 
-// Maximum number of upcoming mitigations to display in the timeline
+// Maximum number of upcoming actions to display in the timeline
 export const MAX_TIMELINE_ITEMS = 3;
 
-// How far ahead (in seconds) to look for upcoming mitigations
+// How far ahead (in seconds) to look for upcoming actions
 export const TIMELINE_WINDOW_SECONDS = 30;
 
 // LocalStorage keys for persisting draggable container positions
 export const STORAGE_KEYS = {
-  TIMELINE_POSITION: 'mitplan-timeline-position',
-  TIMELINE_SIZE: 'mitplan-timeline-size',
-  CALLOUT_POSITION: 'mitplan-callout-position',
-  CALLOUT_SIZE: 'mitplan-callout-size',
-  RAIDPLAN_POSITION: 'mitplan-raidplan-position',
-  RAIDPLAN_SIZE: 'mitplan-raidplan-size',
-  LOADED_PLAN: 'mitplan-loaded-plan',
+  TIMELINE_POSITION: 'xrt-timeline-position',
+  TIMELINE_SIZE: 'xrt-timeline-size',
+  CALLOUT_POSITION: 'xrt-callout-position',
+  CALLOUT_SIZE: 'xrt-callout-size',
+  RAIDPLAN_POSITION: 'xrt-raidplan-position',
+  RAIDPLAN_SIZE: 'xrt-raidplan-size',
+  LOADED_PLAN: 'xrt-loaded-plan',
 };
 
 // Default positions and sizes for containers (percentages of parent)

@@ -4,7 +4,7 @@ import PlanInput from './components/plan/PlanInput';
 import TimelineView from './components/timeline/TimelineView';
 import DraggableContainer from './components/common/DraggableContainer';
 import Logo from './components/common/Logo';
-import MitigationCallout from './components/callout/MitigationCallout';
+import ActionCallout from './components/callout/ActionCallout';
 import RaidPlanDisplay from './components/raidplan/RaidPlanDisplay';
 import DevConsole from './components/dev/DevConsole';
 import ConfigDialog from './components/config/ConfigDialog';
@@ -18,7 +18,7 @@ import { useCallout } from './hooks/useCallout';
 import useRaidPlan from './hooks/useRaidPlan';
 import useConfig, { isRoleValidForJob } from './hooks/useConfig';
 import usePlayerJob from './hooks/usePlayerJob';
-import useMitigationSound from './hooks/useMitigationSound';
+import useActionSound from './hooks/useActionSound';
 import useCombatEvents from './hooks/useCombatEvents';
 import usePlanLibrary from './hooks/usePlanLibrary';
 import useTutorial from './hooks/useTutorial';
@@ -41,7 +41,7 @@ const isDevConsoleEnabled = () => import.meta.env.VITE_DEV_CONSOLE_ENABLED === '
 const DEV_CONSOLE_AVAILABLE = isDevConsoleEnabled();
 
 /**
- * Main Mitplan Application Component
+ * Main XRT Application Component
  */
 const App = () => {
   const [plan, setPlan] = useState(() => {
@@ -131,7 +131,7 @@ const App = () => {
   });
 
   const calloutData = useCallout(plan, currentTime, {
-    showOwnOnly: config.showOwnMitigationsOnly,
+    showOwnOnly: config.showOwnActionsOnly,
     playerJob,
     playerRole: config.playerRole,
   });
@@ -139,7 +139,7 @@ const App = () => {
   // Raid plan image display hook
   const raidPlanData = useRaidPlan(plan, currentTime);
 
-  useMitigationSound(calloutData, config.enableSound, config.soundType);
+  useActionSound(calloutData, config.enableSound, config.soundType);
 
   useEffect(() => {
     const handleOverlayStateUpdate = (e) => {
@@ -166,23 +166,23 @@ const App = () => {
 
   const handlePlanLoad = useCallback(
     (base64String) => {
-      console.log('[Mitplan] Attempting to load plan...');
+      console.log('[XRT] Attempting to load plan...');
       setPlanError('');
       const decodeResult = decodePlan(base64String);
       if (!decodeResult.success) {
-        console.error('[Mitplan] Decode failed:', decodeResult.error);
+        console.error('[XRT] Decode failed:', decodeResult.error);
         setPlanError(decodeResult.error);
         return false;
       }
-      console.log('[Mitplan] Decoded plan:', decodeResult.data);
+      console.log('[XRT] Decoded plan:', decodeResult.data);
       const validation = validatePlan(decodeResult.data);
       if (!validation.valid) {
-        console.error('[Mitplan] Validation failed:', validation.errors);
+        console.error('[XRT] Validation failed:', validation.errors);
         setPlanError(validation.errors.join('. '));
         return false;
       }
       if (validation.warnings.length > 0) {
-        console.warn('[Mitplan] Validation warnings:', validation.warnings);
+        console.warn('[XRT] Validation warnings:', validation.warnings);
       }
       const loadedPlan = decodeResult.data;
       addImportedPlan(loadedPlan);
@@ -194,7 +194,7 @@ const App = () => {
       setPlan(loadedPlan);
       setDialogOpen(false);
       setPlanError('');
-      console.log('[Mitplan] Plan loaded successfully:', loadedPlan.fightName || loadedPlan.name);
+      console.log('[XRT] Plan loaded successfully:', loadedPlan.fightName || loadedPlan.name);
       return true;
     },
     [addImportedPlan]
@@ -202,15 +202,15 @@ const App = () => {
 
   const handleImport = useCallback(() => {
     if (!importValue.trim()) {
-      console.warn('[Mitplan] Import attempted with empty value');
+      console.warn('[XRT] Import attempted with empty value');
       return;
     }
-    console.log('[Mitplan] Importing from text input, length:', importValue.trim().length);
+    console.log('[XRT] Importing from text input, length:', importValue.trim().length);
     const success = handlePlanLoad(importValue.trim());
     if (success) {
       setImportValue('');
     } else {
-      console.error('[Mitplan] Import failed - check planError state');
+      console.error('[XRT] Import failed - check planError state');
     }
   }, [importValue, handlePlanLoad]);
 
@@ -299,7 +299,7 @@ const App = () => {
                 windowSeconds={TIMELINE_WINDOW_SECONDS}
                 maxItems={MAX_TIMELINE_ITEMS}
                 isLocked={isUILocked}
-                showOwnOnly={config.showOwnMitigationsOnly}
+                showOwnOnly={config.showOwnActionsOnly}
                 playerJob={playerJob}
                 playerRole={config.playerRole}
               />
@@ -321,7 +321,7 @@ const App = () => {
             isLocked={isUILocked}
             tutorialHighlight={showTutorial}
           >
-            <MitigationCallout
+            <ActionCallout
               calloutData={calloutData}
               isLocked={isUILocked}
               isEmpty={!calloutData}
@@ -368,7 +368,7 @@ const App = () => {
         <div className={styles.controlBar}>
           <div className={styles.controlInfo}>
             <Logo size={21} className={styles.logo} />
-            <span className={styles.title}>Mitplan</span>
+            <span className={styles.title}>XRT</span>
             {plan && <span className={styles.planStatus}>| {plan.fightName || 'Plan loaded'}</span>}
             {plan?.requiresRoles && !isRoleValidForJob(config.playerRole, playerJob) && (
               <span className={styles.roleWarning}>⚠️ Select role in Settings</span>

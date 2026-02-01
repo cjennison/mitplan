@@ -10,7 +10,7 @@ const FAQ_ITEMS = [
   {
     question: 'Where do I get plan codes?',
     answer:
-      'Plan codes are Base64-encoded strings that contain mitigation assignments. You can create them using the Plan Builder on the Mitplan website, or get them from your raid leader.',
+      'Plan codes are Base64-encoded strings that contain raid action assignments. You can create them using the Plan Builder on the XRT website, or get them from your raid leader.',
   },
   {
     question: "Why don't I see any callouts?",
