@@ -1,11 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './TimelineView.module.css';
-import {
-  getJobColor,
-  getRoleFromJob,
-  jobMatchesEntry,
-  getJobDisplayInfo,
-} from '../../utils/ffxivData';
+import { getJobColor, getRoleFromJob, jobMatchesEntry } from '../../utils/ffxivData';
 import JobBadge from '../common/JobBadge';
 import { CALLOUT_CONFIG } from '../../hooks/useCallout';
 
@@ -42,7 +37,6 @@ const ITEM_HEIGHT_ESTIMATE = 36;
 const TimelineView = ({
   plan,
   currentTime = 0,
-  windowSeconds = 30,
   showOwnOnly = false,
   playerJob = null,
   playerRole = null,
@@ -169,7 +163,7 @@ const TimelineView = ({
     <div ref={containerRef} className={styles.containerLocked}>
       {limitedGroups.map((group, groupIndex) => {
         const timeUntil = group.timestamp - currentTime;
-        const isImminent = timeUntil > 0 && timeUntil <= 10;
+        const isImminent = timeUntil > 0 && timeUntil <= 20;
 
         return (
           <div

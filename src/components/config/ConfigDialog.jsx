@@ -32,6 +32,14 @@ const ConfigDialog = ({
     onConfigChange('enableSound', e.target.checked);
   };
 
+  const handleEnableVoiceCountdownChange = (e) => {
+    onConfigChange('enableVoiceCountdown', e.target.checked);
+  };
+
+  const handleEnableVoiceActionsChange = (e) => {
+    onConfigChange('enableVoiceActions', e.target.checked);
+  };
+
   const handleSoundTypeChange = (soundType) => {
     onConfigChange('soundType', soundType);
   };
@@ -189,6 +197,39 @@ const ConfigDialog = ({
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Voice (TTS) Section */}
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Voice (TTS)</h3>
+            <p className={styles.checkboxDescription} style={{ marginBottom: '0.5rem' }}>
+              Uses OverlayPlugin&apos;s text-to-speech for countdown announcements.
+            </p>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={config.enableVoiceCountdown}
+                onChange={handleEnableVoiceCountdownChange}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkboxText}>Enable voice countdown</span>
+            </label>
+            <p className={styles.checkboxDescription}>
+              Speaks countdown numbers (5, 4, 3, 2, 1) before each action.
+            </p>
+
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={config.enableVoiceActions}
+                onChange={handleEnableVoiceActionsChange}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkboxText}>Enable voiced actions</span>
+            </label>
+            <p className={styles.checkboxDescription}>
+              Announces the ability name when countdown starts and when it&apos;s time to use it.
+            </p>
           </div>
 
           {/* Tutorial Section */}

@@ -5,6 +5,8 @@ const DEFAULT_CONFIG = {
   showNotes: true,
   enableSound: true,
   soundType: 'info', // info, alert, alarm, chime, ping
+  enableVoiceCountdown: false, // TTS countdown 5, 4, 3, 2, 1
+  enableVoiceActions: false, // TTS ability name announcements
   enableRaidPlan: false, // Show raid plan images (off by default to save bandwidth)
   playerRole: null, // MT, OT, M1, M2, D3, D4, H1, H2
 };

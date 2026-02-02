@@ -19,6 +19,7 @@ import useRaidPlan from './hooks/useRaidPlan';
 import useConfig, { isRoleValidForJob } from './hooks/useConfig';
 import usePlayerJob from './hooks/usePlayerJob';
 import useActionSound from './hooks/useActionSound';
+import useActionTTS from './hooks/useActionTTS';
 import useCombatEvents from './hooks/useCombatEvents';
 import usePlanLibrary from './hooks/usePlanLibrary';
 import useTutorial from './hooks/useTutorial';
@@ -140,6 +141,7 @@ const App = () => {
   const raidPlanData = useRaidPlan(plan, currentTime);
 
   useActionSound(calloutData, config.enableSound, config.soundType);
+  useActionTTS(calloutData, config.enableVoiceCountdown, config.enableVoiceActions);
 
   useEffect(() => {
     const handleOverlayStateUpdate = (e) => {
