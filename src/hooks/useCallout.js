@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { jobMatchesEntry } from '../utils/ffxivData';
 
 export const CALLOUT_CONFIG = {
-  SHOW_BEFORE: 5,
+  SHOW_BEFORE: 10,
   SHOW_AFTER: 3,
 };
 
