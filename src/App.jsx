@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import PlanInput from './components/plan/PlanInput';
 import TimelineView from './components/timeline/TimelineView';
@@ -108,25 +108,50 @@ const App = () => {
     [getDefaultPlanForZone]
   );
 
+  // Track combat state for callbacks that need it
+  const isInCombatRef = useRef(false);
+
   const combatEvents = useCombatEvents({
     onCombatStart: useCallback(() => {
+      console.log(
+        '[XRT] Combat started - resetting and starting timer. Was in combat:',
+        isInCombatRef.current
+      );
+      isInCombatRef.current = true;
       reset();
       setTimeout(() => start(), 50);
     }, [reset, start]),
     onCombatEnd: useCallback(() => {
-      reset();
-    }, [reset]),
-    onCountdownStart: useCallback(() => {
-      reset();
-    }, [reset]),
+      console.log('[XRT] Combat ended - NOT resetting (phase transition protection)');
+      isInCombatRef.current = false;
+      // Don't reset on combat end - boss may just be untargetable (phase transition)
+      // Timer will reset on wipe, zone change, or next combat start
+    }, []),
+    onCountdownStart: useCallback(
+      (seconds, player) => {
+        // Only reset on countdown if not currently in combat
+        // Prevents accidental resets if someone starts a countdown mid-fight
+        if (!isInCombatRef.current) {
+          console.log(`[XRT] Countdown started (${seconds}s by ${player}) - resetting timer`);
+          reset();
+        } else {
+          console.log(`[XRT] Countdown started but IN COMBAT - ignoring reset`);
+        }
+      },
+      [reset]
+    ),
     onZoneChange: useCallback(
       (zoneId, zoneName) => {
+        console.log(`[XRT] Zone changed to "${zoneName}" (${zoneId}) - resetting timer`);
+        isInCombatRef.current = false;
         reset();
         handleZoneAutoLoad(zoneName);
       },
       [reset, handleZoneAutoLoad]
     ),
     onWipe: useCallback(() => {
+      console.log('[XRT] Wipe detected - resetting timer');
+      isInCombatRef.current = false;
       reset();
     }, [reset]),
   });

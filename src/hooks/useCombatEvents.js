@@ -19,7 +19,12 @@ const COUNTDOWN_CANCEL_LINE_TYPE = '269';
 const GAMELOG_TYPE = '00';
 const GAMELOG_ENGAGE_CODE = '0039';
 const ACTORCONTROL_LINE_TYPE = '33';
-const WIPE_COMMANDS = ['40000010', '80000004', '40000001'];
+// Wipe detection codes from cactbot docs:
+// 4000000F - Fade in (wipe in 6.2+)
+// 40000010 - Wipe (pre-6.2)
+// 40000005 - Fade out (wipe)
+// NOTE: 80000004 is "Lockout time adjust" - fires on phase transitions, NOT wipes!
+const WIPE_COMMANDS = ['4000000F', '40000010', '40000005'];
 const WIPE_ECHO_PATTERNS = [/cactbot wipe/i, /wipe/i];
 
 const isOverlayPluginAvailable = () =>
@@ -49,6 +54,7 @@ const useCombatEvents = ({
   const onWipeRef = useRef(onWipe);
   const inGameCombatRef = useRef(false);
   const combatStateRef = useRef('idle');
+  const combatEndTimeoutRef = useRef(null);
 
   useEffect(() => {
     onCombatStartRef.current = onCombatStart;
@@ -91,18 +97,34 @@ const useCombatEvents = ({
     if (parts.length < 3) return false;
     const lineType = parts[0];
 
+    // ActorControl wipe commands (party wipe, instance reset)
     if (lineType === ACTORCONTROL_LINE_TYPE) {
       const command = parts[3]?.toUpperCase();
-      if (command && WIPE_COMMANDS.includes(command)) return true;
+      if (command && WIPE_COMMANDS.includes(command)) {
+        console.log('[XRT] Wipe command detected:', command, 'from line:', line);
+        return true;
+      }
     }
 
+    // Echo message wipes (e.g., "/e wipe" or cactbot wipe)
     if (lineType === GAMELOG_TYPE) {
       const code = parts[2];
       const message = parts[4] || '';
       if (code === '0038') {
-        return WIPE_ECHO_PATTERNS.some((pattern) => pattern.test(message));
+        if (WIPE_ECHO_PATTERNS.some((pattern) => pattern.test(message))) {
+          console.log('[XRT] Wipe echo detected:', message);
+          return true;
+        }
       }
     }
+
+    // Also detect "has been defeated" / party wipe messages
+    // Line type 25 (NetworkDeath) or instance fail conditions
+    if (lineType === '33') {
+      // Log all ActorControl messages to debug
+      console.log('[XRT] ActorControl line:', parts.slice(0, 5).join('|'));
+    }
+
     return false;
   }, []);
 
@@ -144,6 +166,11 @@ const useCombatEvents = ({
       }
 
       if (isWipeMessage(line)) {
+        // Cancel any pending combat end timeout - wipe is immediate
+        if (combatEndTimeoutRef.current) {
+          clearTimeout(combatEndTimeoutRef.current);
+          combatEndTimeoutRef.current = null;
+        }
         setCombatState('idle');
         combatStateRef.current = 'idle';
         setCountdownSeconds(null);
@@ -163,31 +190,59 @@ const useCombatEvents = ({
     const newInACTCombat = detail.inACTCombat ?? false;
     const wasInGameCombat = inGameCombatRef.current;
 
+    console.log('[XRT] InCombatChanged:', {
+      newInGameCombat,
+      newInACTCombat,
+      wasInGameCombat,
+      combatState: combatStateRef.current,
+    });
+
     setInGameCombat(newInGameCombat);
     setInACTCombat(newInACTCombat);
     inGameCombatRef.current = newInGameCombat;
 
-    if (newInGameCombat && !wasInGameCombat && combatStateRef.current !== 'combat') {
-      setCombatState('combat');
-      combatStateRef.current = 'combat';
-      onCombatStartRef.current?.();
+    // Combat started - cancel any pending combat end and trigger start
+    if (newInGameCombat && !wasInGameCombat) {
+      console.log('[XRT] Combat state: entering combat');
+      // Cancel any pending combat end timeout (boss became targetable again)
+      if (combatEndTimeoutRef.current) {
+        console.log('[XRT] Cancelled pending combat end timeout');
+        clearTimeout(combatEndTimeoutRef.current);
+        combatEndTimeoutRef.current = null;
+      }
+
+      if (combatStateRef.current !== 'combat') {
+        setCombatState('combat');
+        combatStateRef.current = 'combat';
+        onCombatStartRef.current?.();
+      }
     }
 
+    // Combat ended - wait before confirming (handles phase transitions)
+    // Boss becoming untargetable will trigger this, so we delay to see if combat resumes
     if (!newInGameCombat && wasInGameCombat) {
-      setCombatState('ended');
-      combatStateRef.current = 'ended';
-      setCountdownSeconds(null);
-      setCountdownPlayer(null);
-      onCombatEndRef.current?.();
+      // Don't immediately end - wait 8 seconds for phase transitions
+      // Most phase transitions complete within this window
+      combatEndTimeoutRef.current = setTimeout(() => {
+        // Only end if we're still out of combat after the delay
+        if (!inGameCombatRef.current && combatStateRef.current === 'combat') {
+          setCombatState('ended');
+          combatStateRef.current = 'ended';
+          setCountdownSeconds(null);
+          setCountdownPlayer(null);
+          onCombatEndRef.current?.();
 
-      setTimeout(() => {
-        setCombatState((prev) => {
-          if (prev === 'ended') {
-            combatStateRef.current = 'idle';
-            return 'idle';
-          }
-          return prev;
-        });
+          setTimeout(() => {
+            setCombatState((prev) => {
+              if (prev === 'ended') {
+                combatStateRef.current = 'idle';
+                return 'idle';
+              }
+              return prev;
+            });
+          }, 3000);
+        }
+        combatEndTimeoutRef.current = null;
       }, 3000);
     }
   }, []);
@@ -208,11 +263,27 @@ const useCombatEvents = ({
     setZoneId(newZoneId);
     setZoneName(newZoneName);
     setCombatState('idle');
+    combatStateRef.current = 'idle';
     setCountdownSeconds(null);
     setCountdownPlayer(null);
     setInGameCombat(false);
+    inGameCombatRef.current = false;
     setInACTCombat(false);
+    // Cancel any pending combat end timeout on zone change
+    if (combatEndTimeoutRef.current) {
+      clearTimeout(combatEndTimeoutRef.current);
+      combatEndTimeoutRef.current = null;
+    }
     onZoneChangeRef.current?.(newZoneId, newZoneName);
+  }, []);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (combatEndTimeoutRef.current) {
+        clearTimeout(combatEndTimeoutRef.current);
+      }
+    };
   }, []);
 
   useEffect(() => {
