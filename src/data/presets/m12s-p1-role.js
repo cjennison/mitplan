@@ -216,8 +216,5 @@ export default {
     },
     { timestamp: 397, job: 'SGE', ability: 'Kerachole + Holos', note: 'Slaughtershed III' },
     { timestamp: 397, job: 'Melee', role: 'M2', ability: 'Feint', note: 'Slaughtershed III' },
-
-    // Welcome message for all players
-    { timestamp: 447, job: 'All', ability: 'Thank you for using XRT!', note: 'Welcome' },
   ],
 };
