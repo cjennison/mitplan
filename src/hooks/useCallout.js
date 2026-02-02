@@ -59,7 +59,7 @@ const useCallout = (plan, currentTime, options = {}) => {
           .map((e) => ({ job: e.job, name: e.ability, note: e.note, role: e.role }));
 
         return {
-          mitigation: { time: abilityTime, abilities: abilitiesAtTime },
+          action: { time: abilityTime, abilities: abilitiesAtTime },
           countdown,
           abilityTime,
           isOverdue: countdown < 0,

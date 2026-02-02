@@ -77,6 +77,11 @@ const ActionCallout = ({
 
   const { action, countdown } = calloutData;
 
+  // Guard against missing action data
+  if (!action) {
+    return null;
+  }
+
   // Get job and ability info - handle multiple abilities
   const abilities = action.abilities || [];
   const firstAbility = abilities[0] || {};
