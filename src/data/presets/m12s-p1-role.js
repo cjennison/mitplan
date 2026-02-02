@@ -19,36 +19,36 @@ export default {
     // ═══════════════════════════════════════════════════════════════
     {
       type: 'raidplan',
-      timestamp: 115, // 1:55 - Act 2 starts
-      endTimestamp: 178, // 2:58 - Act 2 ends
+      timestamp: 115, // 115 1:55 - Act 2 starts
+      endTimestamp: 178, // 178 2:58 - Act 2 ends
       imageUrl: '/raidplans/m12s-p1-act2.png',
       note: 'Act 2 Positions',
     },
     {
       type: 'raidplan',
-      timestamp: 300, // 300 3:00 - Act 3 starts
-      endTimestamp: 330, // 330 3:50 - Act 3 ends
+      timestamp: 180, //  3:03 - Act 3 starts
+      endTimestamp: 230, //  3:50 - Act 3 ends
       imageUrl: '/raidplans/m12s-p1-act3.png',
       note: 'Act 3 Positions',
     },
     {
       type: 'raidplan',
-      timestamp: 360, // 360 4:00 - Curtain Call Baits
-      endTimestamp: 380, // 380 4:20 - Curtain Call Baits ends
+      timestamp: 240, // 4:00 - Curtain Call Baits
+      endTimestamp: 260, // 4:20 - Curtain Call Baits ends
       imageUrl: '/raidplans/m12s-p1-curtaincallbaits.png',
       note: 'Curtain Call Baits',
     },
     {
       type: 'raidplan',
-      timestamp: 380, // 380 4:20 - Curtain Call Spreads
-      endTimestamp: 400, // 400 4:40 - Curtain Call Spreads ends
+      timestamp: 261, // 260 4:20 - Curtain Call Spreads
+      endTimestamp: 280, // 280 4:40 - Curtain Call Spreads ends
       imageUrl: '/raidplans/m12s-p1-curtaincallspreads.png',
       note: 'Curtain Call Spreads',
     },
     {
       type: 'raidplan',
-      timestamp: 410, // 410 6:50 - Chain Breaks
-      endTimestamp: 435, // 435 7:15 - Chain Breaks ends
+      timestamp: 281, // 6:00 - Chain Breaks
+      endTimestamp: 300, // 7:15 - Chain Breaks ends
       imageUrl: '/raidplans/m12s-p1-chains.webp',
       note: 'Chain Breaks',
     },
@@ -218,6 +218,6 @@ export default {
     { timestamp: 397, job: 'Melee', role: 'M2', ability: 'Feint', note: 'Slaughtershed III' },
 
     // Welcome message for all players
-    { timestamp: 407, job: 'All', ability: 'Thank you for using XRT!', note: 'Welcome' },
+    { timestamp: 447, job: 'All', ability: 'Thank you for using XRT!', note: 'Welcome' },
   ],
 };
