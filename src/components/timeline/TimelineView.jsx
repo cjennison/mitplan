@@ -194,6 +194,7 @@ const TimelineView = ({
                   >
                     <JobBadge job={entry.job} />
                     <span className={styles.abilityLocked}>{entry.ability}</span>
+                    {entry.note && <span className={styles.noteLocked}>{entry.note}</span>}
                   </div>
                 );
               })}
