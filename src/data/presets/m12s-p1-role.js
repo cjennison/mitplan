@@ -45,13 +45,6 @@ export default {
       imageUrl: '/raidplans/m12s-p1-curtaincallspreads.png',
       note: 'Curtain Call Spreads',
     },
-    {
-      type: 'raidplan',
-      timestamp: 281, // 6:00 - Chain Breaks
-      endTimestamp: 300, // 7:15 - Chain Breaks ends
-      imageUrl: '/raidplans/m12s-p1-chains.webp',
-      note: 'Chain Breaks',
-    },
 
     // ═══════════════════════════════════════════════════════════════
     // ACTION TIMELINE
