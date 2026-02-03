@@ -163,7 +163,7 @@ const App = () => {
   });
 
   // Raid plan image display hook
-  const raidPlanData = useRaidPlan(plan, currentTime);
+  const raidPlanData = useRaidPlan(plan, currentTime, playerJob);
 
   useActionSound(calloutData, config.enableSound, config.soundType);
   useActionTTS(calloutData, config.enableVoiceCountdown, config.enableVoiceActions);
