@@ -58,7 +58,13 @@ const App = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [importValue, setImportValue] = useState('');
   const [isLocked, setIsLocked] = useState(false);
-  const [isUILocked, setIsUILocked] = useState(false);
+  const [isUILocked, setIsUILocked] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.UI_LOCKED) === 'true';
+    } catch {
+      return false;
+    }
+  });
   const [isDevConsoleVisible, setIsDevConsoleVisible] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
@@ -181,11 +187,18 @@ const App = () => {
 
   const handleToggleUILock = useCallback(() => {
     setIsUILocked((prev) => {
+      const newValue = !prev;
       // If locking the UI and tutorial is showing, complete the tutorial
-      if (!prev && showTutorial) {
+      if (newValue && showTutorial) {
         completeTutorial();
       }
-      return !prev;
+      // Persist lock state to localStorage
+      try {
+        localStorage.setItem(STORAGE_KEYS.UI_LOCKED, String(newValue));
+      } catch {
+        // Ignore localStorage errors
+      }
+      return newValue;
     });
   }, [showTutorial, completeTutorial]);
 

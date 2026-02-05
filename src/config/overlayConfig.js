@@ -20,6 +20,7 @@ export const STORAGE_KEYS = {
   RAIDPLAN_POSITION: 'xrt-raidplan-position',
   RAIDPLAN_SIZE: 'xrt-raidplan-size',
   LOADED_PLAN: 'xrt-loaded-plan',
+  UI_LOCKED: 'xrt-ui-locked',
 };
 
 // Default positions and sizes for containers (percentages of parent)
