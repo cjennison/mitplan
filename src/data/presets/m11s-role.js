@@ -57,7 +57,7 @@ export default {
     // Meteorain @ 4:45
     // ───────────────────────────────────────────────────────────────
     {
-      timestamp: 290,
+      timestamp: 294,
       job: 'Tank',
       role: 'MT',
       ability: 'Reprisal',
