@@ -5,12 +5,18 @@
  * isDefault: true marks this preset as the developer-recommended default
  * for its fight. Only one preset per fightName should have isDefault: true.
  */
+import m9sRole from './m9s-role.js';
+import m10sRole from './m10s-role.js';
+import m11sRole from './m11s-role.js';
 import m12sP1Role from './m12s-p1-role.js';
 
-// Mark the role-based simplified plan as default for M12S P1
+// Mark role-based plans as defaults for their respective fights
+m9sRole.isDefault = true;
+m10sRole.isDefault = true;
+m11sRole.isDefault = true;
 m12sP1Role.isDefault = true;
 
-export const PRESETS = [m12sP1Role];
+export const PRESETS = [m9sRole, m10sRole, m11sRole, m12sP1Role];
 
 export const getPresetById = (id) => PRESETS.find((p) => p.id === id);
 
