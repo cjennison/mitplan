@@ -59,4 +59,5 @@ coverage/
 
 # Docs and Copilot
 /docs
-/.github
+/.github/*
+!/.github/workflows/
