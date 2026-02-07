@@ -7,8 +7,6 @@ A FFXIV ACT overlay that helps raid teams coordinate their raid actions and comm
 1. **Raid Leader** creates a raid plan and encodes it as a Base64 string
 2. **Team Members** paste the Base64 string into the XRT overlay
 3. **During Combat**, XRT displays countdown alerts for each player's assigned actions
-   - 📋 **15-second warning**: Small notification card appears
-   - 🚨 **3-second warning**: Large, prominent alert demands attention
 
 ## Quick Start (Development)
 
@@ -89,32 +87,6 @@ Once connected, you should see the XRT interface. Use the **Developer Console** 
 - Load a sample raid plan
 - Simulate different jobs
 
-## Project Structure
-
-```
-xrt/
-├── docs/
-│   └── PROJECT.md          # Detailed project documentation
-├── src/
-│   ├── components/         # React components
-│   │   ├── alerts/         # Alert display components
-│   │   ├── plan/           # Plan input/validation
-│   │   └── dev/            # Developer console
-│   ├── hooks/              # Custom React hooks
-│   ├── utils/              # Utility functions
-│   ├── data/               # Static data (jobs, abilities)
-│   ├── context/            # React context providers
-│   ├── styles/             # CSS modules
-│   ├── App.jsx             # Root component
-│   ├── main.jsx            # Entry point
-│   └── index.html          # HTML template
-├── .github/
-│   └── copilot-instructions.md  # AI agent guidelines
-├── package.json
-├── vite.config.js
-└── README.md
-```
-
 ## Usage
 
 ### Loading a Raid Plan
@@ -173,26 +145,6 @@ eyJ2ZXJzaW9uIjoiMS4wIiwiZmlnaHROYW1lIjoiVGVzdCBGaWdodCIsInRpbWVsaW5lIjpbeyJ0aW1l
 | `npm run lint`    | Run ESLint                               |
 | `npm run format`  | Format code with Prettier                |
 
-### Code Quality
-
-This project uses:
-
-- **ESLint 9+** for static analysis
-- **Prettier 4+** for code formatting
-- **ES2026** JavaScript standards
-- **React 19+** with functional components and hooks
-- **Radix UI Primitives** for accessible interactive components
-- **CSS Modules** for FFXIV-styled component styling
-
-See [.github/copilot-instructions.md](.github/copilot-instructions.md) for detailed coding guidelines.
-
-### UI Architecture
-
-| Component Type                     | Approach               |
-| ---------------------------------- | ---------------------- |
-| **Display-only** (alerts, timers)  | Pure CSS Modules       |
-| **Interactive** (modals, tooltips) | Radix UI + CSS Modules |
-
 ### ACT/Cactbot APIs
 
 XRT integrates with OverlayPlugin using these event listeners:
@@ -213,11 +165,7 @@ addOverlayListener('onPlayerChangedEvent', (e) => {
 
 ## Deployment (Production)
 
-XRT is deployed to Vercel. Users point their OverlayPlugin to the production URL:
-
-```
-https://xrt.vercel.app
-```
+XRT is deployed to Vercel. Users point their OverlayPlugin to the production URL.
 
 ### Deploying Updates
 
@@ -244,4 +192,3 @@ MIT
 
 - [Cactbot](https://github.com/quisquous/cactbot) - Inspiration and overlay architecture
 - [OverlayPlugin](https://github.com/OverlayPlugin/OverlayPlugin) - ACT overlay framework
-- FFXIV raiding community
