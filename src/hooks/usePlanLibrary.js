@@ -5,10 +5,6 @@ import { getFightNameForZone } from '../data/zoneMapping.js';
 const STORAGE_KEY = 'xrt-imported-plans';
 const DEFAULTS_STORAGE_KEY = 'xrt-default-plans';
 
-/**
- * Hook for managing the plan library (presets + imported plans)
- * Also manages default plan preferences per fight.
- */
 const usePlanLibrary = () => {
   const [importedPlans, setImportedPlans] = useState(() => {
     try {
@@ -20,7 +16,6 @@ const usePlanLibrary = () => {
     return [];
   });
 
-  // User's default plan selections: { [fightName]: planId }
   const [userDefaults, setUserDefaults] = useState(() => {
     try {
       const stored = localStorage.getItem(DEFAULTS_STORAGE_KEY);
@@ -85,11 +80,6 @@ const usePlanLibrary = () => {
     [importedPlans]
   );
 
-  /**
-   * Set a plan as the default for its fight
-   * @param {string} fightName - The fight name
-   * @param {string|null} planId - The plan ID to set as default, or null to clear
-   */
   const setDefaultPlan = useCallback((fightName, planId) => {
     setUserDefaults((prev) => {
       if (planId === null) {
@@ -101,49 +91,30 @@ const usePlanLibrary = () => {
     });
   }, []);
 
-  /**
-   * Get the default plan ID for a fight (user selection or preset default)
-   * @param {string} fightName - The fight name
-   * @returns {string|null} - The default plan ID or null
-   */
   const getDefaultPlanId = useCallback(
     (fightName) => {
-      // User selection takes priority
       if (userDefaults[fightName]) {
         return userDefaults[fightName];
       }
-      // Fall back to preset default
       const presetDefault = getDefaultPresetForFight(fightName);
       return presetDefault?.id || null;
     },
     [userDefaults]
   );
 
-  /**
-   * Get the default plan object for a fight
-   * @param {string} fightName - The fight name
-   * @returns {Object|null} - The default plan or null
-   */
   const getDefaultPlan = useCallback(
     (fightName) => {
       const planId = getDefaultPlanId(fightName);
       if (!planId) return null;
 
-      // Check presets first
       const preset = PRESETS.find((p) => p.id === planId);
       if (preset) return preset;
 
-      // Check imported plans
       return importedPlans.find((p) => p.id === planId) || null;
     },
     [getDefaultPlanId, importedPlans]
   );
 
-  /**
-   * Get the default plan for a zone (by zone name)
-   * @param {string} zoneName - The zone name from ChangeZone event
-   * @returns {Object|null} - The default plan or null
-   */
   const getDefaultPlanForZone = useCallback(
     (zoneName) => {
       const fightName = getFightNameForZone(zoneName);
@@ -153,12 +124,6 @@ const usePlanLibrary = () => {
     [getDefaultPlan]
   );
 
-  /**
-   * Check if a plan is the default for its fight
-   * @param {string} planId - The plan ID
-   * @param {string} fightName - The fight name
-   * @returns {boolean}
-   */
   const isPlanDefault = useCallback(
     (planId, fightName) => {
       return getDefaultPlanId(fightName) === planId;
@@ -166,7 +131,6 @@ const usePlanLibrary = () => {
     [getDefaultPlanId]
   );
 
-  // Build a combined list of all plans with their default status
   const allPlans = useMemo(() => {
     return [
       ...PRESETS.map((p) => ({ ...p, type: 'preset' })),

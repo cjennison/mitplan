@@ -1,11 +1,5 @@
 import styles from './TutorialOverlay.module.css';
 
-/**
- * TutorialOverlay - Semi-transparent backdrop shown during tutorial
- *
- * Dims the background to help focus attention on the highlighted elements.
- * Shows instructions based on whether OverlayPlugin's Lock Overlay is enabled.
- */
 const TutorialOverlay = ({ isActive, isOverlayLocked, onDismiss }) => {
   if (!isActive) return null;
 

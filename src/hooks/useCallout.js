@@ -6,37 +6,24 @@ export const CALLOUT_CONFIG = {
   SHOW_AFTER: 3,
 };
 
-/**
- * Check if a timeline entry matches the player's job and role.
- * Supports both specific jobs (WAR, SCH) and job types (Tank, Healer, Melee).
- */
 const entryMatchesPlayer = (entry, playerJob, playerRole) => {
   if (!playerJob) return true;
 
-  // Use the new matching logic that supports job types
   if (!jobMatchesEntry(entry.job, playerJob)) return false;
 
-  // If entry has a role requirement and player has a role, they must match
   if (entry.role && playerRole) {
     return entry.role.toUpperCase() === playerRole.toUpperCase();
   }
-  // If entry has no role, it matches any role for that job
   if (!entry.role) return true;
-  // If entry has a role but player doesn't have one set, still show it
   return true;
 };
 
-/**
- * Determines which ability should be shown as a callout based on current fight time.
- * Shows abilities within SHOW_BEFORE seconds of happening until SHOW_AFTER seconds after.
- */
 const useCallout = (plan, currentTime, options = {}) => {
   const { showOwnOnly = false, playerJob = null, playerRole = null } = options;
 
   const callout = useMemo(() => {
     if (!plan?.timeline?.length) return null;
 
-    // Filter out raidplan entries - they are handled separately
     let timeline = plan.timeline.filter((entry) => entry.type !== 'raidplan');
 
     if (showOwnOnly && playerJob) {
@@ -73,16 +60,11 @@ const useCallout = (plan, currentTime, options = {}) => {
   return callout;
 };
 
-/**
- * Returns timeline items that are upcoming but not yet in callout range.
- * Uses Math.floor to match displayed countdown - hides when displayed value <= SHOW_BEFORE
- */
 const useTimelineItems = (plan, currentTime, windowSeconds = 30, maxItems = 3) => {
   const items = useMemo(() => {
     if (!plan?.timeline?.length) return [];
 
     const filtered = plan.timeline.filter((entry) => {
-      // Filter out raidplan entries - they are handled separately
       if (entry.type === 'raidplan') return false;
       const timeUntil = entry.timestamp - currentTime;
       return Math.floor(timeUntil) > CALLOUT_CONFIG.SHOW_BEFORE && timeUntil <= windowSeconds;

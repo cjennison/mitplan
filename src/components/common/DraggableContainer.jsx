@@ -1,19 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './DraggableContainer.module.css';
 
-/**
- * DraggableContainer - A container that can be dragged and resized within its parent
- *
- * @param {Object} props
- * @param {string} props.storageKeyPosition - localStorage key for position
- * @param {string} props.storageKeySize - localStorage key for size
- * @param {Object} props.defaultPosition - { x, y } default position
- * @param {Object} props.defaultSize - { width, height } default size
- * @param {string} props.label - Label shown on drag handle
- * @param {boolean} props.isLocked - Whether the overlay is locked (hides controls)
- * @param {boolean} props.tutorialHighlight - Whether to show tutorial highlight effect
- * @param {React.ReactNode} props.children - Content to render inside
- */
 const DraggableContainer = ({
   storageKeyPosition,
   storageKeySize,
@@ -24,7 +11,6 @@ const DraggableContainer = ({
   tutorialHighlight = false,
   children,
 }) => {
-  // Load initial state from localStorage or use defaults
   const loadFromStorage = (key, defaultValue) => {
     try {
       const stored = localStorage.getItem(key);
@@ -150,7 +136,6 @@ const DraggableContainer = ({
       }}
       onMouseDown={handleContainerMouseDown}
     >
-      {/* Drag Handle - invisible when locked but maintains space */}
       <div
         className={`${styles.dragHandle} ${isLocked ? styles.handleHidden : ''}`}
         onMouseDown={handleDragStart}
@@ -160,10 +145,8 @@ const DraggableContainer = ({
         <span className={styles.dragLabel}>{label}</span>
       </div>
 
-      {/* Content */}
       <div className={styles.content}>{children}</div>
 
-      {/* Resize Handle - invisible when locked but maintains space */}
       <div
         className={`${styles.resizeHandle} ${isLocked ? styles.handleHidden : ''}`}
         onMouseDown={handleResizeStart}

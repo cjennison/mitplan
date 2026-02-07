@@ -1,9 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 
-/**
- * Hook to manage fight timer state with start/stop/reset controls.
- * Uses refs to avoid stale closure issues in interval callbacks.
- */
 const useFightTimer = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);

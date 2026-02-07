@@ -1,17 +1,6 @@
-/**
- * Overlay Configuration
- *
- * These values control the behavior and appearance of the XRT overlay.
- * Some are hardcoded for now but designed to be configurable later.
- */
-
-// Maximum number of upcoming actions to display in the timeline
 export const MAX_TIMELINE_ITEMS = 3;
-
-// How far ahead (in seconds) to look for upcoming actions
 export const TIMELINE_WINDOW_SECONDS = 30;
 
-// LocalStorage keys for persisting draggable container positions
 export const STORAGE_KEYS = {
   TIMELINE_POSITION: 'xrt-timeline-position',
   TIMELINE_SIZE: 'xrt-timeline-size',
@@ -23,7 +12,6 @@ export const STORAGE_KEYS = {
   UI_LOCKED: 'xrt-ui-locked',
 };
 
-// Default positions and sizes for containers (percentages of parent)
 export const DEFAULT_TIMELINE = {
   x: 10,
   y: 10,

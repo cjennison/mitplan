@@ -4,9 +4,6 @@ import { SOUND_TYPES, initAudio } from '../../utils/sound';
 import styles from './ConfigDialog.module.css';
 import JobBadge from '../common/JobBadge';
 
-/**
- * ConfigDialog - Configuration modal for overlay settings
- */
 const ConfigDialog = ({
   open,
   onOpenChange,

@@ -1,26 +1,6 @@
 import styles from './ActionCallout.module.css';
 import JobBadge from '../common/JobBadge';
 
-/**
- * ActionCallout - Shows the current/upcoming raid action as a large callout
- *
- * This is what the player sees front-and-center during combat.
- * Shows countdown before the action should be performed, then shows
- * negative time after it should have been done.
- *
- * When unlocked and no active callout, shows a placeholder so users
- * can see what the callout will look like during the fight.
- *
- * @param {Object} props
- * @param {Object} props.calloutData - Callout info from useCallout hook
- * @param {Object} props.calloutData.action - The raid action object
- * @param {number} props.calloutData.countdown - Seconds until/since ability (positive=before, negative=after)
- * @param {boolean} props.calloutData.isOverdue - Whether the ability time has passed
- * @param {boolean} props.isLocked - Whether overlay is locked (gameplay mode)
- * @param {boolean} props.isEmpty - Whether to show empty state
- * @param {boolean} props.showPlaceholder - Whether to show placeholder when empty (for unlocked mode)
- * @param {boolean} props.showNotes - Whether to show notes underneath abilities
- */
 const ActionCallout = ({
   calloutData,
   isLocked = false,
@@ -28,12 +8,6 @@ const ActionCallout = ({
   showPlaceholder = false,
   showNotes = true,
 }) => {
-  /**
-   * Format countdown for display
-   * Uses floor to match timeline display - ensures each number appears only once
-   * Positive: "5", "4", "3", "2", "1"
-   * Zero/Negative: "NOW!" (no negative numbers)
-   */
   const formatCountdown = (countdown) => {
     const rounded = Math.floor(countdown);
     if (rounded > 0) {
@@ -42,11 +16,6 @@ const ActionCallout = ({
     return 'NOW!';
   };
 
-  /**
-   * Get countdown urgency class
-   * Uses floored value to match display - when "NOW!" is shown, it should be green
-   * Yellow for 3+ seconds, Red for 1-2 seconds, Green for NOW
-   */
   const getUrgencyClass = (countdown) => {
     const rounded = Math.floor(countdown);
     if (rounded <= 0) return styles.countdownNow; // Green - NOW!
@@ -54,8 +23,6 @@ const ActionCallout = ({
     return styles.countdownNormal; // Yellow - normal
   };
 
-  // Show placeholder when unlocked and no active callout
-  // This helps users see what the callout will look like
   if ((isEmpty || !calloutData) && showPlaceholder && !isLocked) {
     return (
       <div className={`${styles.callout} ${styles.placeholder}`}>
@@ -70,26 +37,21 @@ const ActionCallout = ({
     );
   }
 
-  // Empty state when no callout data - show nothing
   if (isEmpty || !calloutData) {
     return null;
   }
 
   const { action, countdown } = calloutData;
 
-  // Guard against missing action data
   if (!action) {
     return null;
   }
 
-  // Get job and ability info - handle multiple abilities
   const abilities = action.abilities || [];
   const firstAbility = abilities[0] || {};
   const job = firstAbility.job || 'UNK';
   const abilityName = firstAbility.name || 'Unknown';
   const note = firstAbility.note || null;
-
-  // If there are multiple abilities, show them all
   const hasMultiple = abilities.length > 1;
 
   return (
@@ -100,7 +62,6 @@ const ActionCallout = ({
           <span className={styles.abilityName}>{abilityName}</span>
         </div>
 
-        {/* Show note for first ability if showNotes is enabled */}
         {showNotes && note && <div className={styles.abilityNote}>{note}</div>}
 
         {hasMultiple && (
@@ -111,7 +72,6 @@ const ActionCallout = ({
                   <span className={styles.additionalJob}>{ability.job}</span>
                   <span className={styles.additionalName}>{ability.name}</span>
                 </span>
-                {/* Show note for additional abilities if showNotes is enabled */}
                 {showNotes && ability.note && (
                   <div className={styles.additionalNote}>{ability.note}</div>
                 )}

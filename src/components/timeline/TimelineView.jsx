@@ -4,36 +4,14 @@ import { getJobColor, getRoleFromJob, jobMatchesEntry } from '../../utils/ffxivD
 import JobBadge from '../common/JobBadge';
 import { CALLOUT_CONFIG } from '../../hooks/useCallout';
 
-/**
- * Format countdown time for display
- * Shows seconds until ability (e.g., "0:15" for 15 seconds)
- */
 const formatCountdown = (seconds) => {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
-// Approximate height of a single timeline group in pixels
 const ITEM_HEIGHT_ESTIMATE = 36;
 
-/**
- * TimelineView component - Displays mitigations from the plan
- *
- * Shows upcoming mitigations in a compact, readable format.
- * Displays countdown time (time until ability) rather than absolute timestamps.
- * Filters out abilities that are within the callout window (5 seconds).
- * Supports both specific jobs (WAR, SCH) and job types (Tank, Healer, Melee).
- * Dynamically shows as many items as can fit in the container.
- *
- * @param {Object} props
- * @param {Object} props.plan - The decoded mitigation plan
- * @param {number} props.currentTime - Current fight time in seconds (0 if not started)
- * @param {number} props.windowSeconds - How many seconds ahead to show (default 30)
- * @param {boolean} props.isLocked - Whether the overlay is in locked (minimal) mode
- * @param {boolean} props.showOwnOnly - If true, only show abilities for playerJob
- * @param {string} props.playerJob - The player's current job (e.g., "WAR", "SCH")
- */
 const TimelineView = ({
   plan,
   currentTime = 0,
@@ -50,10 +28,9 @@ const TimelineView = ({
     if (!containerRef.current) return;
 
     const containerHeight = containerRef.current.clientHeight;
-    const containerPadding = 16; // 0.5rem top + 0.5rem bottom padding
-    const itemGap = 6; // 0.375rem gap between items
+    const containerPadding = 16;
+    const itemGap = 6;
 
-    // Use measured item height if available, otherwise use estimate
     let itemHeight = ITEM_HEIGHT_ESTIMATE;
     if (itemRef.current) {
       itemHeight = itemRef.current.offsetHeight;
@@ -61,11 +38,7 @@ const TimelineView = ({
 
     const availableHeight = containerHeight - containerPadding;
     const itemWithGap = itemHeight + itemGap;
-
-    // Calculate how many full items can fit
     const fittingItems = Math.floor((availableHeight + itemGap) / itemWithGap);
-
-    // Minimum of 1, and cap at a reasonable maximum
     const newMaxItems = Math.max(1, Math.min(fittingItems, 20));
 
     if (newMaxItems !== maxItems) {
@@ -73,10 +46,7 @@ const TimelineView = ({
     }
   }, [maxItems]);
 
-  // Recalculate on mount and when container resizes
   useEffect(() => {
-    // Wait for next animation frame to ensure container is properly sized after mount
-    // This fixes the issue where the container reports incorrect size on initial load/reload
     let frameId = requestAnimationFrame(() => {
       frameId = requestAnimationFrame(() => {
         calculateMaxItems();
@@ -105,7 +75,6 @@ const TimelineView = ({
     );
   }
 
-  // Check if entry matches player's job and role (supports job types)
   const entryMatchesPlayer = (entry) => {
     if (!jobMatchesEntry(entry.job, playerJob)) return false;
     if (entry.role && playerRole) {
@@ -114,26 +83,20 @@ const TimelineView = ({
     return true;
   };
 
-  // Sort timeline by timestamp, filtering out raidplan entries (handled separately)
   const sortedTimeline = [...plan.timeline]
     .filter((entry) => entry.type !== 'raidplan')
     .sort((a, b) => a.timestamp - b.timestamp);
 
-  // Filter to only upcoming entries (not yet in callout window)
   const upcomingEntries = sortedTimeline.filter((entry) => {
-    // Filter by job and role if showOwnOnly is enabled
     if (showOwnOnly && playerJob) {
       if (!entryMatchesPlayer(entry)) return false;
     }
 
     const timeUntil = entry.timestamp - currentTime;
-    // Hide entries that are already in the callout window
     if (Math.floor(timeUntil) <= CALLOUT_CONFIG.SHOW_BEFORE) return false;
-    // No time limit - we'll show the next N groups regardless of time
     return true;
   });
 
-  // Group entries by timestamp for display
   const groupedEntries = [];
   let currentGroup = null;
 
@@ -148,7 +111,6 @@ const TimelineView = ({
     currentGroup.entries.push(entry);
   }
 
-  // Limit to maxItems groups
   const limitedGroups = groupedEntries.slice(0, maxItems);
 
   if (limitedGroups.length === 0) {

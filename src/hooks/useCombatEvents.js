@@ -1,10 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-/**
- * Track combat state from ACT/OverlayPlugin events.
- * Detects combat start/end, countdown, wipe, and zone changes.
- */
-
 const ENGAGE_PATTERNS = {
   en: /Engage!/,
   de: /Start!/,
@@ -19,11 +14,6 @@ const COUNTDOWN_CANCEL_LINE_TYPE = '269';
 const GAMELOG_TYPE = '00';
 const GAMELOG_ENGAGE_CODE = '0039';
 const ACTORCONTROL_LINE_TYPE = '33';
-// Wipe detection codes from cactbot docs:
-// 4000000F - Fade in (wipe in 6.2+)
-// 40000010 - Wipe (pre-6.2)
-// 40000005 - Fade out (wipe)
-// NOTE: 80000004 is "Lockout time adjust" - fires on phase transitions, NOT wipes!
 const WIPE_COMMANDS = ['4000000F', '40000010', '40000005'];
 const WIPE_ECHO_PATTERNS = [/cactbot wipe/i, /wipe/i];
 
@@ -118,10 +108,7 @@ const useCombatEvents = ({
       }
     }
 
-    // Also detect "has been defeated" / party wipe messages
-    // Line type 25 (NetworkDeath) or instance fail conditions
     if (lineType === '33') {
-      // Log all ActorControl messages to debug
       console.log('[XRT] ActorControl line:', parts.slice(0, 5).join('|'));
     }
 
@@ -166,7 +153,6 @@ const useCombatEvents = ({
       }
 
       if (isWipeMessage(line)) {
-        // Cancel any pending combat end timeout - wipe is immediate
         if (combatEndTimeoutRef.current) {
           clearTimeout(combatEndTimeoutRef.current);
           combatEndTimeoutRef.current = null;
@@ -201,10 +187,8 @@ const useCombatEvents = ({
     setInACTCombat(newInACTCombat);
     inGameCombatRef.current = newInGameCombat;
 
-    // Combat started - cancel any pending combat end and trigger start
     if (newInGameCombat && !wasInGameCombat) {
       console.log('[XRT] Combat state: entering combat');
-      // Cancel any pending combat end timeout (boss became targetable again)
       if (combatEndTimeoutRef.current) {
         console.log('[XRT] Cancelled pending combat end timeout');
         clearTimeout(combatEndTimeoutRef.current);
@@ -218,13 +202,8 @@ const useCombatEvents = ({
       }
     }
 
-    // Combat ended - wait before confirming (handles phase transitions)
-    // Boss becoming untargetable will trigger this, so we delay to see if combat resumes
     if (!newInGameCombat && wasInGameCombat) {
-      // Don't immediately end - wait 8 seconds for phase transitions
-      // Most phase transitions complete within this window
       combatEndTimeoutRef.current = setTimeout(() => {
-        // Only end if we're still out of combat after the delay
         if (!inGameCombatRef.current && combatStateRef.current === 'combat') {
           setCombatState('ended');
           combatStateRef.current = 'ended';
@@ -269,7 +248,6 @@ const useCombatEvents = ({
     setInGameCombat(false);
     inGameCombatRef.current = false;
     setInACTCombat(false);
-    // Cancel any pending combat end timeout on zone change
     if (combatEndTimeoutRef.current) {
       clearTimeout(combatEndTimeoutRef.current);
       combatEndTimeoutRef.current = null;
@@ -277,7 +255,6 @@ const useCombatEvents = ({
     onZoneChangeRef.current?.(newZoneId, newZoneName);
   }, []);
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (combatEndTimeoutRef.current) {

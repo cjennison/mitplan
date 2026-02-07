@@ -48,10 +48,6 @@ const JOB_MAP = {
 
 const jobIdToName = (jobId) => JOB_MAP[jobId] || null;
 
-/**
- * Hook to get the current player's job from ACT/OverlayPlugin.
- * Listens to onPlayerChangedEvent, PartyChanged, and ChangePrimaryPlayer events.
- */
 const usePlayerJob = () => {
   const [playerJob, setPlayerJob] = useState(null);
   const [playerName, setPlayerName] = useState(null);

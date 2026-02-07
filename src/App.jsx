@@ -33,17 +33,9 @@ import {
 } from './config/overlayConfig';
 import styles from './App.module.css';
 
-/**
- * Check if dev console should be available.
- * Only enabled when VITE_DEV_CONSOLE_ENABLED is explicitly set to 'true'.
- */
 const isDevConsoleEnabled = () => import.meta.env.VITE_DEV_CONSOLE_ENABLED === 'true';
-
 const DEV_CONSOLE_AVAILABLE = isDevConsoleEnabled();
 
-/**
- * Main XRT Application Component
- */
 const App = () => {
   const [plan, setPlan] = useState(() => {
     try {
@@ -69,7 +61,6 @@ const App = () => {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
-  // Hooks that provide data (must come before callbacks that use them)
   const { config, updateConfig } = useConfig();
   const { playerJob, playerName } = usePlayerJob();
   const {
@@ -82,17 +73,14 @@ const App = () => {
     getDefaultPlanForZone,
   } = usePlanLibrary();
 
-  // Tutorial system for first-run experience
   const { showTutorial, completeTutorial, resetTutorial } = useTutorial();
 
   const { currentTime, isRunning, start, stop, reset } = useFightTimer();
 
-  // Auto-load default plan for zone (memoized to avoid recreating on each render)
   const handleZoneAutoLoad = useCallback(
     (zoneName) => {
       const defaultPlan = getDefaultPlanForZone(zoneName);
       if (defaultPlan) {
-        // Load the default plan for this zone
         try {
           localStorage.setItem(STORAGE_KEYS.LOADED_PLAN, JSON.stringify(defaultPlan));
         } catch {
@@ -101,7 +89,6 @@ const App = () => {
         setPlan(defaultPlan);
         setPlanError('');
       } else {
-        // No default plan for this zone - clear the current plan
         try {
           localStorage.removeItem(STORAGE_KEYS.LOADED_PLAN);
         } catch {
@@ -114,7 +101,6 @@ const App = () => {
     [getDefaultPlanForZone]
   );
 
-  // Track combat state for callbacks that need it
   const isInCombatRef = useRef(false);
 
   const combatEvents = useCombatEvents({
@@ -168,7 +154,6 @@ const App = () => {
     playerRole: config.playerRole,
   });
 
-  // Raid plan image display hook
   const raidPlanData = useRaidPlan(plan, currentTime, playerJob);
 
   useActionSound(calloutData, config.enableSound, config.soundType);
@@ -188,11 +173,9 @@ const App = () => {
   const handleToggleUILock = useCallback(() => {
     setIsUILocked((prev) => {
       const newValue = !prev;
-      // If locking the UI and tutorial is showing, complete the tutorial
       if (newValue && showTutorial) {
         completeTutorial();
       }
-      // Persist lock state to localStorage
       try {
         localStorage.setItem(STORAGE_KEYS.UI_LOCKED, String(newValue));
       } catch {
@@ -274,17 +257,13 @@ const App = () => {
     setPlanError('');
   }, []);
 
-  // Gameplay mode: UI is locked, hide all controls for clean gameplay view
   const isGameplayMode = isUILocked;
-
-  // Show unlock indicator when ACT overlay is not locked
   const showUnlockIndicator = !isLocked;
 
   return (
     <div
       className={`${styles.app} ${isGameplayMode ? styles.gameplayMode : ''} ${showUnlockIndicator ? styles.overlayUnlocked : ''}`}
     >
-      {/* Overlay unlock indicator - shows bounds and resize handle when ACT overlay is unlocked */}
       {showUnlockIndicator && (
         <>
           <div className={styles.unlockBadge}>
@@ -302,7 +281,6 @@ const App = () => {
         </>
       )}
 
-      {/* Tutorial backdrop overlay */}
       <TutorialOverlay
         isActive={showTutorial}
         isOverlayLocked={isLocked}
@@ -371,7 +349,6 @@ const App = () => {
           </DraggableContainer>
         </TutorialTooltip>
 
-        {/* Raid Plan Image Display - shows strategy images at defined times */}
         {config.enableRaidPlan && (raidPlanData || !isUILocked) && (
           <TutorialTooltip contentKey="raidPlan" show={showTutorial} side="left" align="start">
             <DraggableContainer

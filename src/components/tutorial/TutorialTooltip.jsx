@@ -2,12 +2,6 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import { TUTORIAL_CONTENT } from '../../hooks/useTutorial';
 import styles from './TutorialTooltip.module.css';
 
-/**
- * TutorialTooltip - Tutorial tooltip that shows during first-run experience
- *
- * All tooltips are shown simultaneously when showTutorial is true.
- * They all disappear when the user completes the tutorial by locking the UI.
- */
 const TutorialTooltip = ({
   children,
   contentKey,

@@ -6,9 +6,6 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { jobRequiresRoleSelection } from '../../hooks/useConfig';
 import styles from './PlanInput.module.css';
 
-/**
- * PlanInput component - Load raid plans from catalog
- */
 const PlanInput = ({
   open,
   onOpenChange,

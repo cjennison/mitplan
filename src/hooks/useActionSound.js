@@ -1,10 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { playSoundByType, initAudio } from '../utils/sound';
 
-/**
- * Hook to play alert sounds when raid actions reach their activation time.
- * Sound plays when countdown crosses from positive to zero/negative.
- */
 const useActionSound = (calloutData, enableSound = true, soundType = 'info') => {
   const lastSoundTimeRef = useRef(null);
   const audioInitRef = useRef(false);
@@ -33,8 +29,6 @@ const useActionSound = (calloutData, enableSound = true, soundType = 'info') => 
 
     const { countdown, abilityTime } = calloutData;
 
-    // Play sound when floored countdown hits 0 (matches when "NOW!" appears green)
-    // Use floored value to sync with visual display
     const rounded = Math.floor(countdown);
     if (rounded <= 0 && countdown > -0.5 && lastSoundTimeRef.current !== abilityTime) {
       playSoundByType(soundType);

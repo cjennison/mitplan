@@ -1,13 +1,3 @@
-/**
- * Plan Codec - Utilities for encoding and decoding Base64 mitigation plans
- */
-
-/**
- * Decodes a Base64 encoded mitigation plan string
- *
- * @param {string} base64String - The Base64 encoded plan
- * @returns {{ success: boolean, data?: object, error?: string }}
- */
 export const decodePlan = (base64String) => {
   try {
     // Clean up the input (remove whitespace, newlines)
@@ -31,12 +21,6 @@ export const decodePlan = (base64String) => {
   }
 };
 
-/**
- * Encodes a mitigation plan object to Base64
- *
- * @param {object} plan - The mitigation plan object
- * @returns {string} Base64 encoded string
- */
 export const encodePlan = (plan) => {
   const jsonString = JSON.stringify(plan);
   return btoa(jsonString);

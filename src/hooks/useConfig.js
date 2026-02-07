@@ -13,9 +13,6 @@ const DEFAULT_CONFIG = {
 
 const CONFIG_STORAGE_KEY = 'xrt-config';
 
-/**
- * Role options by job category
- */
 export const ROLE_OPTIONS = {
   tank: [
     { value: 'MT', label: 'Main Tank (MT)' },
@@ -33,9 +30,6 @@ export const ROLE_OPTIONS = {
   ],
 };
 
-/**
- * Get role options for a specific job
- */
 export const getRoleOptionsForJob = (job) => {
   if (!job) return [];
   const jobUpper = job.toUpperCase();
@@ -54,18 +48,11 @@ export const getRoleOptionsForJob = (job) => {
   return [];
 };
 
-/**
- * Check if a job requires role selection (has multiple options)
- */
 export const jobRequiresRoleSelection = (job) => {
   const options = getRoleOptionsForJob(job);
   return options.length > 1;
 };
 
-/**
- * Check if the selected role is valid for the current job
- * Returns true if no role selection is needed, or if the role matches the job's options
- */
 export const isRoleValidForJob = (role, job) => {
   if (!job) return true; // No job info, can't validate
   const options = getRoleOptionsForJob(job);
@@ -75,9 +62,6 @@ export const isRoleValidForJob = (role, job) => {
   return options.some((opt) => opt.value === role);
 };
 
-/**
- * Hook to manage overlay configuration with localStorage persistence.
- */
 const useConfig = () => {
   const [config, setConfig] = useState(() => {
     try {

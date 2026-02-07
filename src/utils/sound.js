@@ -1,17 +1,5 @@
-/**
- * Sound utilities for playing notification sounds
- *
- * Uses the Web Audio API to generate simple alert sounds without
- * requiring external sound files.
- */
-
-// Audio context singleton - created on first use
 let audioContext = null;
 
-/**
- * Get or create the AudioContext
- * Must be called after user interaction (browser requirement)
- */
 const getAudioContext = () => {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -23,15 +11,6 @@ const getAudioContext = () => {
   return audioContext;
 };
 
-/**
- * Play a simple beep/tone sound
- *
- * @param {Object} options - Sound options
- * @param {number} options.frequency - Frequency in Hz (default 880 = A5)
- * @param {number} options.duration - Duration in seconds (default 0.15)
- * @param {number} options.volume - Volume 0-1 (default 0.3)
- * @param {string} options.type - Oscillator type: 'sine', 'square', 'triangle', 'sawtooth' (default 'sine')
- */
 export const playTone = ({
   frequency = 880,
   duration = 0.15,
@@ -61,10 +40,6 @@ export const playTone = ({
   }
 };
 
-/**
- * Play an "alert" sound - a quick double beep
- * Used when a mitigation needs to be used NOW
- */
 export const playAlertSound = () => {
   // First beep
   playTone({ frequency: 880, duration: 0.1, volume: 0.25, type: 'sine' });
@@ -74,18 +49,10 @@ export const playAlertSound = () => {
   }, 120);
 };
 
-/**
- * Play a softer "info" sound - single lower tone
- * Could be used for approaching mitigations
- */
 export const playInfoSound = () => {
   playTone({ frequency: 660, duration: 0.12, volume: 0.2, type: 'sine' });
 };
 
-/**
- * Play an "alarm" sound - urgent triple beep
- * Could be used for critical/missed mitigations
- */
 export const playAlarmSound = () => {
   playTone({ frequency: 1046, duration: 0.08, volume: 0.3, type: 'square' });
   setTimeout(() => {
@@ -96,10 +63,6 @@ export const playAlarmSound = () => {
   }, 200);
 };
 
-/**
- * Play a "chime" sound - pleasant ascending notes
- * A more musical, less jarring option
- */
 export const playChimeSound = () => {
   playTone({ frequency: 523, duration: 0.1, volume: 0.2, type: 'sine' }); // C5
   setTimeout(() => {
@@ -110,17 +73,10 @@ export const playChimeSound = () => {
   }, 160);
 };
 
-/**
- * Play a "ping" sound - short high-pitched ping
- * Quick and non-intrusive
- */
 export const playPingSound = () => {
   playTone({ frequency: 1200, duration: 0.08, volume: 0.2, type: 'sine' });
 };
 
-/**
- * Sound type definitions for UI and playback
- */
 export const SOUND_TYPES = {
   info: { id: 'info', label: 'Soft Tone', play: playInfoSound },
   alert: { id: 'alert', label: 'Double Beep', play: playAlertSound },
@@ -129,9 +85,6 @@ export const SOUND_TYPES = {
   ping: { id: 'ping', label: 'Ping', play: playPingSound },
 };
 
-/**
- * Play a sound by type ID
- */
 export const playSoundByType = (soundType) => {
   const sound = SOUND_TYPES[soundType];
   if (sound) {
@@ -142,9 +95,6 @@ export const playSoundByType = (soundType) => {
   }
 };
 
-/**
- * Pre-warm the audio context. Call on user interaction to ensure sounds work.
- */
 export const initAudio = () => {
   try {
     getAudioContext();

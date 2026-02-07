@@ -1,31 +1,8 @@
-/**
- * Plan Validator - Validates mitigation plan schema and data
- */
-
-/**
- * Required fields for a valid mitigation plan
- */
 const REQUIRED_FIELDS = ['version', 'timeline'];
-
-/**
- * Required fields for each timeline entry (mitigation type)
- */
 const REQUIRED_ENTRY_FIELDS = ['timestamp', 'job', 'ability'];
-
-/**
- * Required fields for raid plan entries
- */
 const REQUIRED_RAIDPLAN_FIELDS = ['timestamp', 'endTimestamp', 'imageUrl'];
-
-/**
- * Allowed URL protocols for image URLs (security)
- * Blocks javascript:, data:, vbscript:, etc.
- */
 const ALLOWED_URL_PROTOCOLS = ['http:', 'https:', 'blob:'];
 
-/**
- * Valid job codes (specific jobs)
- */
 const VALID_JOBS = [
   // Tanks
   'PLD',
@@ -55,18 +32,8 @@ const VALID_JOBS = [
   'PCT',
 ];
 
-/**
- * Valid job type codes (role-based categories)
- * Used in role-based presets where abilities apply to entire job types
- */
 const VALID_JOB_TYPES = ['All', 'Tank', 'Healer', 'Melee', 'PhysRanged', 'MagicRanged'];
 
-/**
- * Validates a mitigation plan object
- *
- * @param {object} plan - The plan object to validate
- * @returns {{ valid: boolean, errors: string[], warnings: string[] }}
- */
 export const validatePlan = (plan) => {
   const errors = [];
   const warnings = [];
@@ -202,12 +169,6 @@ export const validatePlan = (plan) => {
   };
 };
 
-/**
- * Gets a summary of a mitigation plan
- *
- * @param {object} plan - The validated plan object
- * @returns {{ fightName: string, entryCount: number, jobCounts: object, duration: number }}
- */
 export const getPlanSummary = (plan) => {
   const jobCounts = {};
   let maxTimestamp = 0;
