@@ -13,7 +13,7 @@ export default {
     // Crown of Arcadia (optional) @ 0:02
     // ───────────────────────────────────────────────────────────────
     {
-      timestamp: 2,
+      timestamp: 10,
       job: 'Tank',
       role: 'MT',
       ability: 'Party Mit',
@@ -57,7 +57,7 @@ export default {
     // Meteorain @ 4:45
     // ───────────────────────────────────────────────────────────────
     {
-      timestamp: 294,
+      timestamp: 298,
       job: 'Tank',
       role: 'MT',
       ability: 'Reprisal',
