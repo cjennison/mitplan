@@ -373,20 +373,23 @@ const App = () => {
 
         {/* Raid Plan Image Display - shows strategy images at defined times */}
         {config.enableRaidPlan && (raidPlanData || !isUILocked) && (
-          <DraggableContainer
-            storageKeyPosition={STORAGE_KEYS.RAIDPLAN_POSITION}
-            storageKeySize={STORAGE_KEYS.RAIDPLAN_SIZE}
-            defaultPosition={{ x: DEFAULT_RAIDPLAN.x, y: DEFAULT_RAIDPLAN.y }}
-            defaultSize={{ width: DEFAULT_RAIDPLAN.width, height: DEFAULT_RAIDPLAN.height }}
-            label="Raid Plan"
-            isLocked={isUILocked}
-          >
-            <RaidPlanDisplay
-              raidPlan={raidPlanData}
+          <TutorialTooltip contentKey="raidPlan" show={showTutorial} side="left" align="start">
+            <DraggableContainer
+              storageKeyPosition={STORAGE_KEYS.RAIDPLAN_POSITION}
+              storageKeySize={STORAGE_KEYS.RAIDPLAN_SIZE}
+              defaultPosition={{ x: DEFAULT_RAIDPLAN.x, y: DEFAULT_RAIDPLAN.y }}
+              defaultSize={{ width: DEFAULT_RAIDPLAN.width, height: DEFAULT_RAIDPLAN.height }}
+              label="Raid Plan"
               isLocked={isUILocked}
-              showPlaceholder={!isUILocked}
-            />
-          </DraggableContainer>
+              tutorialHighlight={showTutorial}
+            >
+              <RaidPlanDisplay
+                raidPlan={raidPlanData}
+                isLocked={isUILocked}
+                showPlaceholder={!isUILocked}
+              />
+            </DraggableContainer>
+          </TutorialTooltip>
         )}
 
         {DEV_CONSOLE_AVAILABLE && isDevConsoleVisible && (

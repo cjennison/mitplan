@@ -17,6 +17,10 @@ export const TUTORIAL_CONTENT = {
     title: 'Timeline View',
     description: 'Drag to reposition and resize to show more or fewer upcoming actions.',
   },
+  raidPlan: {
+    title: 'Raid Plan',
+    description: 'Shows strategy images at defined times. Drag to reposition for your layout.',
+  },
   settings: {
     title: 'Settings',
     description: 'Configure sound alerts, job filtering, and display options.',
