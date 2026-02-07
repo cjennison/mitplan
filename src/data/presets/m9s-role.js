@@ -38,7 +38,7 @@ export default {
       timestamp: 144,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Crowd Kill',
     },
     {
@@ -56,7 +56,7 @@ export default {
       timestamp: 163,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Finale Fatale',
     },
 
@@ -67,7 +67,7 @@ export default {
       timestamp: 262,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Insatiable Thirst',
     },
     {
@@ -107,7 +107,7 @@ export default {
       timestamp: 362,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Crowd Kill',
     },
 
@@ -125,7 +125,7 @@ export default {
       timestamp: 381,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Finale Fatale',
     },
 

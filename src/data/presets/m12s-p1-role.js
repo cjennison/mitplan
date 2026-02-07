@@ -52,14 +52,14 @@ export default {
 
     // The Fixer @ 0:13
     { timestamp: 13, job: 'Tank', role: 'MT', ability: 'Reprisal', note: 'The Fixer' },
-    { timestamp: 13, job: 'Tank', role: 'OT', ability: 'Party Mit', note: 'The Fixer' },
+    { timestamp: 13, job: 'Tank', role: 'OT', ability: 'Group Defensive', note: 'The Fixer' },
     // Healers are class-specific due to different abilities
     { timestamp: 13, job: 'WHM', ability: 'Plenary Indulgence', note: 'The Fixer' },
     { timestamp: 13, job: 'AST', ability: 'Collective Unconscious', note: 'The Fixer' },
     { timestamp: 13, job: 'SCH', ability: 'Sacred Soil + Spreadlo', note: 'The Fixer' },
     { timestamp: 13, job: 'SGE', ability: 'Zoe Shields + Kerachole', note: 'The Fixer' },
     { timestamp: 13, job: 'Melee', role: 'M1', ability: 'Feint', note: 'The Fixer' },
-    { timestamp: 13, job: 'PhysRanged', ability: 'Party Mit', note: 'The Fixer' },
+    { timestamp: 13, job: 'PhysRanged', ability: 'Group Defensive', note: 'The Fixer' },
     { timestamp: 13, job: 'MagicRanged', ability: 'Addle', note: 'The Fixer' },
 
     // Mortal Slayer @ 0:41
@@ -67,7 +67,7 @@ export default {
     { timestamp: 41, job: 'SGE', ability: 'Kerachole', note: 'Mortal Slayer' },
 
     // Ravenous Reach @ 1:25
-    { timestamp: 85, job: 'Tank', role: 'MT', ability: 'Party Mit', note: 'Ravenous Reach' },
+    { timestamp: 85, job: 'Tank', role: 'MT', ability: 'Group Defensive', note: 'Ravenous Reach' },
     { timestamp: 85, job: 'Tank', role: 'OT', ability: 'Reprisal', note: 'Ravenous Reach' },
     { timestamp: 85, job: 'WHM', ability: 'Temperance + Divine Caress', note: 'Ravenous Reach' },
     { timestamp: 85, job: 'AST', ability: 'Neutral Sect + Sun Sign', note: 'Ravenous Reach' },
@@ -91,7 +91,7 @@ export default {
       timestamp: 94,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit (DRK/GNB)',
+      ability: 'Group Defensive (DRK/GNB)',
       note: 'Fourth-wall Fusion',
     },
     { timestamp: 94, job: 'WHM', ability: 'Liturgy of the Bell', note: 'Fourth-wall Fusion' },
@@ -99,14 +99,20 @@ export default {
     { timestamp: 94, job: 'SCH', ability: 'Sacred Soil + Spreadlo', note: 'Fourth-wall Fusion' },
     { timestamp: 94, job: 'SGE', ability: 'Zoe Shields + Kerachole', note: 'Fourth-wall Fusion' },
     { timestamp: 94, job: 'Melee', role: 'M1', ability: 'Feint', note: 'Fourth-wall Fusion' },
-    { timestamp: 94, job: 'PhysRanged', ability: 'Party Mit', note: 'Fourth-wall Fusion' },
+    { timestamp: 94, job: 'PhysRanged', ability: 'Group Defensive', note: 'Fourth-wall Fusion' },
     { timestamp: 94, job: 'MagicRanged', ability: 'Addle', note: 'Fourth-wall Fusion' },
 
     // The Fixer @ 1:45
-    { timestamp: 105, job: 'Tank', role: 'OT', ability: 'Party Mit (WAR/PLD)', note: 'The Fixer' },
+    {
+      timestamp: 105,
+      job: 'Tank',
+      role: 'OT',
+      ability: 'Group Defensive (WAR/PLD)',
+      note: 'The Fixer',
+    },
     { timestamp: 105, job: 'WHM', ability: 'Plenary Indulgence', note: 'The Fixer' },
     { timestamp: 105, job: 'AST', ability: 'Collective Unconscious', note: 'The Fixer' },
-    { timestamp: 105, job: 'PhysRanged', ability: 'Party Mit', note: 'The Fixer' },
+    { timestamp: 105, job: 'PhysRanged', ability: 'Group Defensive', note: 'The Fixer' },
     { timestamp: 105, job: 'MagicRanged', ability: 'Addle', note: 'The Fixer' },
 
     // Splattershed @ 3:05
@@ -117,7 +123,13 @@ export default {
 
     // Venomous Scourge @ 3:48
     { timestamp: 228, job: 'Tank', role: 'MT', ability: 'Reprisal', note: 'Venomous Scourge' },
-    { timestamp: 228, job: 'Tank', role: 'OT', ability: 'Party Mit', note: 'Venomous Scourge' },
+    {
+      timestamp: 228,
+      job: 'Tank',
+      role: 'OT',
+      ability: 'Group Defensive',
+      note: 'Venomous Scourge',
+    },
     {
       timestamp: 228,
       job: 'SCH',
@@ -131,16 +143,16 @@ export default {
       note: 'Venomous Scourge',
     },
     { timestamp: 228, job: 'Melee', role: 'M1', ability: 'Feint', note: 'Venomous Scourge' },
-    { timestamp: 228, job: 'PhysRanged', ability: 'Party Mit', note: 'Venomous Scourge' },
+    { timestamp: 228, job: 'PhysRanged', ability: 'Group Defensive', note: 'Venomous Scourge' },
     { timestamp: 228, job: 'MagicRanged', ability: 'Addle', note: 'Venomous Scourge' },
 
     // The Fixer @ 3:58
-    { timestamp: 238, job: 'Tank', role: 'OT', ability: 'Party Mit', note: 'The Fixer' },
+    { timestamp: 238, job: 'Tank', role: 'OT', ability: 'Group Defensive', note: 'The Fixer' },
     { timestamp: 238, job: 'WHM', ability: 'Plenary Indulgence', note: 'The Fixer' },
     { timestamp: 238, job: 'AST', ability: 'Collective Unconscious', note: 'The Fixer' },
 
     // Ravenous Reach @ 4:25
-    { timestamp: 265, job: 'Tank', role: 'MT', ability: 'Party Mit', note: 'Ravenous Reach' },
+    { timestamp: 265, job: 'Tank', role: 'MT', ability: 'Group Defensive', note: 'Ravenous Reach' },
     { timestamp: 265, job: 'Tank', role: 'OT', ability: 'Reprisal', note: 'Ravenous Reach' },
     { timestamp: 265, job: 'WHM', ability: 'Temperance + Divine Caress', note: 'Ravenous Reach' },
     { timestamp: 265, job: 'AST', ability: 'Neutral Sect + Sun Sign', note: 'Ravenous Reach' },
@@ -174,7 +186,13 @@ export default {
 
     // Slaughtershed II @ 6:08
     { timestamp: 368, job: 'Tank', role: 'MT', ability: 'Reprisal', note: 'Slaughtershed II' },
-    { timestamp: 368, job: 'Tank', role: 'OT', ability: 'Party Mit', note: 'Slaughtershed II' },
+    {
+      timestamp: 368,
+      job: 'Tank',
+      role: 'OT',
+      ability: 'Group Defensive',
+      note: 'Slaughtershed II',
+    },
     { timestamp: 368, job: 'WHM', ability: 'Liturgy of the Bell', note: 'Slaughtershed II' },
     { timestamp: 368, job: 'AST', ability: 'Macrocosmos', note: 'Slaughtershed II' },
     { timestamp: 368, job: 'SCH', ability: 'Sacred Soil + Spreadlo', note: 'Slaughtershed II' },
@@ -184,10 +202,16 @@ export default {
       ability: 'Kerachole + Panhaima + Zoe Shields',
       note: 'Slaughtershed II',
     },
-    { timestamp: 368, job: 'PhysRanged', ability: 'Party Mit', note: 'Slaughtershed II' },
+    { timestamp: 368, job: 'PhysRanged', ability: 'Group Defensive', note: 'Slaughtershed II' },
 
     // Slaughtershed III @ 6:37
-    { timestamp: 397, job: 'Tank', role: 'MT', ability: 'Party Mit', note: 'Slaughtershed III' },
+    {
+      timestamp: 397,
+      job: 'Tank',
+      role: 'MT',
+      ability: 'Group Defensive',
+      note: 'Slaughtershed III',
+    },
     { timestamp: 397, job: 'Tank', role: 'OT', ability: 'Reprisal', note: 'Slaughtershed III' },
     {
       timestamp: 397,

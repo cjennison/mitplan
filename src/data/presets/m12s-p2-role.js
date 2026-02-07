@@ -61,7 +61,7 @@ export default {
       timestamp: 14,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Arcadia Aflame',
     },
     {
@@ -98,7 +98,7 @@ export default {
     {
       timestamp: 14,
       job: 'PhysRanged',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Arcadia Aflame',
     },
     {
@@ -143,7 +143,7 @@ export default {
       timestamp: 58,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Mighty Magic / Top-tier Slam II',
     },
     {
@@ -199,7 +199,7 @@ export default {
       timestamp: 125,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Firefall Splash',
     },
     {
@@ -236,7 +236,7 @@ export default {
     {
       timestamp: 125,
       job: 'PhysRanged',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Firefall Splash',
     },
     {
@@ -253,7 +253,7 @@ export default {
       timestamp: 158,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Reenactment',
     },
     {
@@ -325,7 +325,7 @@ export default {
       timestamp: 227,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit (DRK/GNB)',
+      ability: 'Group Defensive (DRK/GNB)',
       note: 'Netherworld Near/Far',
     },
     {
@@ -362,7 +362,7 @@ export default {
     {
       timestamp: 227,
       job: 'PhysRanged',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Netherworld Near/Far',
     },
     {
@@ -379,7 +379,7 @@ export default {
       timestamp: 235,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit (WAR/PLD)',
+      ability: 'Group Defensive (WAR/PLD)',
       note: 'Arcadia Aflame',
     },
 
@@ -390,7 +390,7 @@ export default {
       timestamp: 267,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Idyllic Dream',
     },
     {
@@ -434,7 +434,7 @@ export default {
       timestamp: 342,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: "Lindwurm's Meteor",
     },
     {
@@ -471,7 +471,7 @@ export default {
     {
       timestamp: 342,
       job: 'PhysRanged',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: "Lindwurm's Meteor",
     },
     {
@@ -494,7 +494,7 @@ export default {
       timestamp: 369,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Twisted Vision',
     },
     {
@@ -568,7 +568,7 @@ export default {
       timestamp: 437,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Reenactment + Twisted Vision',
     },
     {
@@ -593,7 +593,7 @@ export default {
     {
       timestamp: 437,
       job: 'PhysRanged',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Reenactment + Twisted Vision',
     },
 
@@ -604,7 +604,7 @@ export default {
       timestamp: 470,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Idyllic Dream',
     },
     {
@@ -706,7 +706,7 @@ export default {
       timestamp: 529,
       job: 'Tank',
       role: 'OT',
-      ability: 'Reprisal + Party Mit',
+      ability: 'Reprisal + Group Defensive',
       note: 'Arcadian Hell II',
     },
     {
@@ -743,7 +743,7 @@ export default {
     {
       timestamp: 529,
       job: 'PhysRanged',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Arcadian Hell II',
     },
   ],

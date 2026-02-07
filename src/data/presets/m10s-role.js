@@ -38,7 +38,7 @@ export default {
       timestamp: 166,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Extreme Spectacular',
     },
 
@@ -60,7 +60,7 @@ export default {
       timestamp: 300,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Snaking Cutback Blaze',
     },
 
@@ -78,7 +78,7 @@ export default {
       timestamp: 314,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: "Divers' Dare",
     },
 
@@ -111,7 +111,7 @@ export default {
       timestamp: 521,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: "Divers' Dare",
     },
     {
@@ -136,7 +136,7 @@ export default {
       timestamp: 562,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: "Divers' Dare",
     },
 
@@ -147,7 +147,7 @@ export default {
       timestamp: 588,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: "Divers' Dare",
     },
   ],

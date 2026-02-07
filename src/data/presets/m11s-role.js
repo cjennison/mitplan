@@ -16,7 +16,7 @@ export default {
       timestamp: 10,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Crown of Arcadia (optional)',
     },
 
@@ -38,7 +38,7 @@ export default {
       timestamp: 138,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit + Reprisal',
+      ability: 'Group Defensive + Reprisal',
       note: 'Dance of Domination Trophy',
     },
 
@@ -49,7 +49,7 @@ export default {
       timestamp: 233,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'One and Only',
     },
 
@@ -89,7 +89,7 @@ export default {
       timestamp: 473,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Crown of Arcadia',
     },
 
@@ -100,7 +100,7 @@ export default {
       timestamp: 516,
       job: 'Tank',
       role: 'MT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Crown of Arcadia',
     },
 
@@ -122,14 +122,14 @@ export default {
       timestamp: 627,
       job: 'Tank',
       role: 'MT',
-      ability: 'Reprisal + Party Mit',
+      ability: 'Reprisal + Group Defensive',
       note: 'Heartbreak Kick (Party)',
     },
     {
       timestamp: 627,
       job: 'Tank',
       role: 'OT',
-      ability: 'Party Mit',
+      ability: 'Group Defensive',
       note: 'Heartbreak Kick (Party)',
     },
   ],
